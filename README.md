@@ -13,16 +13,18 @@ The library works on Windows and can be built in Qt Creator or in a terminal.
 - Qt5 Core (library and test);
 - Qt5 Widgets (example).
  
-Build order on the command line:
+Library build order in the command line:
 
 ```
 git clone https://github.com/psivitsky/StringMath
-cd StringMath
+cd StringMath\lib
+mkdir build
+cd build
 cmake ..
 cmake --build .
 ```
 
-The build of the test and the example is performed similarly, but separately.
+Build of test and example is performed similarly, but separately (don't forget to enter ```cmake --install .``` command).
 
 # How to use it?
 
