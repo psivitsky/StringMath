@@ -5,7 +5,7 @@
  * \details
  * Create a text file in the application folder with test expressions such as "1+1=2".
  * Specify the expressions results with precision 'precision'.
- * After that run the application and see the test results in the console.
+ * After that run the application and see the test results in the terminal.
  */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 

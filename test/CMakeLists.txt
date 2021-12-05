@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.5)
 
 project(StringMathTest LANGUAGES CXX)
 
-set(STRING_MATH_INCLUDE_PATH ..\\..\\StringMath\\StringMath)
+set(STRING_MATH_INCLUDE_PATH ..\\lib)
 
 set(CMAKE_SHARED_LIBRARY_PREFIX "")
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
