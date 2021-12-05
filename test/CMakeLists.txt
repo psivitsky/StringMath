@@ -23,4 +23,5 @@ target_link_libraries(StringMathTest Qt5::Core StringMath)
 
 target_include_directories(StringMathTest PRIVATE ${STRING_MATH_INCLUDE_PATH})
 
+install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/test.txt" DESTINATION ${CMAKE_BINARY_DIR})
 install(FILES "${CMAKE_BINARY_DIR}/StringMath/StringMath.dll" DESTINATION ${CMAKE_BINARY_DIR})
