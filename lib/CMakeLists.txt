@@ -14,6 +14,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(Qt5 COMPONENTS Core REQUIRED)
 
 add_library(StringMath SHARED
+  string_math_base.h
   string_math.cpp
   string_math.h
   string_parser.cpp
