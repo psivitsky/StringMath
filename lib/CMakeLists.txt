@@ -16,6 +16,10 @@ find_package(Qt5 COMPONENTS Core REQUIRED)
 add_library(StringMath SHARED
   string_math.cpp
   string_math.h
+  string_parser.cpp
+  string_parser.h
+  term_calc.cpp
+  term_calc.h
 )
 
 target_link_libraries(StringMath PRIVATE Qt5::Core)
