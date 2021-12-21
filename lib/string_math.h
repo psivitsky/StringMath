@@ -34,7 +34,7 @@
  */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 
-#include    "string_parser.h"
+#include    "term_calc.h"
 
 #if defined(STRINGMATH_LIBRARY)
 #  define STRINGMATH_EXPORT Q_DECL_EXPORT
@@ -58,8 +58,27 @@ private:
     static const int    mid_prec = 32;      //!< \details The precision of intermediate calculations.
     static const int    min_res_prec = 0;
     static const int    max_res_prec = 16;
+
+    const QString   base_opening_bracket = "(";
+    const QString   base_closing_bracket = ")";
+
+    const QString   inf_str = "inf";
+    const QString   nan_str = "nan";
+    //Containers...
+    QStringList opening_brackets = {"[", "{"};
+    QStringList closing_brackets = {"]", "}"};
+
+    QStringList operators = {"^", "*", "/", "+", "-"};
+
+    QStringList constants = {"pi"};
+    QStringList constants_values = {"3.1415926535897932384626433832795"};
     //Variables...
     int res_prec = min_res_prec;        //!< \details The precision of calculation result.
+    //Functions...
+    void    parse(const QString &src, QStringList &dst) const;
+    void    brackets_replacer(QString &str) const;
+    void    subexp_parser(const QString &src, int &srcPos, QStringList &dst) const;
+    void    term_checker(const QString &term) const;
 };
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!

@@ -17,8 +17,6 @@ add_library(StringMath SHARED
   string_math_base.h
   string_math.cpp
   string_math.h
-  string_parser.cpp
-  string_parser.h
   term_calc.cpp
   term_calc.h
 )
