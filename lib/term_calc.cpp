@@ -1,8 +1,35 @@
 #include "term_calc.h"
-
-TermCalc::TermCalc()
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+//! \details The default constructor.
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+TermCalc::TermCalc() : res_prec(min_res_prec)
 {
 
+}
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+/*!
+ * The constructor.
+ * \param[in] prec The precision of calculation result (an integer in range from 'min_res_prec' to 'max_res_prec').
+*/
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+TermCalc::TermCalc(int prec) : res_prec(min_res_prec)
+{
+    set_precision(prec);
+}
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+/*!
+ * The calculation precision setter.
+ * \param[in] prec The precision of calculation result (an integer in range from 'min_res_prec' to 'max_res_prec').
+*/
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+void TermCalc::set_precision(int prec)
+{
+    if(prec < min_res_prec)
+        throw StringMathError("The precision of calculation result is too low!");
+    if(prec > max_res_prec)
+        throw StringMathError("The precision of calculation result is too big!");
+
+    res_prec = prec;
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
@@ -11,7 +38,7 @@ TermCalc::TermCalc()
  * \result The calculation result.
 */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-double TermCalc::calculate(QStringList &terms, int prec) const
+double TermCalc::calculate(QStringList &terms) const
 {
     while(terms.contains(pow_op))
         power(terms);
@@ -62,7 +89,7 @@ double TermCalc::calculate(QStringList &terms, int prec) const
         }
     }
 
-    return res_rounding(terms.first().toDouble(), prec);
+    return res_rounding(terms.first().toDouble(), res_prec);
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
@@ -72,70 +99,70 @@ double TermCalc::calculate(QStringList &terms, int prec) const
  * \result The result of calculations.
 */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-qreal TermCalc::func_calc(const QString &funcName, qreal val) const
+qreal TermCalc::func_calc(const QString &funcName, qreal funcArg) const
 {
     if(!functions.contains(funcName))
         throw StringMathError("An unknown function " + funcName + "!");
 
     int func_index = functions.indexOf(funcName);
 
-    qreal eval_res = val;
+    qreal eval_res = funcArg;
     switch(func_index)
     {
     case cosFunc:
-        eval_res = qCos(val);
+        eval_res = qCos(funcArg);
         break;
     case sinFunc:
-        eval_res = qSin(val);
+        eval_res = qSin(funcArg);
         break;
     case tanFunc:
-        if(qAbs(qSin(val)) == 1.)
+        if(qAbs(qSin(funcArg)) == 1.)
             throw StringMathError("The tangent is infinite!");
-        eval_res = qSin(val) / qCos(val);
+        eval_res = qSin(funcArg) / qCos(funcArg);
         break;
     case cotFunc:
-        if(qAbs(qCos(val)) == 1.)
+        if(qAbs(qCos(funcArg)) == 1.)
             throw StringMathError("The cotangent is infinite!");
-        eval_res = qCos(val) / qSin(val);
+        eval_res = qCos(funcArg) / qSin(funcArg);
         break;
     case acosFunc:
-        if(qAbs(val) > 1.)
+        if(qAbs(funcArg) > 1.)
             throw StringMathError("The arccosine subexpression absolute value is greater than 1!");
-        eval_res = qAcos(val);
+        eval_res = qAcos(funcArg);
         break;
     case asinFunc:
-        if(qAbs(val) > 1.)
+        if(qAbs(funcArg) > 1.)
             throw StringMathError("The arcsine subexpression absolute value is greater than 1!");
-        eval_res = qAsin(val);
+        eval_res = qAsin(funcArg);
         break;
     case atanFunc:
-        eval_res = qAtan(val);
+        eval_res = qAtan(funcArg);
         break;
     case acotFunc:
-        eval_res = qAsin(1.) - qAtan(val);
+        eval_res = qAsin(1.) - qAtan(funcArg);
         break;
     case logFunc:
-        if(val == 0.)
+        if(funcArg == 0.)
             throw StringMathError("The natural logarithm subexpression value is equal to zero!");
-        eval_res = qLn(val);
+        eval_res = qLn(funcArg);
         break;
     case log10Func:
-        if(val == 0.)
+        if(funcArg == 0.)
             throw StringMathError("The logarithm (base 10) subexpression value is equal to zero!");
-        eval_res = qLn(val) / qLn(10.);
+        eval_res = qLn(funcArg) / qLn(10.);
         break;
     case log2Func:
-        if(val == 0.)
+        if(funcArg == 0.)
             throw StringMathError("The logarithm (base 2) subexpression value is equal to zero!");
-        eval_res = qLn(val) / qLn(2.);
+        eval_res = qLn(funcArg) / qLn(2.);
         break;
     case expFunc:
-        eval_res = qExp(val);
+        eval_res = qExp(funcArg);
         break;
     case sqrtFunc:
-        if(val < 0.)
+        if(funcArg < 0.)
             throw StringMathError("The square root subexpression value is negative!");
-        eval_res = qSqrt(val);
+        eval_res = qSqrt(funcArg);
         break;
     default:
         break;
@@ -177,7 +204,7 @@ void TermCalc::power(QStringList &terms) const
     qreal pow = qPow(terms.at(terms.indexOf(pow_op) - 1).toDouble(), terms.at(terms.indexOf(pow_op) + 1).toDouble());
     terms.removeAt(terms.indexOf(pow_op) - 1);
     terms.removeAt(terms.indexOf(pow_op) + 1);
-    terms.replace(terms.indexOf(pow_op), QString::number(pow, 'f', mid_prec));
+    terms.replace(terms.indexOf(pow_op), QString::number(pow, 'f', StringMathBase::mid_prec));
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
@@ -193,7 +220,7 @@ void TermCalc::product(QStringList &terms) const
     qreal prod = terms.at(terms.indexOf(prod_op) - 1).toDouble() * terms.at(terms.indexOf(prod_op) + 1).toDouble();
     terms.removeAt(terms.indexOf(prod_op) - 1);
     terms.removeAt(terms.indexOf(prod_op) + 1);
-    terms.replace(terms.indexOf(prod_op), QString::number(prod, 'f', mid_prec));
+    terms.replace(terms.indexOf(prod_op), QString::number(prod, 'f', StringMathBase::mid_prec));
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
@@ -212,7 +239,7 @@ void TermCalc::quotient(QStringList &terms) const
     qreal quot = terms.at(terms.indexOf(quot_op) - 1).toDouble() / terms.at(terms.indexOf(quot_op) + 1).toDouble();
     terms.removeAt(terms.indexOf(quot_op) - 1);
     terms.removeAt(terms.indexOf(quot_op) + 1);
-    terms.replace(terms.indexOf(quot_op), QString::number(quot, 'f', mid_prec));
+    terms.replace(terms.indexOf(quot_op), QString::number(quot, 'f', StringMathBase::mid_prec));
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
@@ -231,7 +258,7 @@ void TermCalc::sum(QStringList &terms) const
         terms.removeAt(terms.indexOf(sum_op) - 1);
     }
     terms.removeAt(terms.indexOf(sum_op) + 1);
-    terms.replace(terms.indexOf(sum_op), QString::number(sum, 'f', mid_prec));
+    terms.replace(terms.indexOf(sum_op), QString::number(sum, 'f', StringMathBase::mid_prec));
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
@@ -250,5 +277,5 @@ void TermCalc::difference(QStringList &terms) const
         terms.removeAt(terms.indexOf(diff_op) - 1);
     }
     terms.removeAt(terms.indexOf(diff_op) + 1);
-    terms.replace(terms.indexOf(diff_op), QString::number(diff, 'f', mid_prec));
+    terms.replace(terms.indexOf(diff_op), QString::number(diff, 'f', StringMathBase::mid_prec));
 }

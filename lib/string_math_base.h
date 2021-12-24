@@ -3,6 +3,11 @@
 
 #include    <QStringList>
 
+namespace StringMathBase
+{
+    static const int    mid_prec = 32;      //!< \details The precision of intermediate calculations.
+}
+
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
  * StringMath exception error class.

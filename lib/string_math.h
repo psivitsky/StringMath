@@ -7,20 +7,23 @@
  * \details
  * Class description
  * -----
- * A class object performs calculations from a given expression in string format.
- * The object analyzes the input string in terms on which it performs calculations.
- * The result is given with 'res_prec' accuracy.\n
- * The input expression can contain subexpresions in bracket of diffrent types ('()', '[]' and '{}').\n
- * The object can compute functions (see 'functions' list). Their names are taken from MATLAB.\n
- * The object also supports constants such as 'pi'.\n
- * If the object finds a syntax error or, for example, a division by zero, it throws an exception of the 'StringMathError' type.\n
+ * The class object performs calculations from a given expression in string format.
+ * It parses the input string in terms and tranfers them to the TermCalc object.
+ * The calculcation result is given with 'res_prec' accuracy.
+ *
+ * The input expression can contain subexpresions in bracket of diffrent types ('()', '[]' and '{}').
+ * The object can compute functions (see 'functions' list). Their names are taken from MATLAB.
+ * The object also supports constants such as 'pi'.
+ *
+ * If the object finds a syntax error or, for example, a division by zero, it throws an exception of the 'StringMathError' type.
  *
  * Code example
  * -----
  * \code
- * QString exp_str = "6/2*(2+1)";    //Expression setter.
  * try
  * {
+ *     QString exp_str = "6/2*(2+1)";
+ *
  *     StringMath calc(3);                              //Calculator with '3' precision.
  *     doubel result = calc.string_process(exp_str);    //The result will be 9.
  * }
@@ -36,16 +39,11 @@
 
 #include    "term_calc.h"
 
-#if defined(STRINGMATH_LIBRARY)
-#  define STRINGMATH_EXPORT Q_DECL_EXPORT
-#else
-#  define STRINGMATH_EXPORT Q_DECL_IMPORT
-#endif
-
 class STRINGMATH_EXPORT StringMath
 {
 public:
-    StringMath(int prec = 8);
+    StringMath();
+    explicit StringMath(int prec = 8);
     //Functions...
     void    set_precision(int prec);
     int     precision() const;
@@ -57,7 +55,7 @@ private:
     //Constants...
     static const int    mid_prec = 32;      //!< \details The precision of intermediate calculations.
     static const int    min_res_prec = 0;
-    static const int    max_res_prec = 16;
+    static const int    max_res_prec = 32;
 
     const QString   base_opening_bracket = "(";
     const QString   base_closing_bracket = ")";
@@ -73,7 +71,7 @@ private:
     QStringList constants = {"pi"};
     QStringList constants_values = {"3.1415926535897932384626433832795"};
     //Variables...
-    int res_prec = min_res_prec;        //!< \details The precision of calculation result.
+    int res_prec;       //!< \details The precision of calculation result.
     //Functions...
     void    parse(const QString &src, QStringList &dst) const;
     void    brackets_replacer(QString &str) const;

@@ -1,11 +1,18 @@
 #include "string_math.h"
 //---------------------------------------------------------------------------------------------------------------------------------------------------
+//! \details The default constructor.
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+StringMath::StringMath() : res_prec(min_res_prec)
+{
+
+}
+//---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
  * The constructor.
  * \param[in] prec The precision of calculation result (an integer in range from 'min_res_prec' to 'max_res_prec').
 */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-StringMath::StringMath(int prec)
+StringMath::StringMath(int prec) : res_prec(min_res_prec)
 {
     set_precision(prec);
 }
@@ -17,17 +24,18 @@ StringMath::StringMath(int prec)
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 void StringMath::set_precision(int prec)
 {
-    res_prec = prec;
-
-    if(res_prec < min_res_prec)
+    if(prec < min_res_prec)
         throw StringMathError("The precision of calculation result is too low!");
-    if(res_prec > max_res_prec)
+    if(prec > max_res_prec)
         throw StringMathError("The precision of calculation result is too big!");
+
+    res_prec = prec;    
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
  * The function of calculating the expression.
  * \param[in] str Input expression of QString type.
+ * \return The calculation result - a double value with 'res_prec' number of characters after the decimal point.
 */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 double StringMath::string_process(const QString &str)
@@ -35,11 +43,17 @@ double StringMath::string_process(const QString &str)
     QStringList terms;
     parse(str, terms);
 
-    TermCalc calc;
+    TermCalc obj(res_prec);
 
-    return calc.calculate(terms, res_prec);
+    return obj.calculate(terms);
 }
-
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+/*!
+ * The parser function.
+ * \param[in] src Expression of QString type.
+ * \param[out] dst Terms list.
+*/
+//---------------------------------------------------------------------------------------------------------------------------------------------------
 void StringMath::parse(const QString &src, QStringList &dst) const
 {
     QString str_exp = src;
@@ -47,7 +61,7 @@ void StringMath::parse(const QString &src, QStringList &dst) const
 
     QString term = "";
 
-    TermCalc calc;
+    TermCalc obj(mid_prec);
 
     int str_pos = 0;
     while(str_pos < src.size())
@@ -59,10 +73,10 @@ void StringMath::parse(const QString &src, QStringList &dst) const
 
             QStringList subexp_terms;
             subexp_parser(src, str_pos, subexp_terms);
-            double subexp_val = calc.calculate(subexp_terms, mid_prec);
+            double subexp_val = obj.calculate(subexp_terms);
 
             if(!term.isEmpty())
-                term = QString::number(calc.func_calc(term, subexp_val), 'f', mid_prec);
+                term = QString::number(obj.func_calc(term, subexp_val), 'f', mid_prec);
             else
                 term = QString::number(subexp_val, 'f', mid_prec);
 
@@ -93,7 +107,13 @@ void StringMath::parse(const QString &src, QStringList &dst) const
         term_checker(term);
     dst.push_back(term);
 }
-
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+/*!
+ * The function of replacing brackets.\n
+ * The function finds and replaces brackets from 'opening_brackets' and 'closing_brackets' with 'base_opening_bracket' and 'base_closing_bracket'.
+ * \param[in,out] str Expression of QString type.
+*/
+//---------------------------------------------------------------------------------------------------------------------------------------------------
 void StringMath::brackets_replacer(QString &str) const
 {
     foreach(QString opening_bracket, opening_brackets)
@@ -102,12 +122,20 @@ void StringMath::brackets_replacer(QString &str) const
     foreach(QString closing_bracket, closing_brackets)
         str = str.replace(closing_bracket, base_closing_bracket);
 }
-
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+/*!
+ * The subexpression parser function.\n
+ * This function is similar to 'parser' function, but it has some features.
+ * \param[in] src Expression of QString type.
+ * \param[in] srcPos The position of subexpression in 'src'.
+ * \param[out] dst Subexpression terms list.
+*/
+//---------------------------------------------------------------------------------------------------------------------------------------------------
 void StringMath::subexp_parser(const QString &src, int &srcPos, QStringList &dst) const
 {
     QString term = "";
 
-    TermCalc calc;
+    TermCalc obj(mid_prec);
 
     if(src.at(srcPos) == base_closing_bracket)
         throw(StringMathError("There is no subexpression between brackets!"));
@@ -122,10 +150,10 @@ void StringMath::subexp_parser(const QString &src, int &srcPos, QStringList &dst
 
             QStringList subexp_terms;
             subexp_parser(src, srcPos, subexp_terms);
-            double subexp_val = calc.calculate(subexp_terms, mid_prec);
+            double subexp_val = obj.calculate(subexp_terms);
 
             if(!term.isEmpty())
-                term = QString::number(calc.func_calc(term, subexp_val), 'f', mid_prec);
+                term = QString::number(obj.func_calc(term, subexp_val), 'f', mid_prec);
             else
                 term = QString::number(subexp_val, 'f', mid_prec);
         }
@@ -161,7 +189,13 @@ void StringMath::subexp_parser(const QString &src, int &srcPos, QStringList &dst
 
     throw StringMathError("The subexpression does not contain closing bracket!");
 }
-
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+/*!
+ * The term checker function.\n
+ * If the function finds any error, it throws an exception.
+ * \param[in] term The checking term.
+*/
+//---------------------------------------------------------------------------------------------------------------------------------------------------
 void StringMath::term_checker(const QString &term) const
 {
     if(term.isEmpty())
