@@ -18,7 +18,7 @@
  * {
  *     QStringList exp_terms = {"6", "/", "2", "*", "(", "2", "+", "1")};
  *
- *     qreal func_arg = 10.;
+ *     double func_arg = 10.;
  *     QString func_name = "log10";
  *
  *     ListMath obj(1);                                 //Calculator with '1' precision.
@@ -41,7 +41,7 @@
 #  define STRINGMATH_EXPORT Q_DECL_IMPORT
 #endif
 
-#include    <qmath.h>
+#include    <cmath>
 
 #include    "string_math_base.h"
 
@@ -55,7 +55,7 @@ public:
     int     precision() const;
 
     double  list_process(QStringList &terms) const;
-    qreal   func_calc(const QString &funcName, qreal funcArg) const;
+    double  func_calc(const QString &funcName, double funcArg) const;
 private:
     ListMath(const ListMath &obj);
     ListMath &operator=(const ListMath &obj);

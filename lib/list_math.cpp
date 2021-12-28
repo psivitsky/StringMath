@@ -99,70 +99,70 @@ double ListMath::list_process(QStringList &terms) const
  * \result The result of calculations.
 */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-qreal ListMath::func_calc(const QString &funcName, qreal funcArg) const
+double ListMath::func_calc(const QString &funcName, double funcArg) const
 {
     if(!functions.contains(funcName))
         throw StringMathError("An unknown function " + funcName + "!");
 
     int func_index = functions.indexOf(funcName);
 
-    qreal eval_res = funcArg;
+    double eval_res = funcArg;
     switch(func_index)
     {
     case cosFunc:
-        eval_res = qCos(funcArg);
+        eval_res = cos(funcArg);
         break;
     case sinFunc:
-        eval_res = qSin(funcArg);
+        eval_res = sin(funcArg);
         break;
     case tanFunc:
-        if(qAbs(qSin(funcArg)) == 1.)
+        if(qAbs(sin(funcArg)) == 1.)
             throw StringMathError("The tangent is infinite!");
-        eval_res = qSin(funcArg) / qCos(funcArg);
+        eval_res = sin(funcArg) / cos(funcArg);
         break;
     case cotFunc:
-        if(qAbs(qCos(funcArg)) == 1.)
+        if(qAbs(cos(funcArg)) == 1.)
             throw StringMathError("The cotangent is infinite!");
-        eval_res = qCos(funcArg) / qSin(funcArg);
+        eval_res = cos(funcArg) / sin(funcArg);
         break;
     case acosFunc:
         if(qAbs(funcArg) > 1.)
             throw StringMathError("The arccosine subexpression absolute value is greater than 1!");
-        eval_res = qAcos(funcArg);
+        eval_res = acos(funcArg);
         break;
     case asinFunc:
         if(qAbs(funcArg) > 1.)
             throw StringMathError("The arcsine subexpression absolute value is greater than 1!");
-        eval_res = qAsin(funcArg);
+        eval_res = asin(funcArg);
         break;
     case atanFunc:
-        eval_res = qAtan(funcArg);
+        eval_res = atan(funcArg);
         break;
     case acotFunc:
-        eval_res = qAsin(1.) - qAtan(funcArg);
+        eval_res = asin(1.) - atan(funcArg);
         break;
-    case logFunc:
-        if(funcArg == 0.)
-            throw StringMathError("The natural logarithm subexpression value is equal to zero!");
-        eval_res = qLn(funcArg);
+    case logFunc:        
+        if(funcArg <= 0.)
+            throw StringMathError("The natural logarithm subexpression value is less than or equal to zero!");
+        eval_res = log(funcArg);
         break;
     case log10Func:
-        if(funcArg == 0.)
-            throw StringMathError("The logarithm (base 10) subexpression value is equal to zero!");
-        eval_res = qLn(funcArg) / qLn(10.);
+        if(funcArg <= 0.)
+            throw StringMathError("The logarithm (base 10) subexpression value is less than or equal to zero!");
+        eval_res = log10(funcArg);
         break;
     case log2Func:
         if(funcArg == 0.)
-            throw StringMathError("The logarithm (base 2) subexpression value is equal to zero!");
-        eval_res = qLn(funcArg) / qLn(2.);
+            throw StringMathError("The logarithm (base 2) subexpression value is less than or equal to zero!");
+        eval_res = log2(funcArg);
         break;
     case expFunc:
-        eval_res = qExp(funcArg);
+        eval_res = exp(funcArg);
         break;
     case sqrtFunc:
         if(funcArg < 0.)
             throw StringMathError("The square root subexpression value is negative!");
-        eval_res = qSqrt(funcArg);
+        eval_res = sqrt(funcArg);
         break;
     default:
         break;
@@ -180,10 +180,10 @@ qreal ListMath::func_calc(const QString &funcName, qreal funcArg) const
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 double ListMath::res_rounding(double resVal, int prec) const
 {
-    double int_part = static_cast<double>(qFloor(resVal));
-    double nonint_part = resVal - qFloor(resVal);
+    double int_part = static_cast<double>(floor(resVal));
+    double nonint_part = resVal - floor(resVal);
 
-    double prec_dec = qPow(10., prec);
+    double prec_dec = pow(10., prec);
     nonint_part = static_cast<double>(qRound64(nonint_part * prec_dec)) / prec_dec;
 
     return int_part + nonint_part;
@@ -201,10 +201,13 @@ void ListMath::power(QStringList &terms) const
     if((terms.indexOf(pow_op) - 1) < 0)
         throw StringMathError("The left operand of " + pow_op + " doesn't exist!");
 
-    qreal pow = qPow(terms.at(terms.indexOf(pow_op) - 1).toDouble(), terms.at(terms.indexOf(pow_op) + 1).toDouble());
+    if(terms.at(terms.indexOf(pow_op) - 1).toDouble() == 0.)
+        throw(StringMathError(terms.at(terms.indexOf(pow_op) - 1) + pow_op + terms.at(terms.indexOf(pow_op) + 1) + " base is equal to zero!"));
+
+    double res = pow(terms.at(terms.indexOf(pow_op) - 1).toDouble(), terms.at(terms.indexOf(pow_op) + 1).toDouble());
     terms.removeAt(terms.indexOf(pow_op) - 1);
     terms.removeAt(terms.indexOf(pow_op) + 1);
-    terms.replace(terms.indexOf(pow_op), QString::number(pow, 'f', StringMathBase::mid_prec));
+    terms.replace(terms.indexOf(pow_op), QString::number(res, 'f', StringMathBase::mid_prec));
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
@@ -217,7 +220,7 @@ void ListMath::product(QStringList &terms) const
     if((terms.indexOf(prod_op) - 1) < 0)
         throw StringMathError("Left operand of " + prod_op + " doesn't exist!");
 
-    qreal prod = terms.at(terms.indexOf(prod_op) - 1).toDouble() * terms.at(terms.indexOf(prod_op) + 1).toDouble();
+    double prod = terms.at(terms.indexOf(prod_op) - 1).toDouble() * terms.at(terms.indexOf(prod_op) + 1).toDouble();
     terms.removeAt(terms.indexOf(prod_op) - 1);
     terms.removeAt(terms.indexOf(prod_op) + 1);
     terms.replace(terms.indexOf(prod_op), QString::number(prod, 'f', StringMathBase::mid_prec));
@@ -236,7 +239,7 @@ void ListMath::quotient(QStringList &terms) const
     if(terms.at(terms.indexOf(quot_op) + 1).toDouble() == 0.)
         throw(StringMathError(terms.at(terms.indexOf(quot_op) - 1) + quot_op + terms.at(terms.indexOf(quot_op) + 1) + " divide by zero!"));
 
-    qreal quot = terms.at(terms.indexOf(quot_op) - 1).toDouble() / terms.at(terms.indexOf(quot_op) + 1).toDouble();
+    double quot = terms.at(terms.indexOf(quot_op) - 1).toDouble() / terms.at(terms.indexOf(quot_op) + 1).toDouble();
     terms.removeAt(terms.indexOf(quot_op) - 1);
     terms.removeAt(terms.indexOf(quot_op) + 1);
     terms.replace(terms.indexOf(quot_op), QString::number(quot, 'f', StringMathBase::mid_prec));
@@ -249,7 +252,7 @@ void ListMath::quotient(QStringList &terms) const
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 void ListMath::sum(QStringList &terms) const
 {
-    qreal sum = 0;
+    double sum = 0;
     if((terms.indexOf(sum_op) - 1) < 0)
         sum = terms.at(terms.indexOf(sum_op) + 1).toDouble();
     else
@@ -268,7 +271,7 @@ void ListMath::sum(QStringList &terms) const
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 void ListMath::difference(QStringList &terms) const
 {
-    qreal diff = 0;
+    double diff = 0;
     if((terms.indexOf(diff_op) - 1) < 0)
         diff = - terms.at(terms.indexOf(diff_op) + 1).toDouble();
     else
