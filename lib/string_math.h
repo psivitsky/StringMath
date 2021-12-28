@@ -24,8 +24,8 @@
  * {
  *     QString exp_str = "6/2*(2+1)";
  *
- *     StringMath calc(3);                              //Calculator with '3' precision.
- *     doubel result = calc.string_process(exp_str);    //The result will be 9.
+ *     StringMath obj(3);                               //Calculator with '3' precision.
+ *     doubel result = obj.string_process(exp_str);     //The result will be 9.
  * }
  * catch(StringMathError &err)
  * {
@@ -37,7 +37,7 @@
  */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 
-#include    "term_calc.h"
+#include    "list_math.h"
 
 class STRINGMATH_EXPORT StringMath
 {

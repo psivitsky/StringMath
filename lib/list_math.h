@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
  * \brief
- * Expression calculation from terms
+ * Expression calculation from QStringList
  * \details
  * Class description
  * -----
@@ -21,9 +21,9 @@
  *     qreal func_arg = 10.;
  *     QString func_name = "log10";
  *
- *     TermCalc calc(1);                                //Calculator with '1' precision.
- *     doubel result = calc.calculate(exp_terms);       //The result will be 9.0
- *     result = calc.func_calc(func_name, func_arg);    //The result will be 1.0
+ *     ListMath obj(1);                                 //Calculator with '1' precision.
+ *     doubel result = obj.list_process(exp_terms);     //The result will be 9.0
+ *     result = obj.func_calc(func_name, func_arg);     //The result will be 1.0
  * }
  * catch(StringMathError &err)
  * {
@@ -32,8 +32,8 @@
  * \endcode
  */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-#ifndef TERMCALC_H
-#define TERMCALC_H
+#ifndef LISTMATH_H
+#define LISTMATH_H
 
 #if defined(STRINGMATH_LIBRARY)
 #  define STRINGMATH_EXPORT Q_DECL_EXPORT
@@ -45,20 +45,20 @@
 
 #include    "string_math_base.h"
 
-class STRINGMATH_EXPORT TermCalc
+class ListMath
 {
 public:
-    TermCalc();
-    explicit TermCalc(int prec);
+    ListMath();
+    explicit ListMath(int prec);
     //Functions...
     void    set_precision(int prec);
     int     precision() const;
 
-    double  calculate(QStringList &terms) const;
+    double  list_process(QStringList &terms) const;
     qreal   func_calc(const QString &funcName, qreal funcArg) const;
 private:
-    TermCalc(const TermCalc &obj);
-    TermCalc &operator=(const TermCalc &obj);
+    ListMath(const ListMath &obj);
+    ListMath &operator=(const ListMath &obj);
     //Constants...
     static const int    mid_prec = 32;      //!< \details The precision of intermediate calculations.
     static const int    min_res_prec = 0;
@@ -93,8 +93,8 @@ private:
  * \return The precision of calculation result (an integer in range from 'min_res_prec' to 'max_res_prec').
 */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-inline int TermCalc::precision() const
+inline int ListMath::precision() const
 {
     return res_prec;
 }
-#endif // TERMCALC_H
+#endif // LISTMATH_H

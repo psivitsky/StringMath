@@ -43,9 +43,9 @@ double StringMath::string_process(const QString &str)
     QStringList terms;
     parse(str, terms);
 
-    TermCalc obj(res_prec);
+    ListMath obj(res_prec);
 
-    return obj.calculate(terms);
+    return obj.list_process(terms);
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
@@ -61,7 +61,7 @@ void StringMath::parse(const QString &src, QStringList &dst) const
 
     QString term = "";
 
-    TermCalc obj(mid_prec);
+    ListMath obj(mid_prec);
 
     int str_pos = 0;
     while(str_pos < src.size())
@@ -73,7 +73,7 @@ void StringMath::parse(const QString &src, QStringList &dst) const
 
             QStringList subexp_terms;
             subexp_parser(src, str_pos, subexp_terms);
-            double subexp_val = obj.calculate(subexp_terms);
+            double subexp_val = obj.list_process(subexp_terms);
 
             if(!term.isEmpty())
                 term = QString::number(obj.func_calc(term, subexp_val), 'f', mid_prec);
@@ -135,7 +135,7 @@ void StringMath::subexp_parser(const QString &src, int &srcPos, QStringList &dst
 {
     QString term = "";
 
-    TermCalc obj(mid_prec);
+    ListMath obj(mid_prec);
 
     if(src.at(srcPos) == base_closing_bracket)
         throw(StringMathError("There is no subexpression between brackets!"));
@@ -150,7 +150,7 @@ void StringMath::subexp_parser(const QString &src, int &srcPos, QStringList &dst
 
             QStringList subexp_terms;
             subexp_parser(src, srcPos, subexp_terms);
-            double subexp_val = obj.calculate(subexp_terms);
+            double subexp_val = obj.list_process(subexp_terms);
 
             if(!term.isEmpty())
                 term = QString::number(obj.func_calc(term, subexp_val), 'f', mid_prec);

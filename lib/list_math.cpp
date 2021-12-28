@@ -1,8 +1,8 @@
-#include "term_calc.h"
+#include "list_math.h"
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 //! \details The default constructor.
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-TermCalc::TermCalc() : res_prec(min_res_prec)
+ListMath::ListMath() : res_prec(min_res_prec)
 {
 
 }
@@ -12,7 +12,7 @@ TermCalc::TermCalc() : res_prec(min_res_prec)
  * \param[in] prec The precision of calculation result (an integer in range from 'min_res_prec' to 'max_res_prec').
 */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-TermCalc::TermCalc(int prec) : res_prec(min_res_prec)
+ListMath::ListMath(int prec) : res_prec(min_res_prec)
 {
     set_precision(prec);
 }
@@ -22,7 +22,7 @@ TermCalc::TermCalc(int prec) : res_prec(min_res_prec)
  * \param[in] prec The precision of calculation result (an integer in range from 'min_res_prec' to 'max_res_prec').
 */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-void TermCalc::set_precision(int prec)
+void ListMath::set_precision(int prec)
 {
     if(prec < min_res_prec)
         throw StringMathError("The precision of calculation result is too low!");
@@ -38,7 +38,7 @@ void TermCalc::set_precision(int prec)
  * \result The calculation result.
 */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-double TermCalc::calculate(QStringList &terms) const
+double ListMath::list_process(QStringList &terms) const
 {
     while(terms.contains(pow_op))
         power(terms);
@@ -99,7 +99,7 @@ double TermCalc::calculate(QStringList &terms) const
  * \result The result of calculations.
 */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-qreal TermCalc::func_calc(const QString &funcName, qreal funcArg) const
+qreal ListMath::func_calc(const QString &funcName, qreal funcArg) const
 {
     if(!functions.contains(funcName))
         throw StringMathError("An unknown function " + funcName + "!");
@@ -178,7 +178,7 @@ qreal TermCalc::func_calc(const QString &funcName, qreal funcArg) const
  * \result The rounded calculation result.
 */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-double TermCalc::res_rounding(double resVal, int prec) const
+double ListMath::res_rounding(double resVal, int prec) const
 {
     double int_part = static_cast<double>(qFloor(resVal));
     double nonint_part = resVal - qFloor(resVal);
@@ -196,7 +196,7 @@ double TermCalc::res_rounding(double resVal, int prec) const
  * \param[in,out] terms The terms list.
 */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-void TermCalc::power(QStringList &terms) const
+void ListMath::power(QStringList &terms) const
 {
     if((terms.indexOf(pow_op) - 1) < 0)
         throw StringMathError("The left operand of " + pow_op + " doesn't exist!");
@@ -212,7 +212,7 @@ void TermCalc::power(QStringList &terms) const
  * \param[in,out] terms The terms list.
 */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-void TermCalc::product(QStringList &terms) const
+void ListMath::product(QStringList &terms) const
 {
     if((terms.indexOf(prod_op) - 1) < 0)
         throw StringMathError("Left operand of " + prod_op + " doesn't exist!");
@@ -228,7 +228,7 @@ void TermCalc::product(QStringList &terms) const
  * \param[in,out] terms The terms list.
 */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-void TermCalc::quotient(QStringList &terms) const
+void ListMath::quotient(QStringList &terms) const
 {
     if((terms.indexOf(quot_op) - 1) < 0)
         throw StringMathError("Left operand of " + quot_op + " doesn't exist!");
@@ -247,7 +247,7 @@ void TermCalc::quotient(QStringList &terms) const
  * \param[in,out] terms The terms list.
 */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-void TermCalc::sum(QStringList &terms) const
+void ListMath::sum(QStringList &terms) const
 {
     qreal sum = 0;
     if((terms.indexOf(sum_op) - 1) < 0)
@@ -266,7 +266,7 @@ void TermCalc::sum(QStringList &terms) const
  * \param[in,out] terms The terms list.
 */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-void TermCalc::difference(QStringList &terms) const
+void ListMath::difference(QStringList &terms) const
 {
     qreal diff = 0;
     if((terms.indexOf(diff_op) - 1) < 0)
