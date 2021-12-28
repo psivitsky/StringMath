@@ -60,10 +60,6 @@ private:
     ListMath(const ListMath &obj);
     ListMath &operator=(const ListMath &obj);
     //Constants...
-    static const int    mid_prec = 32;      //!< \details The precision of intermediate calculations.
-    static const int    min_res_prec = 0;
-    static const int    max_res_prec = 32;
-
     const QString   pow_op = "^";
     const QString   prod_op = "*";
     const QString   quot_op = "/";

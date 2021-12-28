@@ -2,7 +2,7 @@
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 //! \details The default constructor.
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-ListMath::ListMath() : res_prec(min_res_prec)
+ListMath::ListMath() : res_prec(StringMathBase::min_res_prec)
 {
 
 }
@@ -12,7 +12,7 @@ ListMath::ListMath() : res_prec(min_res_prec)
  * \param[in] prec The precision of calculation result (an integer in range from 'min_res_prec' to 'max_res_prec').
 */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-ListMath::ListMath(int prec) : res_prec(min_res_prec)
+ListMath::ListMath(int prec) : res_prec(StringMathBase::min_res_prec)
 {
     set_precision(prec);
 }
@@ -24,9 +24,9 @@ ListMath::ListMath(int prec) : res_prec(min_res_prec)
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 void ListMath::set_precision(int prec)
 {
-    if(prec < min_res_prec)
+    if(prec < StringMathBase::min_res_prec)
         throw StringMathError("The precision of calculation result is too low!");
-    if(prec > max_res_prec)
+    if(prec > StringMathBase::max_res_prec)
         throw StringMathError("The precision of calculation result is too big!");
 
     res_prec = prec;
@@ -184,7 +184,7 @@ double ListMath::res_rounding(double resVal, int prec) const
     double nonint_part = resVal - qFloor(resVal);
 
     double prec_dec = qPow(10., prec);
-    nonint_part = static_cast<double>(qRound(nonint_part * prec_dec)) / prec_dec;
+    nonint_part = static_cast<double>(qRound64(nonint_part * prec_dec)) / prec_dec;
 
     return int_part + nonint_part;
 }

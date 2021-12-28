@@ -2,7 +2,7 @@
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 //! \details The default constructor.
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-StringMath::StringMath() : res_prec(min_res_prec)
+StringMath::StringMath() : res_prec(StringMathBase::min_res_prec)
 {
 
 }
@@ -12,7 +12,7 @@ StringMath::StringMath() : res_prec(min_res_prec)
  * \param[in] prec The precision of calculation result (an integer in range from 'min_res_prec' to 'max_res_prec').
 */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-StringMath::StringMath(int prec) : res_prec(min_res_prec)
+StringMath::StringMath(int prec) : res_prec(StringMathBase::min_res_prec)
 {
     set_precision(prec);
 }
@@ -24,9 +24,9 @@ StringMath::StringMath(int prec) : res_prec(min_res_prec)
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 void StringMath::set_precision(int prec)
 {
-    if(prec < min_res_prec)
+    if(prec < StringMathBase::min_res_prec)
         throw StringMathError("The precision of calculation result is too low!");
-    if(prec > max_res_prec)
+    if(prec > StringMathBase::max_res_prec)
         throw StringMathError("The precision of calculation result is too big!");
 
     res_prec = prec;    
@@ -61,7 +61,7 @@ void StringMath::parse(const QString &src, QStringList &dst) const
 
     QString term = "";
 
-    ListMath obj(mid_prec);
+    ListMath obj(StringMathBase::mid_prec);
 
     int str_pos = 0;
     while(str_pos < src.size())
@@ -76,9 +76,9 @@ void StringMath::parse(const QString &src, QStringList &dst) const
             double subexp_val = obj.list_process(subexp_terms);
 
             if(!term.isEmpty())
-                term = QString::number(obj.func_calc(term, subexp_val), 'f', mid_prec);
+                term = QString::number(obj.func_calc(term, subexp_val), 'f', StringMathBase::mid_prec);
             else
-                term = QString::number(subexp_val, 'f', mid_prec);
+                term = QString::number(subexp_val, 'f', StringMathBase::mid_prec);
 
         }
         else if(operators.contains(ch))
@@ -135,7 +135,7 @@ void StringMath::subexp_parser(const QString &src, int &srcPos, QStringList &dst
 {
     QString term = "";
 
-    ListMath obj(mid_prec);
+    ListMath obj(StringMathBase::mid_prec);
 
     if(src.at(srcPos) == base_closing_bracket)
         throw(StringMathError("There is no subexpression between brackets!"));
@@ -153,9 +153,9 @@ void StringMath::subexp_parser(const QString &src, int &srcPos, QStringList &dst
             double subexp_val = obj.list_process(subexp_terms);
 
             if(!term.isEmpty())
-                term = QString::number(obj.func_calc(term, subexp_val), 'f', mid_prec);
+                term = QString::number(obj.func_calc(term, subexp_val), 'f', StringMathBase::mid_prec);
             else
-                term = QString::number(subexp_val, 'f', mid_prec);
+                term = QString::number(subexp_val, 'f', StringMathBase::mid_prec);
         }
         else if(ch == base_closing_bracket)
         {

@@ -5,7 +5,10 @@
 
 namespace StringMathBase
 {
-    static const int    mid_prec = 32;      //!< \details The precision of intermediate calculations.
+    static const int    mid_prec = 16;      //!< \details The precision of intermediate calculations.
+
+    static const int    min_res_prec = 0;
+    static const int    max_res_prec = 16;
 }
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------

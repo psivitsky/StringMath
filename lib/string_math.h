@@ -53,10 +53,6 @@ private:
     StringMath(const StringMath &obj);
     StringMath &operator=(const StringMath &obj);
     //Constants...
-    static const int    mid_prec = 32;      //!< \details The precision of intermediate calculations.
-    static const int    min_res_prec = 0;
-    static const int    max_res_prec = 32;
-
     const QString   base_opening_bracket = "(";
     const QString   base_closing_bracket = ")";
 
