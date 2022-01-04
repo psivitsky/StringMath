@@ -48,6 +48,9 @@ public:
     void    set_precision(int prec);
     int     precision() const;
 
+    void    add_constant(const QString &constantName, double constantValue);
+    void    remove_constant(const QString &constantName);
+
     double  string_process(const QString &str);
 private:
     StringMath(const StringMath &obj);

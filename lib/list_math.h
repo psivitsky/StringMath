@@ -65,13 +65,6 @@ private:
     const QString   quot_op = "/";
     const QString   sum_op = "+";
     const QString   diff_op = "-";
-    //Containers...
-    QStringList functions = {"cos", "sin", "tan", "cot",
-                             "acos", "asin", "atan", "acot",
-                             "log", "log10", "log2", "exp", "sqrt"};
-    enum functionsIndexes {cosFunc, sinFunc, tanFunc, cotFunc,
-                           acosFunc, asinFunc, atanFunc, acotFunc,
-                           logFunc, log10Func, log2Func, expFunc, sqrtFunc};
     //Variables...
     int res_prec;       //!< \details The precision of calculation result.
     //Functions...

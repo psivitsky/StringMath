@@ -101,65 +101,65 @@ double ListMath::list_process(QStringList &terms) const
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 double ListMath::func_calc(const QString &funcName, double funcArg) const
 {
-    if(!functions.contains(funcName))
+    if(!StringMathBase::functions.contains(funcName))
         throw StringMathError("An unknown function " + funcName + "!");
 
-    int func_index = functions.indexOf(funcName);
+    int func_index = StringMathBase::functions.indexOf(funcName);
 
     double eval_res = funcArg;
     switch(func_index)
     {
-    case cosFunc:
+    case StringMathBase::cosFunc:
         eval_res = cos(funcArg);
         break;
-    case sinFunc:
+    case StringMathBase::sinFunc:
         eval_res = sin(funcArg);
         break;
-    case tanFunc:
+    case StringMathBase::tanFunc:
         if(qAbs(sin(funcArg)) == 1.)
             throw StringMathError("The tangent is infinite!");
         eval_res = sin(funcArg) / cos(funcArg);
         break;
-    case cotFunc:
+    case StringMathBase::cotFunc:
         if(qAbs(cos(funcArg)) == 1.)
             throw StringMathError("The cotangent is infinite!");
         eval_res = cos(funcArg) / sin(funcArg);
         break;
-    case acosFunc:
+    case StringMathBase::acosFunc:
         if(qAbs(funcArg) > 1.)
             throw StringMathError("The arccosine subexpression absolute value is greater than 1!");
         eval_res = acos(funcArg);
         break;
-    case asinFunc:
+    case StringMathBase::asinFunc:
         if(qAbs(funcArg) > 1.)
             throw StringMathError("The arcsine subexpression absolute value is greater than 1!");
         eval_res = asin(funcArg);
         break;
-    case atanFunc:
+    case StringMathBase::atanFunc:
         eval_res = atan(funcArg);
         break;
-    case acotFunc:
+    case StringMathBase::acotFunc:
         eval_res = asin(1.) - atan(funcArg);
         break;
-    case logFunc:        
+    case StringMathBase::logFunc:
         if(funcArg <= 0.)
             throw StringMathError("The natural logarithm subexpression value is less than or equal to zero!");
         eval_res = log(funcArg);
         break;
-    case log10Func:
+    case StringMathBase::log10Func:
         if(funcArg <= 0.)
             throw StringMathError("The logarithm (base 10) subexpression value is less than or equal to zero!");
         eval_res = log10(funcArg);
         break;
-    case log2Func:
+    case StringMathBase::log2Func:
         if(funcArg == 0.)
             throw StringMathError("The logarithm (base 2) subexpression value is less than or equal to zero!");
         eval_res = log2(funcArg);
         break;
-    case expFunc:
+    case StringMathBase::expFunc:
         eval_res = exp(funcArg);
         break;
-    case sqrtFunc:
+    case StringMathBase::sqrtFunc:
         if(funcArg < 0.)
             throw StringMathError("The square root subexpression value is negative!");
         eval_res = sqrt(funcArg);

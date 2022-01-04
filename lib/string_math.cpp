@@ -29,7 +29,50 @@ void StringMath::set_precision(int prec)
     if(prec > StringMathBase::max_res_prec)
         throw StringMathError("The precision of calculation result is too big!");
 
-    res_prec = prec;    
+    res_prec = prec;
+}
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+/*!
+ * The constant adder function.\n
+ * If the added constant already exists, its value will be replaced.
+ * \param[in] constantName The constant name. It must contain from one to three characters.
+ * \param[in] constantValue The constant value.
+*/
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+void StringMath::add_constant(const QString &constantName, double constantValue)
+{
+    if(StringMathBase::functions.contains(constantName))
+        throw StringMathError("The constant name must not match the function name!");
+
+    QRegExp checker("^\\w{1,3}$");
+    if(!checker.exactMatch(constantName))
+        throw StringMathError("Invalid constant name!");
+
+    if(constants.contains(constantName))
+    {
+        int constant_index = constants.indexOf(constantName);
+        constants_values.replace(constant_index, QString::number(constantValue, 'f', StringMathBase::mid_prec));
+    }
+    else
+    {
+        constants.push_back(constantName);
+        constants_values.push_back(QString::number(constantValue, 'f', StringMathBase::mid_prec));
+    }
+}
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+/*!
+ * The constant remover function.
+ * \param[in] constantName The constant name.
+*/
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+void StringMath::remove_constant(const QString &constantName)
+{
+    if(!constants.contains(constantName))
+        throw StringMathError("There is no such constant!");
+
+    int constant_index = constants.indexOf(constantName);
+    constants.removeAt(constant_index);
+    constants_values.removeAt(constant_index);
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
@@ -204,7 +247,8 @@ void StringMath::term_checker(const QString &term) const
     if(term == nan_str)
         throw StringMathError("The operand is not a number!");    
 
-    if(!term.contains(QRegExp("^\\s*(-)?\\d*(.)?\\d*\\s*$")))
+    QRegExp checker("^\\s*(-)?\\d+(.)?\\d*\\s*$");
+    if(!checker.exactMatch(term))
         throw StringMathError("The operand \"" + term + "\" contains invalid symbols!");
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
@@ -232,7 +276,8 @@ void StringMath::constant_replacer(QString &term) const
 {
     foreach(QString constant, constants)
     {
-        if(term.contains(constant))
+        QRegExp checker("^\\s*" + constant + "\\s*$");
+        if(checker.exactMatch(term))
         {
             term.replace(constant, constants_values.at(constants.indexOf(constant)));
             return;

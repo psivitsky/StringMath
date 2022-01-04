@@ -9,6 +9,13 @@ namespace StringMathBase
 
     static const int    min_res_prec = 0;
     static const int    max_res_prec = 16;
+
+    static QStringList functions = {"cos", "sin", "tan", "cot",
+                                    "acos", "asin", "atan", "acot",
+                                    "log", "log10", "log2", "exp", "sqrt"};
+    enum functionsIndexes {cosFunc, sinFunc, tanFunc, cotFunc,
+                           acosFunc, asinFunc, atanFunc, acotFunc,
+                           logFunc, log10Func, log2Func, expFunc, sqrtFunc};
 }
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------
