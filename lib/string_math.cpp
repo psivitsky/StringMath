@@ -192,6 +192,13 @@ void StringMath::subexp_parser(const QString &src, int &srcPos, QStringList &dst
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
  * The term checker function.\n
+ * The term may include:\n
+ * - any number of spaces;\n
+ * - one minus;\n
+ * - at least one number or more;\n *
+ * - one dot;\n
+ * - numbers;\n
+ * - any number of space.\n
  * If the function finds any error, it throws an exception.
  * \param[in] term The checking term.
 */
@@ -207,10 +214,6 @@ void StringMath::term_checker(const QString &term) const
     if(term == nan_str)
         throw StringMathError("The operand is not a number!");
 
-    if(!term.contains(QRegExp("^\\d+$")) &&                 //A number like '11'.
-            !term.contains(QRegExp("^\\d+.$")) &&           //A number like '11.'.
-            !term.contains(QRegExp("^-\\d+.$")) &&          //A number like '-11.'.
-            !term.contains(QRegExp("^\\d+.\\d+$")) &&       //A number like '11.11'.
-            !term.contains(QRegExp("^-\\d+.\\d+$")))        //A number like '-11.11'.
+    if(!term.contains(QRegExp("^\\s*(-)?\\d+(.)?\\d*\\s*$")))
         throw StringMathError("The operand \"" + term + "\" contains invalid symbols!");
 }
