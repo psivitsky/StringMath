@@ -75,6 +75,7 @@ void StringMath::parse(const QString &src, QStringList &dst) const
             subexp_parser(str_exp, str_pos, subexp_terms);
             double subexp_val = obj.list_process(subexp_terms);
 
+            spaces_remover(term);
             if(!term.isEmpty())
                 term = QString::number(obj.func_calc(term, subexp_val), 'f', StringMathBase::mid_prec);
             else
@@ -83,13 +84,15 @@ void StringMath::parse(const QString &src, QStringList &dst) const
         }
         else if(operators.contains(ch))
         {
+            //In case of expression like "-1"...
             if(str_pos != 0)
             {
-                if(constants.contains(term))
-                    term = constants_values.at(constants.indexOf(term));
-                else
-                    term_checker(term);
-                dst.push_back(term);
+                constant_replacer(term);
+                term_checker(term);
+                spaces_remover(term);
+                //In case of expression like " -1"...
+                if(!term.isEmpty())
+                    dst.push_back(term);
             }
             dst.push_back(ch);
 
@@ -101,26 +104,11 @@ void StringMath::parse(const QString &src, QStringList &dst) const
         ++str_pos;
     }
 
-    if(constants.contains(term))
-        term = constants_values.at(constants.indexOf(term));
-    else
-        term_checker(term);
-    dst.push_back(term);
-}
-//---------------------------------------------------------------------------------------------------------------------------------------------------
-/*!
- * The function of replacing brackets.\n
- * The function finds and replaces brackets from 'opening_brackets' and 'closing_brackets' with 'base_opening_bracket' and 'base_closing_bracket'.
- * \param[in,out] str Expression of QString type.
-*/
-//---------------------------------------------------------------------------------------------------------------------------------------------------
-void StringMath::brackets_replacer(QString &str) const
-{
-    foreach(QString opening_bracket, opening_brackets)
-        str = str.replace(opening_bracket, base_opening_bracket);
+    constant_replacer(term);
+    term_checker(term);
+    spaces_remover(term);
 
-    foreach(QString closing_bracket, closing_brackets)
-        str = str.replace(closing_bracket, base_closing_bracket);
+    dst.push_back(term);
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
@@ -152,6 +140,7 @@ void StringMath::subexp_parser(const QString &src, int &srcPos, QStringList &dst
             subexp_parser(src, srcPos, subexp_terms);
             double subexp_val = obj.list_process(subexp_terms);
 
+            spaces_remover(term);
             if(!term.isEmpty())
                 term = QString::number(obj.func_calc(term, subexp_val), 'f', StringMathBase::mid_prec);
             else
@@ -159,10 +148,10 @@ void StringMath::subexp_parser(const QString &src, int &srcPos, QStringList &dst
         }
         else if(ch == base_closing_bracket)
         {
-            if(constants.contains(term))
-                term = constants_values.at(constants.indexOf(term));
-            else
-                term_checker(term);
+            constant_replacer(term);
+            term_checker(term);
+            spaces_remover(term);
+
             dst.push_back(term);
 
             return;
@@ -171,11 +160,12 @@ void StringMath::subexp_parser(const QString &src, int &srcPos, QStringList &dst
         {
             if(srcPos != start_pos)
             {
-                if(constants.contains(term))
-                    term = constants_values.at(constants.indexOf(term));
-                else
-                    term_checker(term);
-                dst.push_back(term);
+                constant_replacer(term);
+                term_checker(term);
+                spaces_remover(term);
+
+                if(!term.isEmpty())
+                    dst.push_back(term);
             }
             dst.push_back(ch);
 
@@ -192,6 +182,13 @@ void StringMath::subexp_parser(const QString &src, int &srcPos, QStringList &dst
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
  * The term checker function.\n
+ * The term may include:\n
+ * - any number of spaces;\n
+ * - one minus;\n
+ * - numbers;\n *
+ * - one dot;\n
+ * - numbers;\n
+ * - any number of space.\n
  * If the function finds any error, it throws an exception.
  * \param[in] term The checking term.
 */
@@ -205,12 +202,50 @@ void StringMath::term_checker(const QString &term) const
         throw StringMathError("The operand is infinite!");
 
     if(term == nan_str)
-        throw StringMathError("The operand is not a number!");
+        throw StringMathError("The operand is not a number!");    
 
-    if(!term.contains(QRegExp("^\\d+$")) &&                 //A number like '11'.
-            !term.contains(QRegExp("^\\d+.$")) &&           //A number like '11.'.
-            !term.contains(QRegExp("^-\\d+.$")) &&          //A number like '-11.'.
-            !term.contains(QRegExp("^\\d+.\\d+$")) &&       //A number like '11.11'.
-            !term.contains(QRegExp("^-\\d+.\\d+$")))        //A number like '-11.11'.
+    if(!term.contains(QRegExp("^\\s*(-)?\\d*(.)?\\d*\\s*$")))
         throw StringMathError("The operand \"" + term + "\" contains invalid symbols!");
+}
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+/*!
+ * The function of replacing brackets.\n
+ * The function finds and replaces brackets from 'opening_brackets' and 'closing_brackets' with 'base_opening_bracket' and 'base_closing_bracket'.
+ * \param[in,out] exp Expression of QString type.
+*/
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+void StringMath::brackets_replacer(QString &exp) const
+{
+    foreach(QString opening_bracket, opening_brackets)
+        exp = exp.replace(opening_bracket, base_opening_bracket);
+
+    foreach(QString closing_bracket, closing_brackets)
+        exp = exp.replace(closing_bracket, base_closing_bracket);
+}
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+/*!
+ * The function of replacing constant symbols with their actual value.
+ * \param[in,out] term Term of QString type.
+*/
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+void StringMath::constant_replacer(QString &term) const
+{
+    foreach(QString constant, constants)
+    {
+        if(term.contains(constant))
+        {
+            term.replace(constant, constants_values.at(constants.indexOf(constant)));
+            return;
+        }
+    }
+}
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+/*!
+ * The function of removing spaces in the term.
+ * \param[in,out] term Term of QString type.
+*/
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+void StringMath::spaces_remover(QString &term) const
+{
+    term = term.remove(" ");
 }

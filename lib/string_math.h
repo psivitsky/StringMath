@@ -69,10 +69,14 @@ private:
     //Variables...
     int res_prec;       //!< \details The precision of calculation result.
     //Functions...
-    void    parse(const QString &src, QStringList &dst) const;
-    void    brackets_replacer(QString &str) const;
+    void    parse(const QString &src, QStringList &dst) const;    
     void    subexp_parser(const QString &src, int &srcPos, QStringList &dst) const;
+
     void    term_checker(const QString &term) const;
+
+    void    brackets_replacer(QString &exp) const;
+    void    constant_replacer(QString &term) const;
+    void    spaces_remover(QString &term) const;
 };
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
