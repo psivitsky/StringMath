@@ -46,9 +46,9 @@ int main(int argc, char *argv[])
 
             double res_val = line.mid(line.indexOf("=") + 1, line.size() - line.indexOf("=")).toDouble();        //The test etalon result.
             //Rounding of test etalon result to 'precision'...
-            double res_int_part = static_cast<double>(qFloor(res_val));
-            double res_nonint_part = res_val - qFloor(res_val);
-            double prec_dec = qPow(10., precision);
+            double res_int_part = static_cast<double>(floor(res_val));
+            double res_nonint_part = res_val - floor(res_val);
+            double prec_dec = pow(10., precision);
             res_nonint_part = static_cast<double>(qRound(res_nonint_part * prec_dec)) / prec_dec;
             res_val = res_int_part + res_nonint_part;
 

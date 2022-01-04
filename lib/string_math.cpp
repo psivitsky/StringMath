@@ -64,15 +64,15 @@ void StringMath::parse(const QString &src, QStringList &dst) const
     ListMath obj(StringMathBase::mid_prec);
 
     int str_pos = 0;
-    while(str_pos < src.size())
+    while(str_pos < str_exp.size())
     {
-        QChar ch = src.at(str_pos);
+        QChar ch = str_exp.at(str_pos);
         if(ch == base_opening_bracket)
         {
             ++str_pos;
 
             QStringList subexp_terms;
-            subexp_parser(src, str_pos, subexp_terms);
+            subexp_parser(str_exp, str_pos, subexp_terms);
             double subexp_val = obj.list_process(subexp_terms);
 
             if(!term.isEmpty())
