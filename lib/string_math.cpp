@@ -88,7 +88,10 @@ void StringMath::parse(const QString &src, QStringList &dst) const
                 if(constants.contains(term))
                     term = constants_values.at(constants.indexOf(term));
                 else
+                {
                     term_checker(term);
+                    spaces_remover(term);
+                }
                 dst.push_back(term);
             }
             dst.push_back(ch);
@@ -104,23 +107,11 @@ void StringMath::parse(const QString &src, QStringList &dst) const
     if(constants.contains(term))
         term = constants_values.at(constants.indexOf(term));
     else
+    {
         term_checker(term);
+        spaces_remover(term);
+    }
     dst.push_back(term);
-}
-//---------------------------------------------------------------------------------------------------------------------------------------------------
-/*!
- * The function of replacing brackets.\n
- * The function finds and replaces brackets from 'opening_brackets' and 'closing_brackets' with 'base_opening_bracket' and 'base_closing_bracket'.
- * \param[in,out] str Expression of QString type.
-*/
-//---------------------------------------------------------------------------------------------------------------------------------------------------
-void StringMath::brackets_replacer(QString &str) const
-{
-    foreach(QString opening_bracket, opening_brackets)
-        str = str.replace(opening_bracket, base_opening_bracket);
-
-    foreach(QString closing_bracket, closing_brackets)
-        str = str.replace(closing_bracket, base_closing_bracket);
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
@@ -162,7 +153,10 @@ void StringMath::subexp_parser(const QString &src, int &srcPos, QStringList &dst
             if(constants.contains(term))
                 term = constants_values.at(constants.indexOf(term));
             else
+            {
                 term_checker(term);
+                spaces_remover(term);
+            }
             dst.push_back(term);
 
             return;
@@ -174,7 +168,10 @@ void StringMath::subexp_parser(const QString &src, int &srcPos, QStringList &dst
                 if(constants.contains(term))
                     term = constants_values.at(constants.indexOf(term));
                 else
+                {
                     term_checker(term);
+                    spaces_remover(term);
+                }
                 dst.push_back(term);
             }
             dst.push_back(ch);
@@ -216,4 +213,29 @@ void StringMath::term_checker(const QString &term) const
 
     if(!term.contains(QRegExp("^\\s*(-)?\\d+(.)?\\d*\\s*$")))
         throw StringMathError("The operand \"" + term + "\" contains invalid symbols!");
+}
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+/*!
+ * The function of replacing brackets.\n
+ * The function finds and replaces brackets from 'opening_brackets' and 'closing_brackets' with 'base_opening_bracket' and 'base_closing_bracket'.
+ * \param[in,out] exp Expression of QString type.
+*/
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+void StringMath::brackets_replacer(QString &exp) const
+{
+    foreach(QString opening_bracket, opening_brackets)
+        exp = exp.replace(opening_bracket, base_opening_bracket);
+
+    foreach(QString closing_bracket, closing_brackets)
+        exp = exp.replace(closing_bracket, base_closing_bracket);
+}
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+/*!
+ * The function of removing spaces in the term.
+ * \param[in,out] term Term of QString type.
+*/
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+void StringMath::spaces_remover(QString &term) const
+{
+    term = term.remove(" ");
 }
