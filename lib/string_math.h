@@ -75,6 +75,7 @@ private:
     void    term_checker(const QString &term) const;
 
     void    brackets_replacer(QString &exp) const;
+    void    constant_replacer(QString &term) const;
     void    spaces_remover(QString &term) const;
 };
 //---------------------------------------------------------------------------------------------------------------------------------------------------

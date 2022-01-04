@@ -75,6 +75,7 @@ void StringMath::parse(const QString &src, QStringList &dst) const
             subexp_parser(src, str_pos, subexp_terms);
             double subexp_val = obj.list_process(subexp_terms);
 
+            spaces_remover(term);
             if(!term.isEmpty())
                 term = QString::number(obj.func_calc(term, subexp_val), 'f', StringMathBase::mid_prec);
             else
@@ -83,16 +84,15 @@ void StringMath::parse(const QString &src, QStringList &dst) const
         }
         else if(operators.contains(ch))
         {
+            //In case of expression like "-1"...
             if(str_pos != 0)
             {
-                if(constants.contains(term))
-                    term = constants_values.at(constants.indexOf(term));
-                else
-                {
-                    term_checker(term);
-                    spaces_remover(term);
-                }
-                dst.push_back(term);
+                constant_replacer(term);
+                term_checker(term);
+                spaces_remover(term);
+                //In case of expression like " -1"...
+                if(!term.isEmpty())
+                    dst.push_back(term);
             }
             dst.push_back(ch);
 
@@ -104,13 +104,10 @@ void StringMath::parse(const QString &src, QStringList &dst) const
         ++str_pos;
     }
 
-    if(constants.contains(term))
-        term = constants_values.at(constants.indexOf(term));
-    else
-    {
-        term_checker(term);
-        spaces_remover(term);
-    }
+    constant_replacer(term);
+    term_checker(term);
+    spaces_remover(term);
+
     dst.push_back(term);
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
@@ -143,6 +140,7 @@ void StringMath::subexp_parser(const QString &src, int &srcPos, QStringList &dst
             subexp_parser(src, srcPos, subexp_terms);
             double subexp_val = obj.list_process(subexp_terms);
 
+            spaces_remover(term);
             if(!term.isEmpty())
                 term = QString::number(obj.func_calc(term, subexp_val), 'f', StringMathBase::mid_prec);
             else
@@ -150,13 +148,10 @@ void StringMath::subexp_parser(const QString &src, int &srcPos, QStringList &dst
         }
         else if(ch == base_closing_bracket)
         {
-            if(constants.contains(term))
-                term = constants_values.at(constants.indexOf(term));
-            else
-            {
-                term_checker(term);
-                spaces_remover(term);
-            }
+            constant_replacer(term);
+            term_checker(term);
+            spaces_remover(term);
+
             dst.push_back(term);
 
             return;
@@ -165,14 +160,12 @@ void StringMath::subexp_parser(const QString &src, int &srcPos, QStringList &dst
         {
             if(srcPos != start_pos)
             {
-                if(constants.contains(term))
-                    term = constants_values.at(constants.indexOf(term));
-                else
-                {
-                    term_checker(term);
-                    spaces_remover(term);
-                }
-                dst.push_back(term);
+                constant_replacer(term);
+                term_checker(term);
+                spaces_remover(term);
+
+                if(!term.isEmpty())
+                    dst.push_back(term);
             }
             dst.push_back(ch);
 
@@ -192,7 +185,7 @@ void StringMath::subexp_parser(const QString &src, int &srcPos, QStringList &dst
  * The term may include:\n
  * - any number of spaces;\n
  * - one minus;\n
- * - at least one number or more;\n *
+ * - numbers;\n *
  * - one dot;\n
  * - numbers;\n
  * - any number of space.\n
@@ -209,9 +202,9 @@ void StringMath::term_checker(const QString &term) const
         throw StringMathError("The operand is infinite!");
 
     if(term == nan_str)
-        throw StringMathError("The operand is not a number!");
+        throw StringMathError("The operand is not a number!");    
 
-    if(!term.contains(QRegExp("^\\s*(-)?\\d+(.)?\\d*\\s*$")))
+    if(!term.contains(QRegExp("^\\s*(-)?\\d*(.)?\\d*\\s*$")))
         throw StringMathError("The operand \"" + term + "\" contains invalid symbols!");
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
@@ -228,6 +221,23 @@ void StringMath::brackets_replacer(QString &exp) const
 
     foreach(QString closing_bracket, closing_brackets)
         exp = exp.replace(closing_bracket, base_closing_bracket);
+}
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+/*!
+ * The function of replacing constant symbols with their actual value.
+ * \param[in,out] term Term of QString type.
+*/
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+void StringMath::constant_replacer(QString &term) const
+{
+    foreach(QString constant, constants)
+    {
+        if(term.contains(constant))
+        {
+            term.replace(constant, constants_values.at(constants.indexOf(constant)));
+            return;
+        }
+    }
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
