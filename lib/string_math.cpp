@@ -241,12 +241,6 @@ void StringMath::term_checker(const QString &term) const
     if(term.isEmpty())
         throw StringMathError("The operand is empty!");
 
-    if(term == inf_str)
-        throw StringMathError("The operand is infinite!");
-
-    if(term == nan_str)
-        throw StringMathError("The operand is not a number!");    
-
     QRegExp checker("^\\s*(-)?\\d+(.)?\\d*\\s*$");
     if(!checker.exactMatch(term))
         throw StringMathError("The operand \"" + term + "\" contains invalid symbols!");

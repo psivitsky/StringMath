@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
 
             if(!test_str_parser(line, test_name, test_exp, test_res))
             {
-                out << "The test string parsing failure! " << line << "\n";
+                out << "The test string parsing failure! \"" << line << "\"\n";
                 continue;
             }
 

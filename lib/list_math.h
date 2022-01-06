@@ -68,6 +68,7 @@ private:
     //Variables...
     int res_prec;       //!< \details The precision of calculation result.
     //Functions...
+    void    res_check(double resVal, const QString &expStr) const;
     double  res_rounding(double resVal, int prec) const;
 
     void    power(QStringList &terms) const;

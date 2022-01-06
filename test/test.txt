@@ -109,7 +109,7 @@
 |exp_14, cos(pi/4)^2 + sin(pi/4)^2 =1|
 |exp_15, sin(pi/3)/cos(pi/3) - tan(pi/3) =0|
 |exp_16, cos(pi/3)/sin(pi/3) - cot(pi/3) =0|
-|exp_17, acos(cos(pi)) = 3.1416|
+|exp_17, acos(cos(pi)) =3.1416|
 |exp_18, log10(exp(10)) / log10(exp(1)) =10|
 |exp_19, log(100) / log(10) =2|
 |exp_20, sqrt(16) - log2(16) =0|

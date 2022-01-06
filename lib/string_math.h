@@ -58,9 +58,6 @@ private:
     //Constants...
     const QString   base_opening_bracket = "(";
     const QString   base_closing_bracket = ")";
-
-    const QString   inf_str = "inf";
-    const QString   nan_str = "nan";
     //Containers...
     QStringList opening_brackets = {"[", "{"};
     QStringList closing_brackets = {"]", "}"};
