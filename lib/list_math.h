@@ -62,7 +62,7 @@ private:
     //Constants...
     const QString   pow_op = "^";
     const QString   prod_op = "*";
-    const QString   quot_op = "/";
+    const QString   div_op = "/";
     const QString   sum_op = "+";
     const QString   diff_op = "-";
     //Variables...
@@ -73,7 +73,7 @@ private:
 
     void    power(QStringList &terms) const;
     void    product(QStringList &terms) const;
-    void    quotient(QStringList &terms) const;
+    void    division(QStringList &terms) const;
     void    sum(QStringList &terms) const;
     void    difference(QStringList &terms) const;
 };

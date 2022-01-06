@@ -43,12 +43,12 @@ double ListMath::list_process(QStringList &terms) const
     while(terms.contains(pow_op))
         power(terms);
 
-    while(terms.contains(prod_op) || terms.contains(quot_op))
+    while(terms.contains(prod_op) || terms.contains(div_op))
     {
         int op_pos = 0;
         while(op_pos < terms.size())
         {
-            if((terms.at(op_pos) == prod_op) || (terms.at(op_pos) == quot_op))
+            if((terms.at(op_pos) == prod_op) || (terms.at(op_pos) == div_op))
                 break;
             ++op_pos;
         }
@@ -59,9 +59,9 @@ double ListMath::list_process(QStringList &terms) const
             continue;
         }
 
-        if(terms.at(op_pos) == quot_op)
+        if(terms.at(op_pos) == div_op)
         {
-            quotient(terms);
+            division(terms);
             continue;
         }
     }
@@ -257,25 +257,25 @@ void ListMath::product(QStringList &terms) const
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
- * The quotient calculation function.
+ * The division function.
  * \param[in,out] terms The terms list.
 */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-void ListMath::quotient(QStringList &terms) const
+void ListMath::division(QStringList &terms) const
 {
-    if((terms.indexOf(quot_op) - 1) < 0)
-        throw StringMathError("Left operand of " + quot_op + " doesn't exist!");
+    if((terms.indexOf(div_op) - 1) < 0)
+        throw StringMathError("Left operand of " + div_op + " doesn't exist!");
 
-    if(terms.at(terms.indexOf(quot_op) + 1).toDouble() == 0.)
-        throw(StringMathError(terms.at(terms.indexOf(quot_op) - 1) + quot_op + terms.at(terms.indexOf(quot_op) + 1) + " divide by zero!"));
+    if(terms.at(terms.indexOf(div_op) + 1).toDouble() == 0.)
+        throw(StringMathError(terms.at(terms.indexOf(div_op) - 1) + div_op + terms.at(terms.indexOf(div_op) + 1) + " divide by zero!"));
 
-    double quot = terms.at(terms.indexOf(quot_op) - 1).toDouble() / terms.at(terms.indexOf(quot_op) + 1).toDouble();
+    double quot = terms.at(terms.indexOf(div_op) - 1).toDouble() / terms.at(terms.indexOf(div_op) + 1).toDouble();
 
-    res_check(quot, terms.at(terms.indexOf(quot_op) - 1) + quot_op + terms.at(terms.indexOf(quot_op) + 1));
+    res_check(quot, terms.at(terms.indexOf(div_op) - 1) + div_op + terms.at(terms.indexOf(div_op) + 1));
 
-    terms.removeAt(terms.indexOf(quot_op) - 1);
-    terms.removeAt(terms.indexOf(quot_op) + 1);
-    terms.replace(terms.indexOf(quot_op), QString::number(quot, 'f', StringMathBase::mid_prec));
+    terms.removeAt(terms.indexOf(div_op) - 1);
+    terms.removeAt(terms.indexOf(div_op) + 1);
+    terms.replace(terms.indexOf(div_op), QString::number(quot, 'f', StringMathBase::mid_prec));
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
