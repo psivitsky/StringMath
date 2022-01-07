@@ -32,7 +32,9 @@
  * \endcode
  * \warning
  * Do not forget about the inaccuracy of the "double" type.
- * For example, 5.55 in double will be equal to 5.549(9), which can lead to rounding errors.
+ * For example, 5.55 in double will be equal to 5.549(9), which can lead to rounding errors.\n
+ * "Double" inaccuracy can also occur when working with very large or very small numbers.
+ * For example, 10^22 will be 10000000000000000000000 and 10^23 will be 99999999999999991611392.
  */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 #ifndef LISTMATH_H

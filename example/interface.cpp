@@ -9,6 +9,8 @@
 Interface::Interface(QWidget *parent) : QWidget(parent), ui(new Ui::Interface)
 {
     ui->setupUi(this);
+
+    ui->expression_result_SB->setRange( - __DBL_MAX__, __DBL_MAX__);
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 //! \details The destructor.
