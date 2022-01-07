@@ -42,7 +42,6 @@
 class STRINGMATH_EXPORT StringMath
 {
 public:
-    StringMath();
     explicit StringMath(int prec = 8);
     //Functions...
     void    set_precision(int prec);

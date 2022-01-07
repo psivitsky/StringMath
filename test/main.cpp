@@ -4,8 +4,7 @@
  * The "StringMath" test console application
  * \details
  * Create a text file in the application folder with test expressions.
- * The test syntax is as follows: |test_name,expression_str=calc_result|
- * Specify the expressions results with precision 'precision'.
+ * The test syntax is as follows: |test_name,calc_precision,expression_str=calc_result|
  * After that run the application and see the test results in the terminal.
  */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
@@ -18,10 +17,13 @@
 
 #include    "string_math.h"
 
-static const int    precision = 1;
 static const int    rand_checks_num = 1000;
 
-bool    test_str_parser(const QString &testStr, QString &testName, QString &testExp, double &testRes);
+bool    test_str_parser(const QString &testStr,
+                        QString &testName,
+                        int &testPrec,
+                        QString &testExp,
+                        double &testRes);
 
 void    sum_rand_tests();
 void    diff_rand_tests();
@@ -48,23 +50,24 @@ int main(int argc, char *argv[])
     return 0;
 }
 
-bool test_str_parser(const QString &testStr, QString &testName, QString &testExp, double &testRes)
+bool test_str_parser(const QString &testStr, QString &testName, int &testPrec, QString &testExp, double &testRes)
 {
     testName = "";
     testExp = "";
 
-    QRegExp test_str_checker("^\\|\\w+\\,[^=]+\\=[^|]+\\|$");
+    QRegExp test_str_checker("^\\|\\w+\\,\\d+\\,[^=]+\\=[^|]+\\|$");
 
     if(!test_str_checker.exactMatch(testStr))
         return false;
 
-    testName = testStr.mid(testStr.indexOf("|") + 1, testStr.indexOf("," - testStr.indexOf("|")) - 1);
-    testExp = testStr.mid(testStr.indexOf(",") + 1, testStr.indexOf("=") - testStr.indexOf(",") - 1);
+    testName = testStr.mid(testStr.indexOf("|") + 1, testStr.indexOf(",") - testStr.indexOf("|") - 1);
+    testPrec = testStr.mid(testStr.indexOf(",") + 1, testStr.lastIndexOf(",") - testStr.indexOf(",") - 1).toInt();
+    testExp = testStr.mid(testStr.lastIndexOf(",") + 1, testStr.indexOf("=") - testStr.lastIndexOf(",") - 1);
     testRes = testStr.mid(testStr.indexOf("=") + 1, testStr.lastIndexOf("|") - testStr.indexOf("=") - 1).toDouble();
 
     double test_res_int_part = static_cast<double>(floor(testRes));
     double test_res_nonint_part = testRes - floor(testRes);
-    double prec_dec = pow(10., precision);
+    double prec_dec = pow(10., testPrec);
     test_res_nonint_part = static_cast<double>(qRound(test_res_nonint_part * prec_dec)) / prec_dec;
     testRes = test_res_int_part + test_res_nonint_part;
 
@@ -78,7 +81,7 @@ void sum_rand_tests()
     double op_2 = 0.;
     QString test_exp = "";
 
-    StringMath calc(precision);
+    StringMath calc;
 
     QTextStream out(stdout);
     out << "Sum check...\n";
@@ -91,7 +94,7 @@ void sum_rand_tests()
         op_1 = static_cast<double>(rand());
         op_2 = static_cast<double>(rand());
 
-        test_exp = QString::number(op_1, 'f', 3) + "+" + QString::number(op_2, 'f', 3);
+        test_exp = QString::number(op_1, 'f', calc.precision()) + "+" + QString::number(op_2, 'f', calc.precision());
 
         try
         {
@@ -122,7 +125,7 @@ void diff_rand_tests()
     double op_2 = 0.;
     QString test_exp = "";
 
-    StringMath calc(precision);
+    StringMath calc;
 
     QTextStream out(stdout);
     out << "Difference check...\n";
@@ -135,7 +138,7 @@ void diff_rand_tests()
         op_1 = static_cast<double>(rand());
         op_2 = static_cast<double>(rand());
 
-        test_exp = QString::number(op_1, 'f', 3) + "-" + QString::number(op_2, 'f', 3);
+        test_exp = QString::number(op_1, 'f', calc.precision()) + "-" + QString::number(op_2, 'f', calc.precision());
 
         try
         {
@@ -166,7 +169,7 @@ void prod_rand_tests()
     double op_2 = 0.;
     QString test_exp = "";
 
-    StringMath calc(precision);
+    StringMath calc;
 
     QTextStream out(stdout);
     out << "Product check...\n";
@@ -179,7 +182,7 @@ void prod_rand_tests()
         op_1 = static_cast<double>(rand());
         op_2 = static_cast<double>(rand());
 
-        test_exp = QString::number(op_1, 'f', 3) + "*" + QString::number(op_2, 'f', 3);
+        test_exp = QString::number(op_1, 'f', calc.precision()) + "*" + QString::number(op_2, 'f', calc.precision());
 
         try
         {
@@ -210,7 +213,7 @@ void div_rand_tests()
     double op_2 = 0.;
     QString test_exp = "";
 
-    StringMath calc(precision);
+    StringMath calc;
 
     QTextStream out(stdout);
     out << "Division check...\n";
@@ -223,12 +226,12 @@ void div_rand_tests()
         op_1 = static_cast<double>(rand());
         op_2 = static_cast<double>(rand());
 
-        test_exp = QString::number(op_1, 'f', 3) + "/" + QString::number(op_2, 'f', 3);
+        test_exp = QString::number(op_1, 'f', calc.precision()) + "/" + QString::number(op_2, 'f', calc.precision());
 
         double test_res = op_1 / op_2;
         double test_res_int_part = static_cast<double>(floor(test_res));
         double test_res_nonint_part = test_res - floor(test_res);
-        double prec_dec = pow(10., precision);
+        double prec_dec = pow(10., calc.precision());
         test_res_nonint_part = static_cast<double>(qRound(test_res_nonint_part * prec_dec)) / prec_dec;
         test_res = test_res_int_part + test_res_nonint_part;
 
@@ -261,7 +264,7 @@ void pow_rand_tests()
     double op_2 = 0.;
     QString test_exp = "";
 
-    StringMath calc(precision);
+    StringMath calc;
 
     QTextStream out(stdout);
     out << "Pow check...\n";
@@ -274,7 +277,7 @@ void pow_rand_tests()
         op_1 = static_cast<double>(1 + rand() % 100);       //To exclude zero values.
         op_2 = static_cast<double>(rand() % 100);
 
-        test_exp = QString::number(op_1, 'f', 3) + "^" + QString::number(op_2, 'f', 3);
+        test_exp = QString::number(op_1, 'f', calc.precision()) + "^" + QString::number(op_2, 'f', calc.precision());
 
         try
         {
@@ -307,11 +310,12 @@ void file_tests()
     {
         int failure_cnt = 0;
 
+        int test_prec = 0;
         double test_res = 0.;
         QString test_name = "";
         QString test_exp = "";
 
-        StringMath calc(precision);
+        StringMath calc;
 
         QString line = "";
         QTextStream in(&f);
@@ -320,14 +324,15 @@ void file_tests()
             if(line.isEmpty())
                 continue;
 
-            if(!test_str_parser(line, test_name, test_exp, test_res))
+            if(!test_str_parser(line, test_name, test_prec, test_exp, test_res))
             {
                 out << "The test string parsing failure! \"" << line << "\"\n";
                 continue;
             }
 
             try
-            {
+            {                
+                calc.set_precision(test_prec);
                 if(test_res != calc.string_process(test_exp))
                 {
                     ++failure_cnt;

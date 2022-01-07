@@ -196,7 +196,8 @@ void ListMath::res_check(double resVal, const QString &expStr) const
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
- * The calculation result rounding function.
+ * The calculation result rounding function.\n
+ * The non-integer part is rounded separately to prevent processing of large numbers.
  * \param[in] resVal The calculation result.
  * \param[in] prec The precision of calculation result
  * \result The rounded calculation result.
@@ -208,7 +209,7 @@ double ListMath::res_rounding(double resVal, int prec) const
     double nonint_part = resVal - floor(resVal);
 
     double prec_dec = pow(10., prec);
-    nonint_part = static_cast<double>(qRound64(nonint_part * prec_dec)) / prec_dec;
+    nonint_part = static_cast<double>(floor(nonint_part * prec_dec + 0.5)) / prec_dec;
 
     return int_part + nonint_part;
 }

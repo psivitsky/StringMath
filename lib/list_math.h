@@ -30,6 +30,9 @@
  *     //Error handling (use err.msg).
  * }
  * \endcode
+ * \warning
+ * Do not forget about the inaccuracy of the "double" type.
+ * For example, 5.55 in double will be equal to 5.549(9), which can lead to rounding errors.
  */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 #ifndef LISTMATH_H
