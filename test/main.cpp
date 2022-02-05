@@ -39,11 +39,11 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
-    sum_rand_tests();
-    diff_rand_tests();
-    prod_rand_tests();
-    div_rand_tests();
-    pow_rand_tests();
+//    sum_rand_tests();
+//    diff_rand_tests();
+//    prod_rand_tests();
+//    div_rand_tests();
+//    pow_rand_tests();
 
     file_tests();
 

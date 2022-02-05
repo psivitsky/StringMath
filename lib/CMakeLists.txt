@@ -12,10 +12,22 @@ find_package(Qt5 COMPONENTS Core REQUIRED)
 
 add_library(StringMath SHARED
     string_math_base.h
-    string_math.cpp
     string_math.h
-    list_math.cpp
-    list_math.h)
+    string_math.cpp
+    string_math_constant.h
+    string_math_constant.cpp
+    string_math_function.h
+    string_math_function.cpp
+    expression_analyzer.h
+    expression_analyzer.cpp
+    op_interpreter.h
+    op_interpreter.cpp
+    fr_op_interpreter.h
+    fr_op_interpreter.cpp
+    sr_op_interpreter.h
+    sr_op_interpreter.cpp
+    func_interpreter.h
+    func_interpreter.cpp)
 
 target_link_libraries(StringMath PRIVATE Qt5::Core)
 

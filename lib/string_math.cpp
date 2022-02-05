@@ -2,27 +2,27 @@
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
  * The constructor.
- * \param[in] prec The precision of calculation result (an integer in range from 'min_res_prec' to 'max_res_prec').
+ * \param[in] resultPrecision The precision of calculation result (an integer in range from 'min_res_prec' to 'max_res_prec').
 */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-StringMath::StringMath(int prec) : res_prec(StringMathBase::min_res_prec)
+StringMath::StringMath(int resultPrecision) : precision_(resultPrecision)
 {
-    set_precision(prec);
+    set_precision(resultPrecision);
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
- * The calculation precision setter.
- * \param[in] prec The precision of calculation result (an integer in range from 'min_res_prec' to 'max_res_prec').
+ * The calculation precision setter function.
+ * \param[in] resultPrecision The precision of calculation result (an integer in range from 'min_res_prec' to 'max_res_prec').
 */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-void StringMath::set_precision(int prec)
+void StringMath::set_precision(int resultPrecision)
 {
-    if(prec < StringMathBase::min_res_prec)
-        throw StringMathError("The precision of calculation result is too low!");
-    if(prec > StringMathBase::max_res_prec)
-        throw StringMathError("The precision of calculation result is too big!");
+    if(resultPrecision < min_res_prec)
+        throw StringMathError("StringMath: the precision of calculation result is too low!");
+    if(resultPrecision > max_res_prec)
+        throw StringMathError("StringMath: the precision of calculation result is too big!");
 
-    res_prec = prec;
+    precision_ = resultPrecision;
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
@@ -32,25 +32,32 @@ void StringMath::set_precision(int prec)
  * \param[in] constantValue The constant value.
 */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-void StringMath::add_constant(const QString &constantName, double constantValue)
+void StringMath::add_constant(const StringMathConstant &newConstant)
 {
-    if(StringMathBase::functions.contains(constantName))
-        throw StringMathError("The constant name must not match the function name!");
+    if(newConstant.name().isEmpty())
+        throw StringMathError("StringMath: the constant name is empty!");
 
-    QRegExp checker("^\\w{1,3}$");
-    if(!checker.exactMatch(constantName))
-        throw StringMathError("Invalid constant name!");
+    foreach(StringMathConstant constant, constants_)
+    {
+        if(newConstant.name() == constant.name())
+            throw StringMathError("StringMath: such a constant already exists!");
+    }
 
-    if(constants.contains(constantName))
+    constants_.push_back(newConstant);
+}
+
+void StringMath::replace_constant(const QString &existingConstantName, double newConstantValue)
+{
+    foreach(StringMathConstant constant, constants_)
     {
-        int constant_index = constants.indexOf(constantName);
-        constants_values.replace(constant_index, QString::number(constantValue, 'f', StringMathBase::mid_prec));
+        if(constant.name() == existingConstantName)
+        {
+            constant.set_value(newConstantValue);
+            return;
+        }
     }
-    else
-    {
-        constants.push_back(constantName);
-        constants_values.push_back(QString::number(constantValue, 'f', StringMathBase::mid_prec));
-    }
+
+    throw StringMathError("StringMath: there is no such constant for replacement!");
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
@@ -58,14 +65,12 @@ void StringMath::add_constant(const QString &constantName, double constantValue)
  * \param[in] constantName The constant name.
 */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-void StringMath::remove_constant(const QString &constantName)
+void StringMath::remove_constant(const StringMathConstant &existingConstant)
 {
-    if(!constants.contains(constantName))
-        throw StringMathError("There is no such constant!");
+    if(!constants_.contains(existingConstant))
+        throw StringMathError("StringMath: there is no such constant for removal!");
 
-    int constant_index = constants.indexOf(constantName);
-    constants.removeAt(constant_index);
-    constants_values.removeAt(constant_index);
+    constants_.removeOne(existingConstant);
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
@@ -74,210 +79,7 @@ void StringMath::remove_constant(const QString &constantName)
  * \return The calculation result - a double value with 'res_prec' number of characters after the decimal point.
 */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-double StringMath::string_process(const QString &str)
+double StringMath::calculate(const QString &str)
 {
-    QStringList terms;
-    parse(str, terms);
-
-    ListMath obj(res_prec);
-
-    return obj.list_process(terms);
-}
-//---------------------------------------------------------------------------------------------------------------------------------------------------
-/*!
- * The parser function.
- * \param[in] src Expression of QString type.
- * \param[out] dst Terms list.
-*/
-//---------------------------------------------------------------------------------------------------------------------------------------------------
-void StringMath::parse(const QString &src, QStringList &dst) const
-{
-    QString str_exp = src;
-    brackets_replacer(str_exp);
-
-    QString term = "";
-
-    ListMath obj(StringMathBase::mid_prec);
-
-    int str_pos = 0;
-    while(str_pos < str_exp.size())
-    {
-        QChar ch = str_exp.at(str_pos);
-        if(ch == base_opening_bracket)
-        {
-            ++str_pos;
-
-            QStringList subexp_terms;
-            subexp_parser(str_exp, str_pos, subexp_terms);
-            double subexp_val = obj.list_process(subexp_terms);
-
-            spaces_remover(term);
-            if(!term.isEmpty())
-                term = QString::number(obj.func_calc(term, subexp_val), 'f', StringMathBase::mid_prec);
-            else
-                term = QString::number(subexp_val, 'f', StringMathBase::mid_prec);
-
-        }
-        else if(operators.contains(ch))
-        {
-            //In case of expression like "-1"...
-            if(str_pos != 0)
-            {
-                constant_replacer(term);
-                term_checker(term);
-                spaces_remover(term);
-                //In case of expression like " -1"...
-                if(!term.isEmpty())
-                    dst.push_back(term);
-            }
-            dst.push_back(ch);
-
-            term.clear();
-        }
-        else
-            term += ch;
-
-        ++str_pos;
-    }
-
-    constant_replacer(term);
-    term_checker(term);
-    spaces_remover(term);
-
-    dst.push_back(term);
-}
-//---------------------------------------------------------------------------------------------------------------------------------------------------
-/*!
- * The subexpression parser function.\n
- * This function is similar to 'parser' function, but it has some features.
- * \param[in] src Expression of QString type.
- * \param[in] srcPos The position of subexpression in 'src'.
- * \param[out] dst Subexpression terms list.
-*/
-//---------------------------------------------------------------------------------------------------------------------------------------------------
-void StringMath::subexp_parser(const QString &src, int &srcPos, QStringList &dst) const
-{
-    QString term = "";
-
-    ListMath obj(StringMathBase::mid_prec);
-
-    if(src.at(srcPos) == base_closing_bracket)
-        throw(StringMathError("There is no subexpression between brackets!"));
-
-    int start_pos = srcPos;
-    while(srcPos < src.size())
-    {
-        QChar ch = src.at(srcPos);
-        if(ch == base_opening_bracket)
-        {
-            ++srcPos;
-
-            QStringList subexp_terms;
-            subexp_parser(src, srcPos, subexp_terms);
-            double subexp_val = obj.list_process(subexp_terms);
-
-            spaces_remover(term);
-            if(!term.isEmpty())
-                term = QString::number(obj.func_calc(term, subexp_val), 'f', StringMathBase::mid_prec);
-            else
-                term = QString::number(subexp_val, 'f', StringMathBase::mid_prec);
-        }
-        else if(ch == base_closing_bracket)
-        {
-            constant_replacer(term);
-            term_checker(term);
-            spaces_remover(term);
-
-            dst.push_back(term);
-
-            return;
-        }
-        else if(operators.contains(ch))
-        {
-            if(srcPos != start_pos)
-            {
-                constant_replacer(term);
-                term_checker(term);
-                spaces_remover(term);
-
-                if(!term.isEmpty())
-                    dst.push_back(term);
-            }
-            dst.push_back(ch);
-
-            term.clear();
-        }
-        else
-            term += ch;
-
-        ++srcPos;
-    }
-
-    throw StringMathError("The subexpression does not contain closing bracket!");
-}
-//---------------------------------------------------------------------------------------------------------------------------------------------------
-/*!
- * The term checker function.\n
- * The term may include:\n
- * - any number of spaces;\n
- * - one minus;\n
- * - numbers;\n *
- * - one dot;\n
- * - numbers;\n
- * - any number of space.\n
- * If the function finds any error, it throws an exception.
- * \param[in] term The checking term.
-*/
-//---------------------------------------------------------------------------------------------------------------------------------------------------
-void StringMath::term_checker(const QString &term) const
-{
-    if(term.isEmpty())
-        throw StringMathError("The operand is empty!");
-
-    QRegExp checker("^\\s*(-)?\\d+(.)?\\d*\\s*$");
-    if(!checker.exactMatch(term))
-        throw StringMathError("The operand \"" + term + "\" contains invalid symbols!");
-}
-//---------------------------------------------------------------------------------------------------------------------------------------------------
-/*!
- * The function of replacing brackets.\n
- * The function finds and replaces brackets from 'opening_brackets' and 'closing_brackets' with 'base_opening_bracket' and 'base_closing_bracket'.
- * \param[in,out] exp Expression of QString type.
-*/
-//---------------------------------------------------------------------------------------------------------------------------------------------------
-void StringMath::brackets_replacer(QString &exp) const
-{
-    foreach(QString opening_bracket, opening_brackets)
-        exp = exp.replace(opening_bracket, base_opening_bracket);
-
-    foreach(QString closing_bracket, closing_brackets)
-        exp = exp.replace(closing_bracket, base_closing_bracket);
-}
-//---------------------------------------------------------------------------------------------------------------------------------------------------
-/*!
- * The function of replacing constant symbols with their actual value.
- * \param[in,out] term Term of QString type.
-*/
-//---------------------------------------------------------------------------------------------------------------------------------------------------
-void StringMath::constant_replacer(QString &term) const
-{
-    foreach(QString constant, constants)
-    {
-        QRegExp checker("^\\s*" + constant + "\\s*$");
-        if(checker.exactMatch(term))
-        {
-            term.replace(constant, constants_values.at(constants.indexOf(constant)));
-            return;
-        }
-    }
-}
-//---------------------------------------------------------------------------------------------------------------------------------------------------
-/*!
- * The function of removing spaces in the term.
- * \param[in,out] term Term of QString type.
-*/
-//---------------------------------------------------------------------------------------------------------------------------------------------------
-void StringMath::spaces_remover(QString &term) const
-{
-    term = term.remove(" ");
+    return 0.;
 }
