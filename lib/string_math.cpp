@@ -2,34 +2,32 @@
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
  * The constructor.
- * \param[in] resultPrecision The precision of calculation result (an integer in range from 'min_res_prec' to 'max_res_prec').
+ * \param[in] precisionValue The precision of calculation result (an integer value in range from 'min_precision_value' to 'max_precision_value').
 */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-StringMath::StringMath(int resultPrecision) : precision_(resultPrecision)
+StringMath::StringMath(int precisionValue)
 {
-    set_precision(resultPrecision);
+    set_precision(precisionValue);
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
  * The calculation precision setter function.
- * \param[in] resultPrecision The precision of calculation result (an integer in range from 'min_res_prec' to 'max_res_prec').
+ * \param[in] precisionValue The precision of calculation result (an integer value in range from 'min_precision_value' to 'max_precision_value').
 */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-void StringMath::set_precision(int resultPrecision)
+void StringMath::set_precision(int precisionValue)
 {
-    if(resultPrecision < min_res_prec)
-        throw StringMathError("StringMath: the precision of calculation result is too low!");
-    if(resultPrecision > max_res_prec)
+    if(precisionValue < min_precision_value)
+        throw StringMathError("StringMath: the precision of calculation result is too small!");
+    if(precisionValue > max_precision_value)
         throw StringMathError("StringMath: the precision of calculation result is too big!");
 
-    precision_ = resultPrecision;
+    precision_ = precisionValue;
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
- * The constant adder function.\n
- * If the added constant already exists, its value will be replaced.
- * \param[in] constantName The constant name. It must contain from one to three characters.
- * \param[in] constantValue The constant value.
+ * The calculation constant adder function.
+ * \param[in] newConstant The new constant.
 */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 void StringMath::add_constant(const StringMathConstant &newConstant)
@@ -45,7 +43,13 @@ void StringMath::add_constant(const StringMathConstant &newConstant)
 
     constants_.push_back(newConstant);
 }
-
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+/*!
+ * The calculation constant replacer function.
+ * \param[in] existingConstantName The name of existing constant.
+ * \param[in] newConstantValue The new value.
+*/
+//---------------------------------------------------------------------------------------------------------------------------------------------------
 void StringMath::replace_constant(const QString &existingConstantName, double newConstantValue)
 {
     foreach(StringMathConstant constant, constants_)
@@ -61,8 +65,8 @@ void StringMath::replace_constant(const QString &existingConstantName, double ne
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
- * The constant remover function.
- * \param[in] constantName The constant name.
+ * The calculation constant remover function.
+ * \param[in] existingConstant The existing constant.
 */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 void StringMath::remove_constant(const StringMathConstant &existingConstant)
@@ -74,12 +78,42 @@ void StringMath::remove_constant(const StringMathConstant &existingConstant)
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
- * The function of calculating the expression.
- * \param[in] str Input expression of QString type.
- * \return The calculation result - a double value with 'res_prec' number of characters after the decimal point.
+ * The algebraic function adder function.
+ * \param[in] newFunction The new function.
 */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-double StringMath::calculate(const QString &str)
+void StringMath::add_function(const StringMathFunction &newFunction)
 {
-    return 0.;
+
+}
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+/*!
+ * The algebraic function replacer function.
+ * \param[in] existingFunctionName The name of existing function.
+*/
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+void StringMath::replace_function(const QString &existingFunctionName)
+{
+
+}
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+/*!
+ * The algebraic function remover function.
+ * \param[in] newFunction The existing function.
+*/
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+void StringMath::remove_function(const StringMathFunction &newFunction)
+{
+
+}
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+/*!
+ * The function of calculating the expression.
+ * \param[in] strExpression The expression of QString type.
+ * \param[out] calcResult The calculation result.
+*/
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+void StringMath::calculate(const QString &strExpression, QString &calcResult)
+{
+
 }

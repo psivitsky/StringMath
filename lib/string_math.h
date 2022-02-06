@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
  * \brief
- * Mathematical expression calculation from QString
+ * Mathematical expression calculation
  * \details
  * Class description
  * -----
@@ -17,9 +17,9 @@
 class STRINGMATH_EXPORT StringMath
 {
 public:
-    explicit StringMath(int resultPrecision = 8);
+    explicit StringMath(int precisionValue = 8);
     //Functions...
-    void    set_precision(int resultPrecision);
+    void    set_precision(int precisionValue);
     int     precision() const;
 
     void    add_constant(const StringMathConstant &newConstant);
@@ -27,17 +27,18 @@ public:
     void    remove_constant(const StringMathConstant &existingConstant);
     const QVector<StringMathConstant>   &constants() const;
 
-    double  calculate(const QString &str);
+    void    add_function(const StringMathFunction &newFunction);
+    void    replace_function(const QString &existingFunctionName);
+    void    remove_function(const StringMathFunction &newFunction);
+    const QVector<StringMathFunction>   &functions() const;
+
+    void calculate(const QString &strExpression, QString &calcResult);
 private:
     StringMath(const StringMath &obj);
     StringMath &operator=(const StringMath &obj);
     //Constants...    
-    static const int    mid_prec = 16;
-    static const int    min_res_prec = 0;
-    static const int    max_res_prec = 16;
-
-    const QString   base_opening_bracket = "(";
-    const QString   base_closing_bracket = ")";
+    static const int    min_precision_value = 0;
+    static const int    max_precision_value = 16;
     //Containers...
     QVector<StringMathConstant> constants_ = {StringMathConstant("pi", 3.1415926535897932384626433832795),
                                               StringMathConstant("e", 2.7182818284590452353602874713527)};
@@ -56,21 +57,36 @@ private:
                                               StringMathFunction("exp"),
                                               StringMathFunction("sqrt")};
     //Variables...
-    int precision_;
+    int precision_ = min_precision_value;
 };
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
  * The calculation precision getter function.
- * \return The precision of calculation result (an integer in range from 'min_res_prec' to 'max_res_prec').
+ * \return The precision of calculation result (an integer value in range from 'min_precision_value' to 'max_precision_value').
 */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 inline int StringMath::precision() const
 {
     return precision_;
 }
-
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+/*!
+ * The calculation constants getter function.
+ * \return The container with constants (StringMathConstant objects).
+*/
+//---------------------------------------------------------------------------------------------------------------------------------------------------
 inline const QVector<StringMathConstant> &StringMath::constants() const
 {
     return constants_;
+}
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+/*!
+ * The algebraic functions getter function.
+ * \return The container with functions (StringMathFunction objects).
+*/
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+inline const QVector<StringMathFunction> &StringMath::functions() const
+{
+    return functions_;
 }
 #endif // STRING_MATH_H
