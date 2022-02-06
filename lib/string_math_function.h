@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
  * \brief
- * Class for a algebraic function in string format for calculations in the StringMath class
+ * Algebraic function
  * \details
  * Class description
  * -----
@@ -17,13 +17,20 @@ class StringMathFunction
 public:
     StringMathFunction();
     StringMathFunction(const QString &functionName);
+    //Operators...
+    friend bool operator== (const StringMathFunction &obj1, const StringMathFunction &obj2);
     //Functions...
-    void    set_name(const QString &constantName);
-    const QString &name() const;
+    void            set_name(const QString &constantName);
+    const QString   &name() const;
 private:
     QString name_;
 };
-
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+/*!
+ * The algebraic function name getter function.
+ * \return The algebraic function name.
+*/
+//---------------------------------------------------------------------------------------------------------------------------------------------------
 inline const QString &StringMathFunction::name() const
 {
     return name_;
