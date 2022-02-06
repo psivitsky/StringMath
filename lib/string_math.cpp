@@ -113,7 +113,8 @@ void StringMath::remove_function(const StringMathFunction &newFunction)
  * \param[out] calcResult The calculation result.
 */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-void StringMath::calculate(const QString &strExpression, QString &calcResult)
+void StringMath::calculate(const QString &strExpression, QString &calcResult) const
 {
-
+    ExpressionAnalyzer obj(precision_, constants_, functions_);
+    obj.analyze(strExpression.begin(), strExpression.end(), calcResult);
 }

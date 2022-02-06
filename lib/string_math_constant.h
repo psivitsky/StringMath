@@ -14,7 +14,7 @@
 
 #include    <QRegExp>
 
-class StringMathConstant
+class STRINGMATH_EXPORT StringMathConstant
 {
 public:
     StringMathConstant();

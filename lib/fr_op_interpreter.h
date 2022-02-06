@@ -6,7 +6,7 @@ class FROpInterpreter
 public:
     FROpInterpreter();
 
-    void    interpret();
+    void    interpret() const;
 private:
     FROpInterpreter(const FROpInterpreter &obj);
     FROpInterpreter &operator=(const FROpInterpreter &obj);

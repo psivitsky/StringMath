@@ -6,7 +6,7 @@ class OpInterpreter
 public:
     OpInterpreter();
 
-    void    interpret();
+    void    interpret() const;
 private:
     OpInterpreter(const OpInterpreter &obj);
     OpInterpreter &operator=(const OpInterpreter &obj);

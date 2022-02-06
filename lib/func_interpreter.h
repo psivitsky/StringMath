@@ -6,7 +6,7 @@ class FuncInterpreter
 public:
     FuncInterpreter();
 
-    void    interpret();
+    void    interpret() const;
 private:
     FuncInterpreter(const FuncInterpreter &obj);
     FuncInterpreter &operator=(const FuncInterpreter &obj);

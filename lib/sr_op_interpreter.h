@@ -6,7 +6,7 @@ class SROpInterpreter
 public:
     SROpInterpreter();
 
-    void    interpret();
+    void    interpret() const;
 private:
     SROpInterpreter(const SROpInterpreter &obj);
     SROpInterpreter &operator=(const SROpInterpreter &obj);

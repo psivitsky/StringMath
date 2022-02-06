@@ -5,7 +5,7 @@ FROpInterpreter::FROpInterpreter()
 
 }
 
-void FROpInterpreter::interpret()
+void FROpInterpreter::interpret() const
 {
 
 }

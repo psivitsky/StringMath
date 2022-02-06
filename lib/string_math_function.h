@@ -12,7 +12,7 @@
 
 #include    "string_math_base.h"
 
-class StringMathFunction
+class STRINGMATH_EXPORT StringMathFunction
 {
 public:
     StringMathFunction();

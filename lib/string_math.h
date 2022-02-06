@@ -11,8 +11,6 @@
 #define STRING_MATH_H
 
 #include    "expression_analyzer.h"
-#include    "string_math_constant.h"
-#include    "string_math_function.h"
 
 class STRINGMATH_EXPORT StringMath
 {
@@ -32,13 +30,15 @@ public:
     void    remove_function(const StringMathFunction &newFunction);
     const QVector<StringMathFunction>   &functions() const;
 
-    void calculate(const QString &strExpression, QString &calcResult);
+    void    calculate(const QString &strExpression, QString &calcResult) const;
 private:
     StringMath(const StringMath &obj);
     StringMath &operator=(const StringMath &obj);
     //Constants...    
     static const int    min_precision_value = 0;
     static const int    max_precision_value = 16;
+    //Variables...
+    int precision_ = min_precision_value;
     //Containers...
     QVector<StringMathConstant> constants_ = {StringMathConstant("pi", 3.1415926535897932384626433832795),
                                               StringMathConstant("e", 2.7182818284590452353602874713527)};
@@ -55,9 +55,7 @@ private:
                                               StringMathFunction("log10"),
                                               StringMathFunction("log2"),
                                               StringMathFunction("exp"),
-                                              StringMathFunction("sqrt")};
-    //Variables...
-    int precision_ = min_precision_value;
+                                              StringMathFunction("sqrt")};    
 };
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!

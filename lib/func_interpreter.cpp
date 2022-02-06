@@ -5,7 +5,7 @@ FuncInterpreter::FuncInterpreter()
 
 }
 
-void FuncInterpreter::interpret()
+void FuncInterpreter::interpret() const
 {
 
 }

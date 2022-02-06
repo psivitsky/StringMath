@@ -5,7 +5,7 @@ OpInterpreter::OpInterpreter()
 
 }
 
-void OpInterpreter::interpret()
+void OpInterpreter::interpret() const
 {
 
 }

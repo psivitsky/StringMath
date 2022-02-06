@@ -5,7 +5,7 @@ SROpInterpreter::SROpInterpreter()
 
 }
 
-void SROpInterpreter::interpret()
+void SROpInterpreter::interpret() const
 {
 
 }
