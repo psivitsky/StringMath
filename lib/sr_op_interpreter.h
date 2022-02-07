@@ -17,9 +17,11 @@ class SROpInterpreter : public OpInterpreter
 public:
     SROpInterpreter();
 
-    void    interpret(QString::const_iterator begin, QString::const_iterator end) const;
+    void    interpret(QString &strExpression) const;
 private:
     SROpInterpreter(const SROpInterpreter &obj);
     SROpInterpreter &operator=(const SROpInterpreter &obj);
+    //Functions...
+    double  calculate(QString::const_iterator begin, QString::const_iterator end) const;
 };
 #endif // SROPINTERPRETER_H
