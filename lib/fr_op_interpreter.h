@@ -17,7 +17,7 @@ class FROpInterpreter : public OpInterpreter
 public:
     FROpInterpreter();
 
-    void    interpret(QString::const_iterator begin, QString::const_iterator end) const;
+    void    interpret(QString &strExpression) const;
 private:
     FROpInterpreter(const FROpInterpreter &obj);
     FROpInterpreter &operator=(const FROpInterpreter &obj);

@@ -27,7 +27,7 @@ public:
                        const QVector<StringMathConstant> &constants,
                        const QVector<StringMathFunction> &functions);
 
-    void    analyze(QString::const_iterator begin, QString::const_iterator end, QString &calcResult) const;
+    void    analyze(const QString &strExpression, QString &calcResult) const;
 private:
     ExpressionAnalyzer(const ExpressionAnalyzer &obj);
     ExpressionAnalyzer &operator=(const ExpressionAnalyzer &obj);
@@ -42,9 +42,9 @@ private:
     //Variables...
     int precision_;
 
-    FuncInterpreter function;
-    FROpInterpreter first_rang_operators;
-    SROpInterpreter second_rang_operators;
+    FuncInterpreter function_;
+    FROpInterpreter first_rang_operators_;
+    SROpInterpreter second_rang_operators_;
     //Containers...
     QVector<StringMathConstant> constants_;
     QVector<StringMathFunction> functions_;

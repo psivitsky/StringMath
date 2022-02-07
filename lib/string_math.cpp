@@ -116,5 +116,5 @@ void StringMath::remove_function(const StringMathFunction &newFunction)
 void StringMath::calculate(const QString &strExpression, QString &calcResult) const
 {
     ExpressionAnalyzer obj(precision_, constants_, functions_);
-    obj.analyze(strExpression.begin(), strExpression.end(), calcResult);
+    obj.analyze(strExpression, calcResult);
 }

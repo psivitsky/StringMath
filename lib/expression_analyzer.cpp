@@ -8,27 +8,28 @@
 */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 ExpressionAnalyzer::ExpressionAnalyzer(int precision, const QVector<StringMathConstant> &constants, const QVector<StringMathFunction> &functions) :
-    precision_(precision), constants_(constants), functions_(functions)
+    precision_(precision), function_(functions), constants_(constants), functions_(functions)
 {
 
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
  * The expression analyzer function.
- * \param[in] begin The expression string begin.
- * \param[in] end The expression string begin.
+ * \param[in] strExpression The expression string to analyze.
  * \param[in] calcResult The calculation result.
 */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-void ExpressionAnalyzer::analyze(QString::const_iterator begin, QString::const_iterator end, QString &calcResult) const
+void ExpressionAnalyzer::analyze(const QString &strExpression, QString &calcResult) const
 {
+    QString temp_str = strExpression;
+
     subexpression_finder();
 
     constants_replacer();
 
-    first_rang_operators.interpret(begin, end);
-    second_rang_operators.interpret(begin, end);
-    function.interpret(begin, end);
+    first_rang_operators_.interpret(temp_str);
+    second_rang_operators_.interpret(temp_str);
+    function_.interpret(temp_str);
 
     rounder();
 }
