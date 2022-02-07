@@ -13,7 +13,6 @@
 #include    <QVector>
 #include    <QStringList>
 
-#include    "string_math_base.h"
 #include    "string_math_constant.h"
 #include    "string_math_function.h"
 

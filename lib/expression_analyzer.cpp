@@ -26,9 +26,9 @@ void ExpressionAnalyzer::analyze(QString::const_iterator begin, QString::const_i
 
     constants_replacer();
 
-    first_rang_operators.interpret();
-    second_rang_operators.interpret();
-    function.interpret();
+    first_rang_operators.interpret(begin, end);
+    second_rang_operators.interpret(begin, end);
+    function.interpret(begin, end);
 
     rounder();
 }
