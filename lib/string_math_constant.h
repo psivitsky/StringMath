@@ -6,7 +6,7 @@
  * Class description
  * -----
  * This class defines a mathematical constant by its name and value.\n
- * The name of the constant must consist of three letters.
+ * The name of the constant must consist of three letters or numbers.
  */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 #ifndef STRINGMATHCONSTANT_H

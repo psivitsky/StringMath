@@ -19,7 +19,7 @@ StringMathConstant::StringMathConstant(const QString &constantName, double const
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
- * The overload of the equality operator
+ * The overload of the equality operator.
  * \param[in] obj1 The left operand.
  * \param[in] obj2 The right operand.
  * \return The comparison result: true - operands have equal name and value, false - operands don't have equal name or value.

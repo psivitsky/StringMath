@@ -92,7 +92,7 @@ void StringMath::add_function(const StringMathFunction &newFunction)
  * \param[in] existingFunctionName The name of existing function.
 */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-void StringMath::replace_function(const QString &existingFunctionName)
+void StringMath::replace_function(const QString &existingFunctionName, std::function<double (double)> newFunction)
 {
 
 }

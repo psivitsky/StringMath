@@ -26,7 +26,7 @@ public:
     const QVector<StringMathConstant>   &constants() const;
 
     void    add_function(const StringMathFunction &newFunction);
-    void    replace_function(const QString &existingFunctionName);
+    void    replace_function(const QString &existingFunctionName, std::function<double (double)> newFunction);
     void    remove_function(const StringMathFunction &newFunction);
     const QVector<StringMathFunction>   &functions() const;
 
@@ -43,19 +43,19 @@ private:
     QVector<StringMathConstant> constants_ = {StringMathConstant("pi", 3.1415926535897932384626433832795),
                                               StringMathConstant("e", 2.7182818284590452353602874713527)};
 
-    QVector<StringMathFunction> functions_ = {StringMathFunction("cos"),
-                                              StringMathFunction("sin"),
-                                              StringMathFunction("tan"),
-                                              StringMathFunction("cot"),
-                                              StringMathFunction("acos"),
-                                              StringMathFunction("asin"),
-                                              StringMathFunction("atan"),
-                                              StringMathFunction("acot"),
-                                              StringMathFunction("log"),
-                                              StringMathFunction("log10"),
-                                              StringMathFunction("log2"),
-                                              StringMathFunction("exp"),
-                                              StringMathFunction("sqrt")};    
+    QVector<StringMathFunction> functions_ = {StringMathFunction("cos", StringMathFuncImpl::cos_impl),
+                                              StringMathFunction("sin", StringMathFuncImpl::sin_impl),
+                                              StringMathFunction("tan", StringMathFuncImpl::tan_impl),
+                                              StringMathFunction("cot", StringMathFuncImpl::cot_impl),
+                                              StringMathFunction("acos", StringMathFuncImpl::acos_impl),
+                                              StringMathFunction("asin", StringMathFuncImpl::asin_impl),
+                                              StringMathFunction("atan", StringMathFuncImpl::atan_impl),
+                                              StringMathFunction("acot", StringMathFuncImpl::acot_impl),
+                                              StringMathFunction("log", StringMathFuncImpl::log_impl),
+                                              StringMathFunction("log10", StringMathFuncImpl::log10_impl),
+                                              StringMathFunction("log2", StringMathFuncImpl::log2_impl),
+                                              StringMathFunction("exp", StringMathFuncImpl::exp_impl),
+                                              StringMathFunction("sqrt", StringMathFuncImpl::sqrt_impl)};
 };
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
