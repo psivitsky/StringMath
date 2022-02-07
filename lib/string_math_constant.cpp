@@ -19,14 +19,16 @@ StringMathConstant::StringMathConstant(const QString &constantName, double const
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
- * The operator==() overload function.
+ * The overload of the equality operator
  * \param[in] obj1 The left operand.
  * \param[in] obj2 The right operand.
- * \return The comparison result: true - operands have equal name and value, false - operands don't have equal name and value.
+ * \return The comparison result: true - operands have equal name and value, false - operands don't have equal name or value.
 */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 bool operator==(const StringMathConstant &obj1, const StringMathConstant &obj2)
 {
+    if((obj1.name_ == obj2.name_) && (obj1.value_ == obj2.value_))
+        return true;
     return false;
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
@@ -67,4 +69,17 @@ void StringMathConstant::set_name(const QString &constantName)
         throw StringMathError("StringMathConstant: invalid constant name!");
 
     name_ = constantName;
+}
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+/*!
+ * The mathematical constant name getter function.
+ * \return The mathematical constant name.
+*/
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+const QString &StringMathConstant::name() const
+{
+    if(name_.isEmpty())
+        throw StringMathError("StringMathConstant: the constant name is empty!");
+
+    return name_;
 }

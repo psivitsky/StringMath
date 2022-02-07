@@ -1,10 +1,12 @@
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
  * \brief
- * Mathematical constant
+ * The mathematical constant
  * \details
  * Class description
  * -----
+ * This class defines a mathematical constant by its name and value.\n
+ * The name of the constant must consist of three letters.
  */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 #ifndef STRINGMATHCONSTANT_H
@@ -42,15 +44,5 @@ private:
 inline void StringMathConstant::set_value(double value)
 {
     value_ = value;
-}
-//---------------------------------------------------------------------------------------------------------------------------------------------------
-/*!
- * The mathematical constant name getter function.
- * \return The mathematical constant name.
-*/
-//---------------------------------------------------------------------------------------------------------------------------------------------------
-inline const QString &StringMathConstant::name() const
-{
-    return name_;
 }
 #endif // STRINGMATHCONSTANT_H
