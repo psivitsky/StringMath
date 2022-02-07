@@ -15,7 +15,7 @@
 class OpInterpreter
 {
 public:
-    virtual void    interpret(QString::const_iterator begin, QString::const_iterator end) const = 0;
+    virtual void    interpret(QString &strExpression) const = 0;
 protected:
     OpInterpreter();
 private:
