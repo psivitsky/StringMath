@@ -27,7 +27,7 @@ public:
                        const QVector<StringMathConstant> &constants,
                        const QVector<StringMathFunction> &functions);
 
-    void    analyze(const QString &strExpression, QString &calcResult) const;
+    void    analyze(const QString &expressionStr, QString &calcResultStr) const;
 private:
     ExpressionAnalyzer(const ExpressionAnalyzer &obj);
     ExpressionAnalyzer &operator=(const ExpressionAnalyzer &obj);
@@ -49,7 +49,11 @@ private:
     QVector<StringMathConstant> constants_;
     QVector<StringMathFunction> functions_;
     //Functions...
-    void    subexpression_finder() const;
+    void    subexpression_brackets_replacer(QString &expressionStr) const;
+    void    subexpression_processor(const QString &expressionStrBefore, QString &expressionStrAfter) const;
+    int     subexpression_begin_search(const QString &expressionStr, int findFrom) const;
+    int     subexpression_end_search(const QString &expressionStr, int findFrom) const;
+
     void    constants_replacer() const;
     void    rounder() const;
 };
