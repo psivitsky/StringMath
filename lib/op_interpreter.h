@@ -22,12 +22,15 @@ public:
 protected:
     OpInterpreter(const QVector<StringMathConstant> &constants);
     //Functions...
-    void    replace_constant();
-    void    operand_checker();
+    void    operand_processing(QString &operand) const;
 private:
     OpInterpreter(const OpInterpreter &obj);
     OpInterpreter &operator=(const OpInterpreter &obj);
     //Containers...
     QVector<StringMathConstant> constants_;
+    //Functions...
+    void    spaces_removing(QString &operand) const;
+    bool    operand_checking(const QString &operand) const;
+    void    constant_replacing(QString &operand) const;
 };
 #endif // OPINTERPRETER_H
