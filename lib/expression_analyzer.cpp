@@ -24,10 +24,8 @@ void ExpressionAnalyzer::analyze(const QString &expressionStr, QString &calcResu
     QString temp_str_1 = expressionStr;
     QString temp_str_2 = "";
 
-    subexpression_brackets_replacer(temp_str_1);
-    subexpression_processor(temp_str_1, temp_str_2);
-
-    constants_replacer();
+    subexpression_brackets_replacing(temp_str_1);
+    subexpression_processing(temp_str_1, temp_str_2);
 
     first_rang_operators_.interpret(temp_str_2);
     second_rang_operators_.interpret(temp_str_2);
@@ -42,7 +40,7 @@ void ExpressionAnalyzer::analyze(const QString &expressionStr, QString &calcResu
  * \param[in,out] expressionStr The expression string with brackets to replace.
 */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-void ExpressionAnalyzer::subexpression_brackets_replacer(QString &expressionStr) const
+void ExpressionAnalyzer::subexpression_brackets_replacing(QString &expressionStr) const
 {
     foreach(QString opening_bracket, opening_brackets)
         expressionStr = expressionStr.replace(opening_bracket, base_opening_bracket);
@@ -60,12 +58,12 @@ void ExpressionAnalyzer::subexpression_brackets_replacer(QString &expressionStr)
  * \param[out] expressionStrAfter The expression string after processing without subexpressions.
 */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-void ExpressionAnalyzer::subexpression_processor(const QString &expressionStrBefore, QString &expressionStrAfter) const
+void ExpressionAnalyzer::subexpression_processing(const QString &expressionStrBefore, QString &expressionStrAfter) const
 {
     int pos = 0;
     while(true)
     {
-        int subexp_begin = subexpression_begin_search(expressionStrBefore, pos);
+        int subexp_begin = subexpression_begin_searching(expressionStrBefore, pos);
         if(subexp_begin == -1)
         {
             expressionStrAfter += expressionStrBefore.mid(pos, expressionStrBefore.length() - pos);
@@ -73,7 +71,7 @@ void ExpressionAnalyzer::subexpression_processor(const QString &expressionStrBef
         }
         else
         {
-            int subexp_end = subexpression_end_search(expressionStrBefore, subexp_begin + 1);
+            int subexp_end = subexpression_end_searching(expressionStrBefore, subexp_begin + 1);
             if(subexp_end == -1)
                 throw StringMathError("ExpressionAnalyzer: the closing bracket is missing!");
 
@@ -99,7 +97,7 @@ void ExpressionAnalyzer::subexpression_processor(const QString &expressionStrBef
  * \return The beginning position of the subexpression (non-negative integer value) or -1 if there is no subexpression.
 */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-int ExpressionAnalyzer::subexpression_begin_search(const QString &expressionStr, int findFrom) const
+int ExpressionAnalyzer::subexpression_begin_searching(const QString &expressionStr, int findFrom) const
 {
     int subexp_start = expressionStr.indexOf(base_opening_bracket, findFrom);
 
@@ -124,7 +122,7 @@ int ExpressionAnalyzer::subexpression_begin_search(const QString &expressionStr,
  * \return The end of the subexpression (non-negative integer value) or -1 if there is no closing bracket.
 */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-int ExpressionAnalyzer::subexpression_end_search(const QString &expressionStr, int findFrom) const
+int ExpressionAnalyzer::subexpression_end_searching(const QString &expressionStr, int findFrom) const
 {
     int subexp_end = findFrom;
 
@@ -147,15 +145,6 @@ int ExpressionAnalyzer::subexpression_end_search(const QString &expressionStr, i
         return -1;
 
     return subexp_end;
-}
-//---------------------------------------------------------------------------------------------------------------------------------------------------
-/*!
- * The mathematical constants replacer function.
-*/
-//---------------------------------------------------------------------------------------------------------------------------------------------------
-void ExpressionAnalyzer::constants_replacer() const
-{
-
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
