@@ -2,23 +2,25 @@
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
  * The constructor.
+ * \param[in] constants The container with constants (StringMathConstant objects).
 */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-SROpInterpreter::SROpInterpreter()
+SROpInterpreter::SROpInterpreter(const QVector<StringMathConstant> &constants) : OpInterpreter(constants)
 {
 
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
  * Second rang operators interpreter function.
- * \param[in,out] strExpression The expression string to interpret as input and the interpreted string as output.
+ * \param[in] expressionStr The expression string to interpret.
+ * \param[out] interpretedExpStr The interpreted expression string.
 */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-void SROpInterpreter::interpret(QString &strExpression) const
+void SROpInterpreter::interpret(const QString &expressionStr, QString &interpretedExpStr) const
 {
     //The expression location - # cos(1+1) -> 1+1.
 
-    double result = calculate(strExpression.begin(), strExpression.end());
+    double result = calculate(expressionStr.begin(), interpretedExpStr.end());
 
     //The string result former - # "cos(" + "2" + ")".
 }

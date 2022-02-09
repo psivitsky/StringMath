@@ -12,16 +12,15 @@
 
 #include    "op_interpreter.h"
 
-#include    <QVector>
-
 #include    "string_math_function.h"
 
 class FuncInterpreter : public OpInterpreter
 {
 public:
-    FuncInterpreter(const QVector<StringMathFunction> &functions);
+    FuncInterpreter(const QVector<StringMathConstant> &constants,
+                    const QVector<StringMathFunction> &functions);
 
-    void    interpret(QString &strExpression) const;
+    void    interpret(const QString &expressionStr, QString &interpretedExpStr) const;
 private:
     FuncInterpreter(const FuncInterpreter &obj);
     FuncInterpreter &operator=(const FuncInterpreter &obj);

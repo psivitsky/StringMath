@@ -2,27 +2,31 @@
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
  * The constructor.
+ * \param[in] constants The container with constants (StringMathConstant objects).
 */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-FROpInterpreter::FROpInterpreter()
+FROpInterpreter::FROpInterpreter(const QVector<StringMathConstant> &constants) : OpInterpreter(constants)
 {
 
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
  * First rang operators interpreter function.
- * \param[in,out] strExpression The expression string to interpret.
+ * \param[in] expressionStr The expression string to interpret.
+ * \param[out] interpretedExpStr The interpreted expression string.
 */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-void FROpInterpreter::interpret(QString &strExpression) const
+void FROpInterpreter::interpret(const QString &expressionStr, QString &interpretedExpStr) const
 {
-    QString result = "";
-    for(QString::const_iterator i = strExpression.begin(); i != strExpression.end(); ++i)
+    interpretedExpStr = "";
+    for(QString::const_iterator i = expressionStr.begin(); i != expressionStr.end(); ++i)
     {
         //The first rang operator finder.
         //If operator is found...
             //Operands extraction.
+            //Constants replacement.
+            //Operands check.
             //Calculation.
-        result += *i;
+        interpretedExpStr += *i;
     }
 }

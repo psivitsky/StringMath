@@ -10,11 +10,7 @@
 #ifndef EXPRESSIONANALYZER_H
 #define EXPRESSIONANALYZER_H
 
-#include    <QVector>
 #include    <QStringList>
-
-#include    "string_math_constant.h"
-#include    "string_math_function.h"
 
 #include    "func_interpreter.h"
 #include    "fr_op_interpreter.h"

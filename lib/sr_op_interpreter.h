@@ -15,9 +15,9 @@
 class SROpInterpreter : public OpInterpreter
 {
 public:
-    SROpInterpreter();
+    SROpInterpreter(const QVector<StringMathConstant> &constants);
 
-    void    interpret(QString &strExpression) const;
+    void    interpret(const QString &expressionStr, QString &interpretedExpStr) const;
 private:
     SROpInterpreter(const SROpInterpreter &obj);
     SROpInterpreter &operator=(const SROpInterpreter &obj);

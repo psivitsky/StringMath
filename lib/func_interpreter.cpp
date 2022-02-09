@@ -2,26 +2,29 @@
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
  * The constructor.
+ * \param[in] constants The container with constants (StringMathConstant objects).
  * \param[in] functions The container with functions (StringMathFunction objects).
 */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-FuncInterpreter::FuncInterpreter(const QVector<StringMathFunction> &functions) : functions_(functions)
+FuncInterpreter::FuncInterpreter(const QVector<StringMathConstant> &constants, const QVector<StringMathFunction> &functions) :
+    OpInterpreter(constants), functions_(functions)
 {
 
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
  * The algebraic function interpreter method.
- * \param[in,out] strExpression The expression string to interpret as input and the interpreted string as output.
+ * \param[in] expressionStr The expression string to interpret.
+ * \param[out] interpretedExpStr The interpreted expression string.
 */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-void FuncInterpreter::interpret(QString &strExpression) const
+void FuncInterpreter::interpret(const QString &expressionStr, QString &interpretedExpStr) const
 {
     QString name = "";
-    extract_name(strExpression, name);
+    extract_name(expressionStr, name);
     check_name(name);
 
-    double argument = extract_argument(strExpression);
+    double argument = extract_argument(expressionStr);
 
     foreach(StringMathFunction function, functions_)
     {

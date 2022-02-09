@@ -15,9 +15,9 @@
 class FROpInterpreter : public OpInterpreter
 {
 public:
-    FROpInterpreter();
+    FROpInterpreter(const QVector<StringMathConstant> &constants);
 
-    void    interpret(QString &strExpression) const;
+    void    interpret(const QString &expressionStr, QString &interpretedExpStr) const;
 private:
     FROpInterpreter(const FROpInterpreter &obj);
     FROpInterpreter &operator=(const FROpInterpreter &obj);
