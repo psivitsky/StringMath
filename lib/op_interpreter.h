@@ -21,6 +21,11 @@ public:
     virtual void    interpret(const QString &expressionStr, QString &interpretedExpStr) const = 0;
 protected:
     OpInterpreter(const QVector<StringMathConstant> &constants);
+    //Constants...
+    const QString   opening_bracket = "(";
+    const QString   closing_bracket = ")";
+
+    static const int    precision = 16;
     //Functions...
     void    operand_processing(QString &operand) const;
 private:

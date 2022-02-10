@@ -68,7 +68,7 @@ void OpInterpreter::constant_replacing(QString &operand) const
     {
         if(constant.name() == operand)
         {
-            operand = QString::number(constant.value(), 'f', constant_replacing_precision);
+            operand = QString::number(constant.value(), 'f', precision);
             return;
         }
     }

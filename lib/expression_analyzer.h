@@ -39,8 +39,8 @@ private:
     int precision_;
 
     FuncInterpreter function_;
-    FROpInterpreter first_rang_operators_;
-    SROpInterpreter second_rang_operators_;
+    FROpInterpreter first_rank_operators_;
+    SROpInterpreter second_rank_operators_;
     //Containers...
     QVector<StringMathConstant> constants_;
     QVector<StringMathFunction> functions_;

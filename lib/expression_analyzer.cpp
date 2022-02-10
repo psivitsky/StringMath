@@ -8,7 +8,7 @@
 */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 ExpressionAnalyzer::ExpressionAnalyzer(int precision, const QVector<StringMathConstant> &constants, const QVector<StringMathFunction> &functions) :
-    precision_(precision), function_(constants, functions), first_rang_operators_(constants), second_rang_operators_(constants),
+    precision_(precision), function_(constants, functions), first_rank_operators_(constants), second_rank_operators_(constants),
     constants_(constants), functions_(functions)
 {
 
@@ -28,8 +28,8 @@ void ExpressionAnalyzer::analyze(const QString &expressionStr, QString &calcResu
     subexpression_brackets_replacing(temp_str_1);
     subexpression_processing(temp_str_1, temp_str_2);
 
-    first_rang_operators_.interpret(temp_str_2, temp_str_1);
-    second_rang_operators_.interpret(temp_str_1, temp_str_2);
+    first_rank_operators_.interpret(temp_str_2, temp_str_1);
+    second_rank_operators_.interpret(temp_str_1, temp_str_2);
     function_.interpret(temp_str_2, temp_str_1);
 
     rounder();
