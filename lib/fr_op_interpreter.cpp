@@ -18,39 +18,35 @@ FROpInterpreter::FROpInterpreter(const QVector<StringMathConstant> &constants) :
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 void FROpInterpreter::interpret(const QString &expressionStr, QString &interpretedExpStr) const
 {
-    interpretedExpStr = "";    
+    interpretedExpStr = "";
 
-    QString::const_iterator index = expressionStr.begin();
+    QString::const_iterator begin = expressionStr.begin();
     if(expressionStr.contains(opening_bracket))
-    {
-        while(*index != opening_bracket)
-            ++index;
-        ++index;
-    }
+        opening_bracket_skipping(begin, expressionStr.end(), interpretedExpStr);
 
     QString operand = "";
     while(true)
     {
-        if(index == expressionStr.end())
+        if(begin == expressionStr.end())
         {
             interpretedExpStr += operand;
             break;
         }
         else
         {
-            if(second_rank_operators.contains(*index))
+            if(second_rank_operators.contains(*begin))
             {
                 interpretedExpStr += operand;
                 operand = "";
-                interpretedExpStr += *index;
-                ++index;
+                interpretedExpStr += *begin;
+                ++begin;
             }
-            else if(first_rank_operators.contains(*index))
-                calculate(index, expressionStr.end(), operand);
+            else if(first_rank_operators.contains(*begin))
+                calculate(begin, expressionStr.end(), operand);
             else
             {
-                operand += *index;
-                ++index;
+                operand += *begin;
+                ++begin;
             }
         }
     }

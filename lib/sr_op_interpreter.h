@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
  * \brief
- * Second rang algebraic operators interpreter
+ * Second rank algebraic operators interpreter
  * \details
  * Class description
  * -----
@@ -16,12 +16,15 @@ class SROpInterpreter : public OpInterpreter
 {
 public:
     SROpInterpreter(const QVector<StringMathConstant> &constants);
-
+    //Functions...
     void    interpret(const QString &expressionStr, QString &interpretedExpStr) const;
 private:
     SROpInterpreter(const SROpInterpreter &obj);
     SROpInterpreter &operator=(const SROpInterpreter &obj);
+    //Constants...
+    const QString       sum_operator = "+";
+    const QString       diff_operator = "-";
     //Functions...
-    double  calculate(QString::const_iterator begin, QString::const_iterator end) const;
+    double  calculate(QString::const_iterator begin, QString::const_iterator end, bool fFirstOperand) const;
 };
 #endif // SROPINTERPRETER_H

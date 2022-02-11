@@ -11,6 +11,28 @@ OpInterpreter::OpInterpreter(const QVector<StringMathConstant> &constants) : con
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
+ * The function of skipping the opening bracket.
+ * \param[in,out] begin The iterator pointing to the first character in the processing string.
+ * \param[in] end The iterator pointing to the character after the last character in the processing string.
+ * \param[out] skippedStr Skipped characters (function name and the opening bracket).
+*/
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+void OpInterpreter::opening_bracket_skipping(QString::const_iterator &begin, QString::const_iterator end, QString &skippedStr) const
+{
+    while((*begin != opening_bracket) && (begin != end))
+    {
+        skippedStr += *begin;
+        ++begin;
+    }
+
+    if(begin == end)
+        throw StringMathError("OpInterpreter: there is no opening bracket!");
+
+    skippedStr += *begin;
+    ++begin;
+}
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+/*!
  * Operand processing function.
  * \param[in,out] operand The operand string at the input and the processing result at the output.
 */

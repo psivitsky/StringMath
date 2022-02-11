@@ -27,14 +27,15 @@ protected:
 
     static const int    precision = 16;
     //Functions...
+    void    opening_bracket_skipping(QString::const_iterator &begin, QString::const_iterator end, QString &skippedStr) const;
     void    operand_processing(QString &operand) const;
+    void    spaces_removing(QString &operand) const;
 private:
     OpInterpreter(const OpInterpreter &obj);
     OpInterpreter &operator=(const OpInterpreter &obj);
     //Containers...
     QVector<StringMathConstant> constants_;
     //Functions...
-    void    spaces_removing(QString &operand) const;
     bool    operand_checking(const QString &operand) const;
     void    constant_replacing(QString &operand) const;
 };
