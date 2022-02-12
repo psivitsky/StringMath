@@ -45,7 +45,7 @@ void SROpInterpreter::interpret(const QString &expressionStr, QString &interpret
 double SROpInterpreter::calculate(QString::const_iterator begin, QString::const_iterator end, bool fFirstOperand) const
 {
     QString operand = "";
-    while((begin == end) || (*begin == closing_bracket))
+    while((begin != end) || (*begin != closing_bracket))
     {
         if(*begin == sum_operator)
         {

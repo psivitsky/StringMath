@@ -46,20 +46,20 @@ void OpInterpreter::operand_processing(QString &operand) const
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
  * Spaces removing function.
- * \param[in,out] operand Operand string at the input and the operand string without spaces at the output.
+ * \param[in,out] str The input string with spaces and the output string without spaces.
 */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-void OpInterpreter::spaces_removing(QString &operand) const
+void OpInterpreter::spaces_removing(QString &str) const
 {
     while(true)
     {
-        if(operand.isEmpty())
+        if(str.isEmpty())
             break;
 
-        if(operand.at(0) == " ")
-            operand.remove(0, 1);
-        else if(operand.at(operand.length() - 1) == " ")
-            operand.remove(operand.length() - 1, 1);
+        if(str.at(0) == " ")
+            str.remove(0, 1);
+        else if(str.at(str.length() - 1) == " ")
+            str.remove(str.length() - 1, 1);
         else
             break;
     }
@@ -95,5 +95,5 @@ void OpInterpreter::constant_replacing(QString &operand) const
         }
     }
 
-    throw StringMathError("OpInterpreter: the operand " + operand + " is invalid!");
+    throw StringMathError("OpInterpreter: the operand \"" + operand + "\" is invalid!");
 }
