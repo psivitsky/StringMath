@@ -49,7 +49,5 @@ private:
     void    subexpression_processing(const QString &expressionStrBefore, QString &expressionStrAfter) const;
     int     subexpression_begin_searching(const QString &expressionStr, int findFrom) const;
     int     subexpression_end_searching(const QString &expressionStr, int findFrom) const;
-
-    void    rounder() const;
 };
 #endif // EXPRESSIONANALYZER_H

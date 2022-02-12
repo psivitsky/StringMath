@@ -30,9 +30,9 @@ void ExpressionAnalyzer::analyze(const QString &expressionStr, QString &calcResu
 
     first_rank_operators_.interpret(temp_str_2, temp_str_1);
     second_rank_operators_.interpret(temp_str_1, temp_str_2);
-    function_.interpret(temp_str_2, temp_str_1);
+    function_.interpret(temp_str_2, calcResultStr);
 
-    rounder();
+    calcResultStr = QString::number(calcResultStr.toDouble(), 'f', precision_);
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
@@ -146,13 +146,4 @@ int ExpressionAnalyzer::subexpression_end_searching(const QString &expressionStr
         return -1;
 
     return subexp_end;
-}
-//---------------------------------------------------------------------------------------------------------------------------------------------------
-/*!
- * The expression calculation result rounder function.
-*/
-//---------------------------------------------------------------------------------------------------------------------------------------------------
-void ExpressionAnalyzer::rounder() const
-{
-
 }
