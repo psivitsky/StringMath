@@ -72,7 +72,7 @@ void ExpressionAnalyzer::subexpression_processing(const QString &expressionStrBe
         }
         else
         {
-            int subexp_end = subexpression_end_searching(expressionStrBefore, subexp_begin + 1);
+            int subexp_end = subexpression_end_searching(expressionStrBefore, subexp_begin);
             if(subexp_end == -1)
                 throw StringMathError("ExpressionAnalyzer: the closing bracket is missing!");
 
@@ -134,7 +134,7 @@ int ExpressionAnalyzer::subexpression_end_searching(const QString &expressionStr
             ++subsubexp_number;
         if(expressionStr.at(subexp_end) == base_closing_bracket)
         {
-            if(subsubexp_number == 0)
+            if(subsubexp_number == 1)
                 break;
             else
                 --subsubexp_number;

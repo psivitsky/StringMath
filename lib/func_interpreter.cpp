@@ -69,7 +69,7 @@ void FuncInterpreter::extract_name(QString::const_iterator &begin, QString::cons
 double FuncInterpreter::extract_argument(QString::const_iterator begin, QString::const_iterator end) const
 {
     QString argument = "";
-    while((begin != end) || (*begin != closing_bracket))
+    while((begin != end) && (*begin != closing_bracket))
     {
         argument += *begin;
         ++begin;

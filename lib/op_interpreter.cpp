@@ -58,7 +58,11 @@ void OpInterpreter::spaces_removing(QString &str) const
 
         if(str.at(0) == " ")
             str.remove(0, 1);
+        else if(str.at(0) == "\t")
+            str.remove(0, 1);
         else if(str.at(str.length() - 1) == " ")
+            str.remove(str.length() - 1, 1);
+        else if(str.at(str.length() - 1) == "\t")
             str.remove(str.length() - 1, 1);
         else
             break;
@@ -73,7 +77,7 @@ void OpInterpreter::spaces_removing(QString &str) const
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 bool OpInterpreter::operand_checking(const QString &operand) const
 {
-    QRegExp checker("^\\d+(.\\d*)?$");
+    QRegExp checker("^(-)?\\d+(\\.\\d*)?$");
     if(checker.exactMatch(operand))
         return true;
     return false;
