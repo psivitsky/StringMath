@@ -29,7 +29,6 @@ void    sum_rand_tests();
 void    diff_rand_tests();
 void    prod_rand_tests();
 void    div_rand_tests();
-void    pow_rand_tests();
 
 void    file_tests();
 
@@ -39,10 +38,10 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
-//    sum_rand_tests();
-//    diff_rand_tests();
-//    prod_rand_tests();
-//    div_rand_tests();
+    sum_rand_tests();
+    diff_rand_tests();
+    prod_rand_tests();
+    div_rand_tests();
 
     file_tests();
 
@@ -269,6 +268,7 @@ void div_rand_tests()
 void file_tests()
 {
     QTextStream out(stdout);
+    out << "Tests from the specified file...\n";
 
     QFile f(file_name);
     if(f.open(QFile::ReadOnly))

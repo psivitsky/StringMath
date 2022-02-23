@@ -10,21 +10,18 @@
 #ifndef SROPINTERPRETER_H
 #define SROPINTERPRETER_H
 
-#include    "op_interpreter.h"
+#include    "string_math_base.h"
 
-class SROpInterpreter : public OpInterpreter
+#include    <QVector>
+
+class SROpInterpreter
 {
 public:
-    SROpInterpreter(const QVector<StringMathConstant> &constants);
+    SROpInterpreter();
     //Functions...
-    void    interpret(const QString &expressionStr, QString &interpretedExpStr) const;
+    double  interpret(const QVector<StringMathSymbol> &symbols) const;
 private:
     SROpInterpreter(const SROpInterpreter &obj);
     SROpInterpreter &operator=(const SROpInterpreter &obj);
-    //Constants...
-    const QString       sum_operator = "+";
-    const QString       diff_operator = "-";
-    //Functions...
-    double  calculate(QString::const_iterator begin, QString::const_iterator end, bool fFirstOperand) const;
 };
 #endif // SROPINTERPRETER_H

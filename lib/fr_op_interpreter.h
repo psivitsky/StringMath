@@ -10,26 +10,35 @@
 #ifndef FROPINTERPRETER_H
 #define FROPINTERPRETER_H
 
-#include    "op_interpreter.h"
+#include    "string_math_base.h"
 
-#include    <QStringList>
+#include    <QVector>
 
-class FROpInterpreter : public OpInterpreter
+class FROpInterpreter
 {
 public:
-    FROpInterpreter(const QVector<StringMathConstant> &constants);
+    FROpInterpreter();
     //Functions...
-    void    interpret(const QString &expressionStr, QString &interpretedExpStr) const;
+    void    interpret(const QVector<StringMathSymbol> &symbolsBefore,
+                      QVector<StringMathSymbol> &symbolsAfter) const;
 private:
     FROpInterpreter(const FROpInterpreter &obj);
     FROpInterpreter &operator=(const FROpInterpreter &obj);
     //Constants...
-    const QString       mult_operator = "*";
-    const QString       div_operator = "/";
-
-    const QStringList   first_rank_operators = {"*", "/"};
-    const QStringList   second_rank_operators = {"+", "-"};
+    const QVector<StringMathSymbolType> first_rank_operators = {multOperatorType, divOperatorType};
+    const QVector<StringMathSymbolType> second_rank_operators = {sumOperatorType, diffOperatorType};
     //Functions...
-    void    calculate(QString::const_iterator &begin, QString::const_iterator end, QString &leftOperand) const;
+    void    operation_parser(QVector<StringMathSymbol>::const_iterator &begin,
+                             QVector<StringMathSymbol>::const_iterator end,
+                             StringMathSymbol &centerOperator,
+                             StringMathSymbol &rightOperand) const;
+
+    void    first_rank_operation_processing(StringMathSymbol &leftOperand,
+                                            const StringMathSymbol &centerOperator,
+                                            const StringMathSymbol &rightOperand) const;
+    void    second_rank_operation_processing(StringMathSymbol &leftOperand,
+                                             const StringMathSymbol &centerOperator,
+                                             const StringMathSymbol &rightOperand,
+                                             QVector<StringMathSymbol> &symbolsAfter) const;
 };
 #endif // FROPINTERPRETER_H

@@ -20,8 +20,6 @@ add_library(StringMath SHARED
     string_math_function.cpp
     expression_analyzer.h
     expression_analyzer.cpp
-    op_interpreter.h
-    op_interpreter.cpp
     fr_op_interpreter.h
     fr_op_interpreter.cpp
     sr_op_interpreter.h

@@ -1,93 +1,126 @@
 #include "fr_op_interpreter.h"
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-/*!
- * The constructor.
- * \param[in] constants The container with constants (StringMathConstant objects).
-*/
+//! \details The constructor.
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-FROpInterpreter::FROpInterpreter(const QVector<StringMathConstant> &constants) : OpInterpreter(constants)
+FROpInterpreter::FROpInterpreter()
 {
 
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
  * First rank operators interpreter function.
- * \param[in] expressionStr The expression string to interpret.
- * \param[out] interpretedExpStr The interpreted expression string.
+ * \param[in] symbolsBefore Expression symbols to interpret.
+ * \param[out] symbolsAfter Interpreted expression symbols.
 */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-void FROpInterpreter::interpret(const QString &expressionStr, QString &interpretedExpStr) const
+void FROpInterpreter::interpret(const QVector<StringMathSymbol> &symbolsBefore, QVector<StringMathSymbol> &symbolsAfter) const
 {
-    interpretedExpStr = "";
+    symbolsAfter.clear();
 
-    QString::const_iterator begin = expressionStr.begin();
-    if(expressionStr.contains(opening_bracket))
-        opening_bracket_skipping(begin, expressionStr.end(), interpretedExpStr);
+    if(symbolsBefore.isEmpty())
+        throw StringMathError("FROpInterpreter: the expression is empty!");
 
-    QString operand = "";
+    StringMathSymbol    left_operand;
+    StringMathSymbol    center_operator;
+    StringMathSymbol    right_operand;
+
+    QVector<StringMathSymbol>::const_iterator iterator = symbolsBefore.begin();
+
+    left_operand = *iterator;
+    ++iterator;
+
     while(true)
     {
-        if(begin == expressionStr.end())
+        if(iterator == symbolsBefore.end())
         {
-            interpretedExpStr += operand;
+            symbolsAfter.push_back(left_operand);
             break;
         }
+
+        operation_parser(iterator, symbolsBefore.end(), center_operator, right_operand);
+
+        if(first_rank_operators.contains(center_operator.type))
+            first_rank_operation_processing(left_operand, center_operator, right_operand);
+        else if(second_rank_operators.contains(center_operator.type))
+            second_rank_operation_processing(left_operand, center_operator, right_operand, symbolsAfter);
         else
-        {
-            if(second_rank_operators.contains(*begin))
-            {
-                interpretedExpStr += operand;
-                operand = "";
-                interpretedExpStr += *begin;
-                ++begin;
-            }
-            else if(first_rank_operators.contains(*begin))
-                calculate(begin, expressionStr.end(), operand);
-            else
-            {
-                operand += *begin;
-                ++begin;
-            }
-        }
+            throw StringMathError("FROpInterpreter: the expression contains an invalid operator!");
     }
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
- * The first rank operator calculation function.\n
- * At the end of processing, the "begin" iterator points to the next operator, the closing bracket or the end of the string.\n
- * The calculation result will be used as the left operand for the next operation.
- * \param[in,out] begin The iterator pointing to the first character in the processing string.
- * \param[in] end The iterator pointing to the character after the last character in the processing string.
- * \param[in,out] leftOperand The left operand of the operator and the result of the calculation.
+ * The algebraic operation parser function.\n
+ * An algebraic operation consists of three elements: a left operand, an operator, and a right operand.
+ * The left operand is already known, so the function extracts the operator and the right operand.\n
+ * After parsing, the iterator "begin" will be pointing to the next operator.
+ * \param[in,out] begin The iterator pointing to the operator in the parsing container.
+ * \param[in] end The iterator pointing to a symbol after the last symbol in the parsing container.
+ * \param[out] centerOperator The operator.
+ * \param[out] rightOperand The right operand.
 */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-void FROpInterpreter::calculate(QString::const_iterator &begin, QString::const_iterator end, QString &leftOperand) const
+void FROpInterpreter::operation_parser(QVector<StringMathSymbol>::const_iterator &begin,
+                                       QVector<StringMathSymbol>::const_iterator end,
+                                       StringMathSymbol &centerOperator,
+                                       StringMathSymbol &rightOperand) const
 {
-    QString first_rank_operator = *begin;
+    centerOperator = *begin;
     ++begin;
 
-    QString right_operand = "";
-    while(begin != end)
-    {
-        if(first_rank_operators.contains(*begin))
-            break;
-        else if(second_rank_operators.contains(*begin))
-            break;
-        else if(*begin == closing_bracket)
-            break;
-        else
-            right_operand += *begin;
-        ++begin;
-    }
+    if(begin == end)
+        throw StringMathError("FROpInterpreter: the right operand is missing!");
 
-    operand_processing(leftOperand);
-    operand_processing(right_operand);
+    rightOperand = *begin;
+    ++begin;
+}
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+/*!
+ * The first rank algebraic operation processing function.\n
+ * The processing result will be stored in the "leftOperand" structure.
+ * \param[in,out] leftOperand The left operand.
+ * \param[in] centerOperator The first rank operator.
+ * \param[in] rightOperand The right operand.
+*/
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+void FROpInterpreter::first_rank_operation_processing(StringMathSymbol &leftOperand,
+                                                      const StringMathSymbol &centerOperator,
+                                                      const StringMathSymbol &rightOperand) const
+{
+    if(leftOperand.type != operandType)
+        throw StringMathError("FROpInterpreter: the left operand is invalid!");
 
-    QString calculation_result = "";
-    if(first_rank_operator == mult_operator)
-        calculation_result = QString::number(leftOperand.toDouble() * right_operand.toDouble(), 'f', precision);
+    if(rightOperand.type != operandType)
+        throw StringMathError("FROpInterpreter: the right operand is invalid!");
+
+    double calc_result = 0.;
+    if(centerOperator.type == multOperatorType)
+        calc_result = leftOperand.value * rightOperand.value;
+    else if(centerOperator.type == divOperatorType)
+        calc_result = leftOperand.value / rightOperand.value;
     else
-        calculation_result = QString::number(leftOperand.toDouble() / right_operand.toDouble(), 'f', precision);
+        throw StringMathError("FROpInterpreter: there is no such first rank operator!");
 
-    leftOperand = calculation_result;
+    leftOperand.value = calc_result;
+}
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+/*!
+ * The second rank algebraic operation processing function.
+ * \param[in,out] leftOperand The left operand.
+ * \param[in] centerOperator The second rank operator.
+ * \param[in] rightOperand The right operand.
+ * \param[out] symbolsAfter Interpreted expression symbols.
+*/
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+void FROpInterpreter::second_rank_operation_processing(StringMathSymbol &leftOperand, const StringMathSymbol &centerOperator,
+                                                       const StringMathSymbol &rightOperand, QVector<StringMathSymbol> &symbolsAfter) const
+{
+    if((leftOperand.type != operandType) && (leftOperand.type != emptyOperandType))
+        throw StringMathError("FROpInterpreter: the left operand is invalid!");
+
+    if(rightOperand.type != operandType)
+        throw StringMathError("FROpInterpreter: the right operand is invalid!");
+
+    symbolsAfter.push_back(leftOperand);
+    symbolsAfter.push_back(centerOperator);
+    leftOperand = rightOperand;
 }

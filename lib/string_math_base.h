@@ -26,6 +26,19 @@ private:
     QString msg;
 };
 
+enum StringMathSymbolType {invalidType, operandType, emptyOperandType, multOperatorType, divOperatorType, sumOperatorType, diffOperatorType};
+
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+/*!
+ * StringMath expression symbol.
+*/
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+struct StringMathSymbol
+{
+    double                  value = 0.;
+    StringMathSymbolType    type = invalidType;
+};
+
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
  * StringMathFunction implementations.

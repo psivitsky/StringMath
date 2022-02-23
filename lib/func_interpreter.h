@@ -10,17 +10,17 @@
 #ifndef FUNCINTERPRETER_H
 #define FUNCINTERPRETER_H
 
-#include    "op_interpreter.h"
-
+#include    "string_math_base.h"
 #include    "string_math_function.h"
 
-class FuncInterpreter : public OpInterpreter
+#include    <QVector>
+
+class FuncInterpreter
 {
 public:
-    FuncInterpreter(const QVector<StringMathConstant> &constants,
-                    const QVector<StringMathFunction> &functions);
+    FuncInterpreter(const QVector<StringMathFunction> &functions);
     //Methods...
-    void    interpret(const QString &expressionStr, QString &interpretedExpStr) const;
+    double  interpret(double funcArgument, const QString &funcName) const;
 private:
     FuncInterpreter(const FuncInterpreter &obj);
     FuncInterpreter &operator=(const FuncInterpreter &obj);
