@@ -24,17 +24,17 @@
  * Code example
  * -----
  * \code
+ *
+ * StringMath calculator;
+ *
  * try
  * {
- *     QString exp_str = "6/2*(2+1)";
- *
- *     StringMath obj;
- *     double result = obj.calculate(exp_str);
- *     //The result will be 9.
+ *     double result = calculator.calculate(" 6 / 2 * (2 + 1) ");
+ *     // The result will be "9".
  * }
  * catch(StringMathError &err)
  * {
- *     //Error handling (use err.what()).
+ *     // Error handling (use err.what()).
  * }
  * \endcode
  */
