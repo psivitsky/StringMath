@@ -41,6 +41,9 @@ class STRINGMATH_EXPORT StringMathConstant
 public:
     StringMathConstant();
     StringMathConstant(const QString& constantName, double constantValue);
+    StringMathConstant(const StringMathConstant& obj) = default;
+    StringMathConstant& operator=(const StringMathConstant& obj) = default;
+    ~StringMathConstant() = default;
     // Functions...
     friend bool operator==(const StringMathConstant& obj1,
                            const StringMathConstant& obj2);

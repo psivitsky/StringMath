@@ -48,6 +48,9 @@ class STRINGMATH_EXPORT StringMath
 {
 public:
     StringMath();
+    StringMath(const StringMath& obj) = delete;
+    StringMath& operator=(const StringMath& obj) = delete;
+    ~StringMath() = default;
     // Functions...
     void add_constant(const StringMathConstant& newConstant);
     void replace_constant(const QString& existingConstantName,
@@ -65,8 +68,6 @@ public:
     QString& calculate(const QString& strExpression, int precision) const;
 
 private:
-    StringMath(const StringMath& obj);
-    StringMath& operator=(const StringMath& obj);
     // Constants...
     static const int min_precision = 0;
     static const int max_precision = 16;

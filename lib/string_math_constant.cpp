@@ -8,7 +8,7 @@ StringMathConstant::StringMathConstant() : value_(0.), name_("")
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
  * The constructor.
- * \param[in] constantName Constant name.
+ * \param[in] constantName Constant name (three letters or numbers).
  * \param[in] constantValue Constant value.
  */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
@@ -23,7 +23,8 @@ StringMathConstant::StringMathConstant(const QString& constantName,
  * Overload of the equality operator.
  * \param[in] obj1 The left operand.
  * \param[in] obj2 The right operand.
- * \return The comparison result: true - operands have equal name and value,
+ * \return The comparison result:
+ * true - operands have equal name and value,
  * false - operands don't have equal name or value.
  */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
@@ -36,7 +37,7 @@ bool operator==(const StringMathConstant& obj1, const StringMathConstant& obj2)
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
  * Constant setter function.
- * \param[in] constantName Constant name.
+ * \param[in] constantName Constant name (three letters or numbers).
  * \param[in] constantValue Constant value.
  */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
@@ -72,13 +73,18 @@ double StringMathConstant::value() const
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
  * The function of setting a constant name.
- * \param[in] constantName Constant name.
+ * \param[in] constantName Constant name (three letters or numbers).
  */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 void StringMathConstant::set_name(const QString& constantName)
 {
-    QRegExp checker("^\\w{1,3}$");
-    if(!checker.exactMatch(constantName))
+    QRegExp checker_1("^\\d{1,3}$");
+    if(checker_1.exactMatch(constantName))
+        throw StringMathError("StringMathConstant: a constant name consisting "
+                              "of digits is meaningless!");
+
+    QRegExp checker_2("^\\w{1,3}$");
+    if(!checker_2.exactMatch(constantName))
         throw StringMathError("StringMathConstant: invalid constant name!");
 
     name_ = constantName;
