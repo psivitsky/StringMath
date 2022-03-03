@@ -34,7 +34,7 @@ private:
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 inline ExpressionOperand::ExpressionOperand() : ExpressionSymbol(), value_(0.)
 {
-    type_ = operandType;
+    symbol_type_ = operandType;
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
@@ -72,6 +72,6 @@ public:
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 inline ExpressionEmptyOperand::ExpressionEmptyOperand() : ExpressionSymbol()
 {
-    type_ = emptyOperandType;
+    symbol_type_ = emptyOperandType;
 }
 #endif // EXPRESSIONOPERAND_H

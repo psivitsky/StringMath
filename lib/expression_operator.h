@@ -1,44 +1,50 @@
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
  * \brief
- * Expression symbol
+ * Expression operator
  * \details
  * Class description
  * -----
- * This is the base class of expression symbols. It provides the type of symbol.
+ * This class specifies the operator of the expression.
+ * It is derived from the ExpressionSymbol class.
+ * The class object provides the type of the operator.
  */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-#ifndef EXPRESSIONSYMBOL_H
-#define EXPRESSIONSYMBOL_H
+#ifndef EXPRESSIONOPERATOR_H
+#define EXPRESSIONOPERATOR_H
 
-enum ExpressionSymbolType
+#include "expression_symbol.h"
+
+enum ExpressionOperatorType
 {
-    invalidType,
-    subExpressionType,
-    operatorType,
-    operandType,
-    emptyOperandType
+    defaultType,
+    multType,
+    divType,
+    sumType,
+    diffType
 };
 
-class ExpressionSymbol
+class ExpressionOperator : public ExpressionSymbol
 {
 public:
+    ExpressionOperator();
+    ExpressionOperator(const ExpressionOperator& obj) = default;
+    ExpressionOperator& operator=(const ExpressionOperator& obj) = default;
+    ~ExpressionOperator() = default;
     // Functions...
-    ExpressionSymbolType symbol_type();
+    ExpressionOperatorType operator_type();
 
-protected:
-    ExpressionSymbol();
-    ExpressionSymbol(const ExpressionSymbol& obj) = default;
-    ExpressionSymbol& operator=(const ExpressionSymbol& obj) = default;
-    virtual ~ExpressionSymbol() = default;
+private:
     // Variables...
-    ExpressionSymbolType symbol_type_;
+    ExpressionOperatorType operator_type_;
 };
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 //! \details The constructor.
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-inline ExpressionSymbol::ExpressionSymbol() : symbol_type_(invalidType)
+inline ExpressionOperator::ExpressionOperator()
+    : ExpressionSymbol(), operator_type_(defaultType)
 {
+    symbol_type_ = operandType;
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
@@ -46,8 +52,8 @@ inline ExpressionSymbol::ExpressionSymbol() : symbol_type_(invalidType)
  * \return Symbol type.
  */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-inline ExpressionSymbolType ExpressionSymbol::symbol_type()
+inline ExpressionOperatorType ExpressionOperator::operator_type()
 {
-    return symbol_type_;
+    return operator_type_;
 }
-#endif // EXPRESSIONSYMBOL_H
+#endif // EXPRESSIONOPERATOR_H
