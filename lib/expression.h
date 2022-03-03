@@ -1,88 +1,87 @@
-#ifndef EXPRESSIONOPERAND_H
-#define EXPRESSIONOPERAND_H
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+/*!
+ * \brief
+ * Expression operator
+ * \details
+ * Class description
+ * -----
+ * This class specifies an expression.
+ * It is derived from the ExpressionSymbol class.
+ * The class object contains symbols and subexpressions.
+ */
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+#ifndef EXPRESSION_H
+#define EXPRESSION_H
 
 #include "expression_symbol.h"
 
-//---------------------------------------------------------------------------------------------------------------------------------------------------
-/*!
- * \brief
- * Expression operand
- * \details
- * Class description
- * -----
- * This class specifies the operand of the expression.
- * It is derived from the ExpressionSymbol class.
- * The class object provides the value of the operand.
- */
-//---------------------------------------------------------------------------------------------------------------------------------------------------
-class ExpressionOperand : public ExpressionSymbol
+#include <QVector>
+
+class Expression : public ExpressionSymbol
 {
 public:
-    ExpressionOperand();
-    ExpressionOperand(const ExpressionOperand& obj) = default;
-    ExpressionOperand& operator=(const ExpressionOperand& obj) = default;
-    ~ExpressionOperand() = default;
+    Expression();
+    Expression(const Expression& obj) = default;
+    Expression& operator=(const Expression& obj) = default;
+    ~Expression() = default;
     // Functions...
-    void   set_value(double operandValue);
-    double value() const;
+    void                             add(ExpressionSymbol& symbol);
+    const QVector<ExpressionSymbol>& symbols() const;
+
+    void           set_function_name(const QString& functionName);
+    const QString& function_name() const;
 
 private:
     // Variables...
-    double value_;
+    QString function_name_;
+    // Containers...
+    QVector<ExpressionSymbol> symbols_;
 };
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 //! \details The constructor.
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-inline ExpressionOperand::ExpressionOperand() : ExpressionSymbol(), value_(0.)
+inline Expression::Expression() : ExpressionSymbol()
 {
-    symbol_type_ = operandType;
+    symbol_type_ = expressionType;
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
- * The function of setting the operand value.
- * \param[in] operandValue Operand value.
+ * The function of adding a new symbol.
+ * \param[in] symbol New symbol.
  */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-inline void ExpressionOperand::set_value(double operandValue)
+inline void Expression::add(ExpressionSymbol& symbol)
 {
-    value_ = operandValue;
+    symbols_.push_back(symbol);
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
- * The function of getting the operand value.
- * \return Operand value.
+ * The function of getting the expression symbols.
+ * \return Container of expression symbols.
  */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-inline double ExpressionOperand::value() const
+inline const QVector<ExpressionSymbol>& Expression::symbols() const
 {
-    return value_;
+    return symbols_;
 }
-
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
- * \brief
- * Expression empty operand
- * \details
- * Class description
- * -----
- * This class specifies an empty operand of the expression.
- * It is derived from the ExpressionSymbol class.
+ * Method for setting the name of the expression function.
+ * \param[in] functionName The name of the expression function.
  */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-class ExpressionEmptyOperand : public ExpressionSymbol
+inline void Expression::set_function_name(const QString& functionName)
 {
-public:
-    ExpressionEmptyOperand();
-    ExpressionEmptyOperand(const ExpressionEmptyOperand& obj) = default;
-    ExpressionEmptyOperand&
-    operator=(const ExpressionEmptyOperand& obj) = default;
-    ~ExpressionEmptyOperand() = default;
-};
-//---------------------------------------------------------------------------------------------------------------------------------------------------
-//! \details The constructor.
-//---------------------------------------------------------------------------------------------------------------------------------------------------
-inline ExpressionEmptyOperand::ExpressionEmptyOperand() : ExpressionSymbol()
-{
-    symbol_type_ = emptyOperandType;
+    function_name_ = functionName;
 }
-#endif // EXPRESSIONOPERAND_H
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+/*!
+ * Method for getting the name of the expression function.
+ * \return The name of the expression function.
+ */
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+inline const QString& Expression::function_name() const
+{
+    return function_name_;
+}
+#endif // EXPRESSION_H

@@ -14,7 +14,7 @@
 enum ExpressionSymbolType
 {
     invalidType,
-    subExpressionType,
+    expressionType,
     operatorType,
     operandType,
     emptyOperandType
@@ -24,7 +24,7 @@ class ExpressionSymbol
 {
 public:
     // Functions...
-    ExpressionSymbolType symbol_type();
+    ExpressionSymbolType symbol_type() const;
 
 protected:
     ExpressionSymbol();
@@ -46,7 +46,7 @@ inline ExpressionSymbol::ExpressionSymbol() : symbol_type_(invalidType)
  * \return Symbol type.
  */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-inline ExpressionSymbolType ExpressionSymbol::symbol_type()
+inline ExpressionSymbolType ExpressionSymbol::symbol_type() const
 {
     return symbol_type_;
 }

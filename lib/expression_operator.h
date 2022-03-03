@@ -32,7 +32,8 @@ public:
     ExpressionOperator& operator=(const ExpressionOperator& obj) = default;
     ~ExpressionOperator() = default;
     // Functions...
-    ExpressionOperatorType operator_type();
+    void set_operator_type(ExpressionOperatorType operatorType);
+    ExpressionOperatorType operator_type() const;
 
 private:
     // Variables...
@@ -48,11 +49,22 @@ inline ExpressionOperator::ExpressionOperator()
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
- * The function of getting the type of symbol.
- * \return Symbol type.
+ * The function of setting the operator type.
+ * \param[in] operatorType Operator type.
  */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-inline ExpressionOperatorType ExpressionOperator::operator_type()
+inline void
+ExpressionOperator::set_operator_type(ExpressionOperatorType operatorType)
+{
+    operator_type_ = operatorType;
+}
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+/*!
+ * The function of getting the operator type.
+ * \return Operator type.
+ */
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+inline ExpressionOperatorType ExpressionOperator::operator_type() const
 {
     return operator_type_;
 }
