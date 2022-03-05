@@ -4,123 +4,144 @@
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 FROpInterpreter::FROpInterpreter()
 {
-
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
  * First rank operators interpreter function.
  * \param[in] symbolsBefore Expression symbols to interpret.
  * \param[out] symbolsAfter Interpreted expression symbols.
-*/
+ */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-void FROpInterpreter::interpret(const QVector<StringMathSymbol> &symbolsBefore, QVector<StringMathSymbol> &symbolsAfter) const
+void FROpInterpreter::interpret(const QVector<ExpressionSymbol*>& symbolsBefore,
+                                QVector<ExpressionSymbol*>& symbolsAfter) const
 {
-    symbolsAfter.clear();
-
     if(symbolsBefore.isEmpty())
         throw StringMathError("FROpInterpreter: the expression is empty!");
 
-    StringMathSymbol    left_operand;
-    StringMathSymbol    center_operator;
-    StringMathSymbol    right_operand;
+    if(!symbolsAfter.isEmpty())
+    {
+        foreach(ExpressionSymbol* symbol, symbolsAfter)
+            delete symbol;
+        symbolsAfter.clear();
+    }
 
-    QVector<StringMathSymbol>::const_iterator iterator = symbolsBefore.begin();
+    QVector<ExpressionSymbol*>::const_iterator iterator = symbolsBefore.begin();
 
-    left_operand = *iterator;
+    ExpressionOperand* left_operand =
+        operand_checker(iterator, symbolsBefore.end());
     ++iterator;
 
-    while(true)
+    ExpressionOperator* expression_operator = nullptr;
+    ExpressionOperand*  right_operand = nullptr;
+
+    while(iterator != symbolsBefore.end())
     {
-        if(iterator == symbolsBefore.end())
+        expression_operator = operator_checker(iterator, symbolsBefore.end());
+        ++iterator;
+        right_operand = operand_checker(iterator, symbolsBefore.end());
+        ++iterator;
+
+        if(first_rank_operators.contains(expression_operator->operator_type()))
+        {
+            left_operand = first_rank_operation_processing(
+                left_operand, expression_operator, right_operand);
+        }
+        else if(second_rank_operators.contains(
+                    expression_operator->operator_type()))
         {
             symbolsAfter.push_back(left_operand);
-            break;
+            symbolsAfter.push_back(expression_operator);
+
+            left_operand = right_operand;
         }
-
-        operation_parser(iterator, symbolsBefore.end(), center_operator, right_operand);
-
-        if(first_rank_operators.contains(center_operator.type))
-            first_rank_operation_processing(left_operand, center_operator, right_operand);
-        else if(second_rank_operators.contains(center_operator.type))
-            second_rank_operation_processing(left_operand, center_operator, right_operand, symbolsAfter);
         else
-            throw StringMathError("FROpInterpreter: the expression contains an invalid operator!");
+            throw StringMathError("FROpInterpreter: the expression contains an "
+                                  "invalid operator!");
     }
+
+    symbolsAfter.push_back(left_operand);
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
- * The algebraic operation parser function.\n
- * An algebraic operation consists of three elements: a left operand, an operator, and a right operand.
- * The left operand is already known, so the function extracts the operator and the right operand.\n
- * After parsing, the iterator "begin" will be pointing to the next operator.
- * \param[in,out] begin The iterator pointing to the operator in the parsing container.
- * \param[in] end The iterator pointing to a symbol after the last symbol in the parsing container.
- * \param[out] centerOperator The operator.
- * \param[out] rightOperand The right operand.
-*/
+ * Operator checker function.
+ * \param[in] begin The iterator pointing to the operator in the parsing
+ * container.
+ * \param[in] end The iterator pointing to a symbol after the last
+ * symbol in the parsing container.
+ * \return centerOperator Pointer to the operator.
+ */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-void FROpInterpreter::operation_parser(QVector<StringMathSymbol>::const_iterator &begin,
-                                       QVector<StringMathSymbol>::const_iterator end,
-                                       StringMathSymbol &centerOperator,
-                                       StringMathSymbol &rightOperand) const
+ExpressionOperator* FROpInterpreter::operator_checker(
+    QVector<ExpressionSymbol*>::const_iterator begin,
+    QVector<ExpressionSymbol*>::const_iterator end) const
 {
-    centerOperator = *begin;
-    ++begin;
-
     if(begin == end)
-        throw StringMathError("FROpInterpreter: the right operand is missing!");
+        throw StringMathError("FROpInterpreter: the expression syntax error!");
 
-    rightOperand = *begin;
-    ++begin;
-}
-//---------------------------------------------------------------------------------------------------------------------------------------------------
-/*!
- * The first rank algebraic operation processing function.\n
- * The processing result will be stored in the "leftOperand" structure.
- * \param[in,out] leftOperand The left operand.
- * \param[in] centerOperator The first rank operator.
- * \param[in] rightOperand The right operand.
-*/
-//---------------------------------------------------------------------------------------------------------------------------------------------------
-void FROpInterpreter::first_rank_operation_processing(StringMathSymbol &leftOperand,
-                                                      const StringMathSymbol &centerOperator,
-                                                      const StringMathSymbol &rightOperand) const
-{
-    if(leftOperand.type != operandType)
-        throw StringMathError("FROpInterpreter: the left operand is invalid!");
+    ExpressionOperator* expression_operator = 0;
 
-    if(rightOperand.type != operandType)
-        throw StringMathError("FROpInterpreter: the right operand is invalid!");
-
-    double calc_result = 0.;
-    if(centerOperator.type == multOperatorType)
-        calc_result = leftOperand.value * rightOperand.value;
-    else if(centerOperator.type == divOperatorType)
-        calc_result = leftOperand.value / rightOperand.value;
+    if((*begin)->symbol_type() == operatorType)
+        expression_operator = dynamic_cast<ExpressionOperator*>(*begin);
     else
-        throw StringMathError("FROpInterpreter: there is no such first rank operator!");
+        throw StringMathError("FROpInterpreter: the expression syntax error!");
 
-    leftOperand.value = calc_result;
+    return expression_operator;
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
- * The second rank algebraic operation processing function.
- * \param[in,out] leftOperand The left operand.
- * \param[in] centerOperator The second rank operator.
- * \param[in] rightOperand The right operand.
- * \param[out] symbolsAfter Interpreted expression symbols.
-*/
+ * Operand checker function.
+ * \param[in] begin The iterator pointing to the operand in the parsing
+ * container.
+ * \param[in] end The iterator pointing to a symbol after the last
+ * symbol in the parsing container.
+ * \return Pointer to the operand.
+ */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-void FROpInterpreter::second_rank_operation_processing(StringMathSymbol &leftOperand, const StringMathSymbol &centerOperator,
-                                                       const StringMathSymbol &rightOperand, QVector<StringMathSymbol> &symbolsAfter) const
+ExpressionOperand* FROpInterpreter::operand_checker(
+    QVector<ExpressionSymbol*>::const_iterator begin,
+    QVector<ExpressionSymbol*>::const_iterator end) const
 {
-    if((leftOperand.type != operandType) && (leftOperand.type != emptyOperandType))
-        throw StringMathError("FROpInterpreter: the left operand is invalid!");
+    if(begin == end)
+        throw StringMathError("FROpInterpreter: the expression syntax error!");
 
-    if(rightOperand.type != operandType)
-        throw StringMathError("FROpInterpreter: the right operand is invalid!");
+    ExpressionOperand* operand = 0;
 
-    symbolsAfter.push_back(leftOperand);
-    symbolsAfter.push_back(centerOperator);
-    leftOperand = rightOperand;
+    if((*begin)->symbol_type() == operandType)
+        operand = dynamic_cast<ExpressionOperand*>(*begin);
+    else
+        throw StringMathError("FROpInterpreter: the expression syntax error!");
+
+    return operand;
+}
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+/*!
+ * The first rank operation processing function.\n
+ * \param[in] leftOperand Pointer to the left operand.
+ * \param[in] centerOperator Pointer to the first rank operator.
+ * \param[in] rightOperand Pointer to the right operand.
+ * \return Pointer to the new operand.
+ */
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+ExpressionOperand* FROpInterpreter::first_rank_operation_processing(
+    const ExpressionOperand*  leftOperand,
+    const ExpressionOperator* centerOperator,
+    const ExpressionOperand*  rightOperand) const
+{
+    if(leftOperand->is_empty())
+        throw StringMathError("FROpInterpreter: the expression syntax error!");
+
+    if(rightOperand->is_empty())
+        throw StringMathError("FROpInterpreter: the expression syntax error!");
+
+    ExpressionOperand* new_operand = new ExpressionOperand;
+
+    if(centerOperator->operator_type() == multType)
+        new_operand->set_value(leftOperand->value() * rightOperand->value());
+    else if(centerOperator->operator_type() == divType)
+        new_operand->set_value(leftOperand->value() / rightOperand->value());
+    else
+        throw StringMathError(
+            "FROpInterpreter: there is no such first rank operator!");
+
+    return new_operand;
 }
