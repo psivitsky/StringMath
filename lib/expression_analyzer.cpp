@@ -85,7 +85,7 @@ void ExpressionAnalyzer::parsing(const QString&              expressionStr,
             symbols.push_back(operand_parsing(operand));
             operand = "";
 
-            symbols.push_back(operator_parsing(*begin));
+            symbols.push_back(new ExpressionOperator(*begin));
             ++begin;
         }
         else if(*begin == base_opening_bracket)
@@ -376,36 +376,6 @@ ExpressionAnalyzer::last_operand_parsing(QString& operandStr) const
     }
 
     return operand_parsing(operandStr);
-}
-//---------------------------------------------------------------------------------------------------------------------------------------------------
-/*!
- * The operator parsing function.
- * \param[in] operandStr The operator character to parse.
- * \return The expression operator symbol.
- */
-//---------------------------------------------------------------------------------------------------------------------------------------------------
-ExpressionOperator*
-ExpressionAnalyzer::operator_parsing(const QChar& operatorChar) const
-{
-    ExpressionOperator* symbol = new ExpressionOperator;
-
-    if(operatorChar == "*")
-        symbol->set_operator_type(multType);
-    else if(operatorChar == "/")
-        symbol->set_operator_type(divType);
-    else if(operatorChar == "+")
-        symbol->set_operator_type(sumType);
-    else if(operatorChar == "-")
-        symbol->set_operator_type(diffType);
-    else
-    {
-        delete symbol;
-        throw StringMathError("ExpressionAnalyzer: the operator \"" +
-                              static_cast<QString>(operatorChar) +
-                              "\" doesn't exist!");
-    }
-
-    return symbol;
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!

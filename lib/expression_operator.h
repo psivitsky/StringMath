@@ -15,6 +15,8 @@
 
 #include "expression_symbol.h"
 
+#include <QChar>
+
 enum ExpressionOperatorType
 {
     defaultType,
@@ -28,6 +30,7 @@ class ExpressionOperator : public ExpressionSymbol
 {
 public:
     ExpressionOperator();
+    ExpressionOperator(const QChar& character);
     ExpressionOperator(const ExpressionOperator& obj) = default;
     ExpressionOperator& operator=(const ExpressionOperator& obj) = default;
     ~ExpressionOperator() = default;
@@ -40,12 +43,32 @@ private:
     ExpressionOperatorType operator_type_;
 };
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-//! \details The constructor.
+//! \details The default constructor.
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 inline ExpressionOperator::ExpressionOperator()
     : ExpressionSymbol(), operator_type_(defaultType)
 {
     symbol_type_ = operatorType;
+}
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+/*!
+ * The constructor.
+ * \param[in] character Operator character.
+ */
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+inline ExpressionOperator::ExpressionOperator(const QChar& character)
+    : ExpressionSymbol(), operator_type_(defaultType)
+{
+    symbol_type_ = operatorType;
+
+    if(character == '*')
+        operator_type_ = multType;
+    else if(character == '/')
+        operator_type_ = divType;
+    else if(character == '+')
+        operator_type_ = sumType;
+    else if(character == '-')
+        operator_type_ = diffType;
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
