@@ -45,7 +45,7 @@ private:
 inline ExpressionOperator::ExpressionOperator()
     : ExpressionSymbol(), operator_type_(defaultType)
 {
-    symbol_type_ = operandType;
+    symbol_type_ = operatorType;
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!

@@ -16,21 +16,20 @@ enum ExpressionSymbolType
     invalidType,
     expressionType,
     operatorType,
-    operandType,
-    emptyOperandType
+    operandType
 };
 
 class ExpressionSymbol
 {
 public:
-    // Functions...
-    ExpressionSymbolType symbol_type() const;
-
-protected:
     ExpressionSymbol();
     ExpressionSymbol(const ExpressionSymbol& obj) = default;
     ExpressionSymbol& operator=(const ExpressionSymbol& obj) = default;
     virtual ~ExpressionSymbol() = default;
+    // Functions...
+    ExpressionSymbolType symbol_type() const;
+
+protected:
     // Variables...
     ExpressionSymbolType symbol_type_;
 };

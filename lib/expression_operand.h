@@ -23,28 +23,46 @@ public:
     ExpressionOperand& operator=(const ExpressionOperand& obj) = default;
     ~ExpressionOperand() = default;
     // Functions...
+    bool is_empty() const;
+
     void   set_value(double operandValue);
     double value() const;
 
 private:
     // Variables...
+    bool   f_empty;
     double value_;
 };
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 //! \details The constructor.
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-inline ExpressionOperand::ExpressionOperand() : ExpressionSymbol(), value_(0.)
+inline ExpressionOperand::ExpressionOperand()
+    : ExpressionSymbol(), f_empty(true), value_(0.)
 {
     symbol_type_ = operandType;
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
- * The function of setting the operand value.
+ * The function of checking, whether the operand is empty.
+ * \return The result of the check:
+ * true - the operand is empty,
+ * false - the operand is not empty.
+ */
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+inline bool ExpressionOperand::is_empty() const
+{
+    return f_empty;
+}
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+/*!
+ * The function of setting the operand value.\n
+ * After setting the value, the operand is no longer empty.
  * \param[in] operandValue Operand value.
  */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 inline void ExpressionOperand::set_value(double operandValue)
 {
+    f_empty = false;
     value_ = operandValue;
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
@@ -56,33 +74,5 @@ inline void ExpressionOperand::set_value(double operandValue)
 inline double ExpressionOperand::value() const
 {
     return value_;
-}
-
-//---------------------------------------------------------------------------------------------------------------------------------------------------
-/*!
- * \brief
- * Expression empty operand
- * \details
- * Class description
- * -----
- * This class specifies an empty operand of the expression.
- * It is derived from the ExpressionSymbol class.
- */
-//---------------------------------------------------------------------------------------------------------------------------------------------------
-class ExpressionEmptyOperand : public ExpressionSymbol
-{
-public:
-    ExpressionEmptyOperand();
-    ExpressionEmptyOperand(const ExpressionEmptyOperand& obj) = default;
-    ExpressionEmptyOperand&
-    operator=(const ExpressionEmptyOperand& obj) = default;
-    ~ExpressionEmptyOperand() = default;
-};
-//---------------------------------------------------------------------------------------------------------------------------------------------------
-//! \details The constructor.
-//---------------------------------------------------------------------------------------------------------------------------------------------------
-inline ExpressionEmptyOperand::ExpressionEmptyOperand() : ExpressionSymbol()
-{
-    symbol_type_ = emptyOperandType;
 }
 #endif // EXPRESSIONOPERAND_H
