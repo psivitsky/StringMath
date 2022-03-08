@@ -12,8 +12,6 @@
 
 #include <QStringList>
 
-#include "string_math_constant.h"
-
 #include "fr_op_interpreter.h"
 #include "func_interpreter.h"
 #include "sr_op_interpreter.h"
@@ -61,12 +59,6 @@ private:
                                QString::const_iterator  end,
                                QString&                 subExpressionStr) const;
 
-    ExpressionOperand*  operand_parsing(QString& operandStr) const;
-    ExpressionOperand*  last_operand_parsing(QString& operandStr) const;
-    ExpressionOperator* operator_parsing(const QChar& operatorChar) const;
-
-    void spaces_removing(QString& operand) const;
-    bool operand_checking(const QString& operand) const;
-    void constant_replacing(QString& operand) const;
+    ExpressionOperand* last_operand_parsing(QString& operandStr) const;
 };
 #endif // EXPRESSIONANALYZER_H

@@ -3,9 +3,11 @@
 /*!
  * The constructor.
  * \param[in] precisionValue The precision of calculation result (an integer
- * non-negative value). \param[in] constants The container with constants
- * (StringMathConstant objects). \param[in] functions The container with
- * functions (StringMathFunction objects).
+ * non-negative value).
+ * \param[in] constants The container with constants (StringMathConstant
+ * objects).
+ * \param[in] functions The container with functions (StringMathFunction
+ * objects).
  */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 ExpressionAnalyzer::ExpressionAnalyzer(
@@ -82,7 +84,8 @@ void ExpressionAnalyzer::parsing(const QString&              expressionStr,
     {
         if(operators.contains(*begin))
         {
-            symbols.push_back(operand_parsing(operand));
+            symbols.push_back(
+                ExpressionChecker::operand_parsing(operand, constants_));
             operand = "";
 
             symbols.push_back(new ExpressionOperator(*begin));
@@ -110,11 +113,13 @@ void ExpressionAnalyzer::parsing(const QString&              expressionStr,
 /*!
  * The function name parsing method.\n
  * The function name is at the beginning of the expression string before the
- * first bracket. \param[in,out] begin The iterator pointing to the first
- * character in the parsing string. \param[in] end The iterator pointing to the
- * character after the last character in the parsing string. \param[out]
- * funcName The name of the expression function. If there is no function in the
- * expression, the name will be an empty string.
+ * first bracket.
+ * \param[in,out] begin The iterator pointing to the first character in the
+ * parsing string.
+ * \param[in] end The iterator pointing to the character after the last
+ * character in the parsing string.
+ * \param[out] funcName The name of the expression function.
+ * If there is no function in the expression, the name will be an empty string.
  */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 void ExpressionAnalyzer::function_name_parsing(QString::const_iterator& begin,
@@ -185,10 +190,10 @@ void ExpressionAnalyzer::function_name_parsing(QString::const_iterator& begin,
                 funcName += *begin;
                 ++begin;
             }
-            spaces_removing(
-                funcName); // The function name can be empty after removing
-                           // spaces! However the expression contains an opening
-                           // bracket.
+
+            ExpressionChecker::spaces_removing(funcName);
+            // The function name can be empty after removing spaces!
+            // However the expression contains an opening bracket.
 
             ++begin;
         }
@@ -198,8 +203,9 @@ void ExpressionAnalyzer::function_name_parsing(QString::const_iterator& begin,
 /*!
  * The opening bracket skipping function.
  * \param[in,out] begin The iterator pointing to the first character in the
- * parsing string. \param[in] end The iterator pointing to the character after
- * the last character in the parsing string.
+ * parsing string.
+ * \param[in] end The iterator pointing to the character after the last
+ * character in the parsing string.
  */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 void ExpressionAnalyzer::opening_bracket_skipping(
@@ -268,11 +274,13 @@ void ExpressionAnalyzer::opening_bracket_skipping(
 /*!
  * The subexpression parsing function.\n
  * A subexpression is an operand that contains mathematical operations inside
- * brackets.\n A subexpression may contain other subexpressions. \param[in,out]
- * begin The iterator pointing to the opening bracket of the parsing string.
+ * brackets.\n
+ * A subexpression may contain other subexpressions.
+ * \param[in,out] begin The iterator pointing to the opening bracket of the
+ * parsing string.
  * \param[in] end The iterator pointing to the character after the last
- * character in the parsing string. \param[out] subExpressionStr The
- * subexpression string.
+ * character in the parsing string.
+ * \param[out] subExpressionStr The subexpression string.
  */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 void ExpressionAnalyzer::subexpression_parsing(QString::const_iterator& begin,
@@ -321,35 +329,11 @@ void ExpressionAnalyzer::subexpression_parsing(QString::const_iterator& begin,
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
- * The operand parsing function.\n
- * The function removes spaces from the operand string, checks its syntax, and
- * replaces the constant if necessary.
- * \param[in] operandStr The operand string to parse.
- * \return The expression operand symbol.
- */
-//---------------------------------------------------------------------------------------------------------------------------------------------------
-ExpressionOperand*
-ExpressionAnalyzer::operand_parsing(QString& operandStr) const
-{
-    spaces_removing(operandStr);
-
-    if(operandStr.isEmpty())
-        return new ExpressionOperand;
-
-    if(!operand_checking(operandStr))
-        constant_replacing(operandStr);
-
-    ExpressionOperand* symbol = new ExpressionOperand;
-    symbol->set_value(operandStr.toDouble());
-
-    return symbol;
-}
-//---------------------------------------------------------------------------------------------------------------------------------------------------
-/*!
  * The last operand parsing function.\n
  * If this operand string contains a closing bracket, it will be removed from
- * the string. \param[in] operandStr The last operand string to parse. \return
- * The expression last operand symbol.
+ * the string.
+ * \param[in] operandStr The last operand string to parse.
+ * \return The expression last operand symbol.
  */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 ExpressionOperand*
@@ -375,67 +359,5 @@ ExpressionAnalyzer::last_operand_parsing(QString& operandStr) const
         operandStr = operand_without_bracket;
     }
 
-    return operand_parsing(operandStr);
-}
-//---------------------------------------------------------------------------------------------------------------------------------------------------
-/*!
- * Spaces removing function.
- * \param[in,out] str The input string with spaces and the output string without
- * spaces.
- */
-//---------------------------------------------------------------------------------------------------------------------------------------------------
-void ExpressionAnalyzer::spaces_removing(QString& str) const
-{
-    while(true)
-    {
-        if(str.isEmpty())
-            break;
-
-        if(str.at(0) == " ")
-            str.remove(0, 1);
-        else if(str.at(0) == "\t")
-            str.remove(0, 1);
-        else if(str.at(str.length() - 1) == " ")
-            str.remove(str.length() - 1, 1);
-        else if(str.at(str.length() - 1) == "\t")
-            str.remove(str.length() - 1, 1);
-        else
-            break;
-    }
-}
-//---------------------------------------------------------------------------------------------------------------------------------------------------
-/*!
- * Operand checking function.
- * \param[in] operand The operand string.
- * \return Check result: true - the operand is alright, false - the operand is
- * invalid.
- */
-//---------------------------------------------------------------------------------------------------------------------------------------------------
-bool ExpressionAnalyzer::operand_checking(const QString& operand) const
-{
-    QRegExp checker("^(-)?\\d+(\\.\\d*)?$");
-    if(checker.exactMatch(operand))
-        return true;
-    return false;
-}
-//---------------------------------------------------------------------------------------------------------------------------------------------------
-/*!
- * Constant replacement function.
- * \param[in,out] operand The operand string at the input and the replacement
- * result at the output.
- */
-//---------------------------------------------------------------------------------------------------------------------------------------------------
-void ExpressionAnalyzer::constant_replacing(QString& operand) const
-{
-    foreach(StringMathConstant constant, constants_)
-    {
-        if(constant.name() == operand)
-        {
-            operand = QString::number(constant.value(), 'f', precision_);
-            return;
-        }
-    }
-
-    throw StringMathError("ExpressionAnalyzer: the operand \"" + operand +
-                          "\" is invalid!");
+    return ExpressionChecker::operand_parsing(operandStr, constants_);
 }
