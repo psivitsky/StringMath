@@ -28,7 +28,7 @@ void FROpInterpreter::interpret(const QVector<ExpressionSymbol*>& symbolsBefore,
     QVector<ExpressionSymbol*>::const_iterator iterator = symbolsBefore.begin();
 
     ExpressionOperand* left_operand =
-        operand_checker(iterator, symbolsBefore.end());
+        ExpressionChecker::operand_checker(iterator, symbolsBefore.end());
     ++iterator;
 
     ExpressionOperator* expression_operator = nullptr;
@@ -36,9 +36,11 @@ void FROpInterpreter::interpret(const QVector<ExpressionSymbol*>& symbolsBefore,
 
     while(iterator != symbolsBefore.end())
     {
-        expression_operator = operator_checker(iterator, symbolsBefore.end());
+        expression_operator =
+            ExpressionChecker::operator_checker(iterator, symbolsBefore.end());
         ++iterator;
-        right_operand = operand_checker(iterator, symbolsBefore.end());
+        right_operand =
+            ExpressionChecker::operand_checker(iterator, symbolsBefore.end());
         ++iterator;
 
         if(first_rank_operators.contains(expression_operator->operator_type()))
@@ -60,58 +62,6 @@ void FROpInterpreter::interpret(const QVector<ExpressionSymbol*>& symbolsBefore,
     }
 
     symbolsAfter.push_back(left_operand);
-}
-//---------------------------------------------------------------------------------------------------------------------------------------------------
-/*!
- * Operator checker function.
- * \param[in] begin The iterator pointing to the operator in the parsing
- * container.
- * \param[in] end The iterator pointing to a symbol after the last
- * symbol in the parsing container.
- * \return centerOperator Pointer to the operator.
- */
-//---------------------------------------------------------------------------------------------------------------------------------------------------
-ExpressionOperator* FROpInterpreter::operator_checker(
-    QVector<ExpressionSymbol*>::const_iterator begin,
-    QVector<ExpressionSymbol*>::const_iterator end) const
-{
-    if(begin == end)
-        throw StringMathError("FROpInterpreter: the expression syntax error!");
-
-    ExpressionOperator* expression_operator = 0;
-
-    if((*begin)->symbol_type() == operatorType)
-        expression_operator = dynamic_cast<ExpressionOperator*>(*begin);
-    else
-        throw StringMathError("FROpInterpreter: the expression syntax error!");
-
-    return expression_operator;
-}
-//---------------------------------------------------------------------------------------------------------------------------------------------------
-/*!
- * Operand checker function.
- * \param[in] begin The iterator pointing to the operand in the parsing
- * container.
- * \param[in] end The iterator pointing to a symbol after the last
- * symbol in the parsing container.
- * \return Pointer to the operand.
- */
-//---------------------------------------------------------------------------------------------------------------------------------------------------
-ExpressionOperand* FROpInterpreter::operand_checker(
-    QVector<ExpressionSymbol*>::const_iterator begin,
-    QVector<ExpressionSymbol*>::const_iterator end) const
-{
-    if(begin == end)
-        throw StringMathError("FROpInterpreter: the expression syntax error!");
-
-    ExpressionOperand* operand = 0;
-
-    if((*begin)->symbol_type() == operandType)
-        operand = dynamic_cast<ExpressionOperand*>(*begin);
-    else
-        throw StringMathError("FROpInterpreter: the expression syntax error!");
-
-    return operand;
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!

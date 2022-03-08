@@ -10,13 +10,7 @@
 #ifndef FROPINTERPRETER_H
 #define FROPINTERPRETER_H
 
-#include "string_math_base.h"
-
-#include "expression.h"
-#include "expression_operand.h"
-#include "expression_operator.h"
-
-#include <QVector>
+#include "expression_checker.h"
 
 class FROpInterpreter
 {
@@ -35,13 +29,6 @@ private:
     const QVector<ExpressionOperatorType> second_rank_operators = {sumType,
                                                                    diffType};
     // Functions...
-    ExpressionOperator*
-    operator_checker(QVector<ExpressionSymbol*>::const_iterator begin,
-                     QVector<ExpressionSymbol*>::const_iterator end) const;
-    ExpressionOperand*
-    operand_checker(QVector<ExpressionSymbol*>::const_iterator begin,
-                    QVector<ExpressionSymbol*>::const_iterator end) const;
-
     ExpressionOperand* first_rank_operation_processing(
         const ExpressionOperand*  leftOperand,
         const ExpressionOperator* centerOperator,
