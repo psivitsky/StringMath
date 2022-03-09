@@ -1,4 +1,4 @@
-#include "expression_checker.h"
+#include "math_checker.h"
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
  * Operand parsing function.\n
@@ -10,8 +10,8 @@
  */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 ExpressionOperand*
-ExpressionChecker::operand_parsing(const QString& operandStr,
-                                   const QVector<StringMathConstant>& constants)
+MathChecker::operand_parsing(const QString&                     operandStr,
+                             const QVector<StringMathConstant>& constants)
 {
     double  new_operand_val = 0.;
     QString new_operand_str = operandStr;
@@ -54,7 +54,7 @@ ExpressionChecker::operand_parsing(const QString& operandStr,
  * the output string without spaces.
  */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-void ExpressionChecker::spaces_removing(QString& str)
+void MathChecker::spaces_removing(QString& str)
 {
     while(true)
     {
@@ -83,9 +83,9 @@ void ExpressionChecker::spaces_removing(QString& str)
  * \return Pointer to the operand.
  */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-ExpressionOperand* ExpressionChecker::operand_checking(
-    QVector<ExpressionSymbol*>::const_iterator begin,
-    QVector<ExpressionSymbol*>::const_iterator end)
+ExpressionOperand*
+MathChecker::operand_checking(QVector<ExpressionSymbol*>::const_iterator begin,
+                              QVector<ExpressionSymbol*>::const_iterator end)
 {
     if(begin == end)
         throw StringMathError(
@@ -111,9 +111,9 @@ ExpressionOperand* ExpressionChecker::operand_checking(
  * \return centerOperator Pointer to the operator.
  */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-ExpressionOperator* ExpressionChecker::operator_checking(
-    QVector<ExpressionSymbol*>::const_iterator begin,
-    QVector<ExpressionSymbol*>::const_iterator end)
+ExpressionOperator*
+MathChecker::operator_checking(QVector<ExpressionSymbol*>::const_iterator begin,
+                               QVector<ExpressionSymbol*>::const_iterator end)
 {
     if(begin == end)
         throw StringMathError(

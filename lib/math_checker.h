@@ -1,5 +1,5 @@
-#ifndef EXPRESSIONOPERANDCHECKER_H
-#define EXPRESSIONOPERANDCHECKER_H
+#ifndef MATHCHECKER_H
+#define MATHCHECKER_H
 
 #include "string_math_base.h"
 #include "string_math_constant.h"
@@ -10,7 +10,7 @@
 #include <QRegExp>
 #include <QVector>
 
-namespace ExpressionChecker
+namespace MathChecker
 {
 ExpressionOperand*
 operand_parsing(const QString&                     operandStr,
@@ -25,5 +25,5 @@ operand_checking(QVector<ExpressionSymbol*>::const_iterator begin,
 ExpressionOperator*
 operator_checking(QVector<ExpressionSymbol*>::const_iterator begin,
                   QVector<ExpressionSymbol*>::const_iterator end);
-};     // namespace ExpressionChecker
-#endif // EXPRESSIONOPERANDCHECKER_H
+};     // namespace MathChecker
+#endif // MATHCHECKER_H
