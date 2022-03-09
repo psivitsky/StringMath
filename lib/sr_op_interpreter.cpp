@@ -19,7 +19,7 @@ SROpInterpreter::interpret(const QVector<ExpressionSymbol*>& symbols) const
 
     ExpressionOperator* expression_operator = nullptr;
     ExpressionOperand*  operand =
-        ExpressionChecker::operand_checking(iterator, symbols.end());
+        MathChecker::operand_checking(iterator, symbols.end());
     ++iterator;
 
     if(operand->is_empty())
@@ -30,9 +30,9 @@ SROpInterpreter::interpret(const QVector<ExpressionSymbol*>& symbols) const
     while(iterator != symbols.end())
     {
         expression_operator =
-            ExpressionChecker::operator_checking(iterator, symbols.end());
+            MathChecker::operator_checking(iterator, symbols.end());
         ++iterator;
-        operand = ExpressionChecker::operand_checking(iterator, symbols.end());
+        operand = MathChecker::operand_checking(iterator, symbols.end());
         ++iterator;
 
         if(expression_operator->operator_type() == sumType)

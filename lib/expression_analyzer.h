@@ -10,7 +10,7 @@
 #ifndef EXPRESSIONANALYZER_H
 #define EXPRESSIONANALYZER_H
 
-#include <QStringList>
+#include "math_parser.h"
 
 #include "fr_op_interpreter.h"
 #include "func_interpreter.h"
@@ -28,14 +28,6 @@ public:
 private:
     ExpressionAnalyzer(const ExpressionAnalyzer& obj);
     ExpressionAnalyzer& operator=(const ExpressionAnalyzer& obj);
-    // Constants...
-    const QString base_opening_bracket = "(";
-    const QString base_closing_bracket = ")";
-
-    const QStringList opening_brackets = {"(", "[", "{"};
-    const QStringList closing_brackets = {")", "]", "}"};
-
-    const QStringList operators = {"*", "/", "+", "-"};
     // Variables...
     int precision_;
 
@@ -46,19 +38,7 @@ private:
     QVector<StringMathConstant> constants_;
     QVector<StringMathFunction> functions_;
     // Functions...
-    void brackets_replacing(QString& expressionStr) const;
-
-    void parsing(const QString&              expressionStr,
-                 QVector<ExpressionSymbol*>& symbols, QString& funcName) const;
-    void function_name_parsing(QString::const_iterator& begin,
-                               QString::const_iterator  end,
-                               QString&                 funcName) const;
-    void opening_bracket_skipping(QString::const_iterator& begin,
-                                  QString::const_iterator  end) const;
-    void subexpression_parsing(QString::const_iterator& begin,
-                               QString::const_iterator  end,
-                               QString&                 subExpressionStr) const;
-
-    ExpressionOperand* last_operand_parsing(QString& operandStr) const;
+    double calculate(const Expression* expression,
+                     const QString&    funcName) const;
 };
 #endif // EXPRESSIONANALYZER_H

@@ -28,7 +28,7 @@ void FROpInterpreter::interpret(const QVector<ExpressionSymbol*>& symbolsBefore,
     QVector<ExpressionSymbol*>::const_iterator iterator = symbolsBefore.begin();
 
     ExpressionOperand* left_operand =
-        ExpressionChecker::operand_checking(iterator, symbolsBefore.end());
+        MathChecker::operand_checking(iterator, symbolsBefore.end());
     ++iterator;
 
     ExpressionOperator* expression_operator = nullptr;
@@ -37,10 +37,10 @@ void FROpInterpreter::interpret(const QVector<ExpressionSymbol*>& symbolsBefore,
     while(iterator != symbolsBefore.end())
     {
         expression_operator =
-            ExpressionChecker::operator_checking(iterator, symbolsBefore.end());
+            MathChecker::operator_checking(iterator, symbolsBefore.end());
         ++iterator;
         right_operand =
-            ExpressionChecker::operand_checking(iterator, symbolsBefore.end());
+            MathChecker::operand_checking(iterator, symbolsBefore.end());
         ++iterator;
 
         if(first_rank_operators.contains(expression_operator->operator_type()))

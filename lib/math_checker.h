@@ -1,7 +1,6 @@
 #ifndef MATHCHECKER_H
 #define MATHCHECKER_H
 
-#include "string_math_base.h"
 #include "string_math_constant.h"
 
 #include "expression_operand.h"

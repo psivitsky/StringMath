@@ -25,8 +25,8 @@ public:
     Expression& operator=(const Expression& obj) = default;
     ~Expression() = default;
     // Functions...
-    void                             add(ExpressionSymbol& symbol);
-    const QVector<ExpressionSymbol>& symbols() const;
+    void                              add(ExpressionSymbol* symbol);
+    const QVector<ExpressionSymbol*>& symbols() const;
 
     void           set_function_name(const QString& functionName);
     const QString& function_name() const;
@@ -35,7 +35,7 @@ private:
     // Variables...
     QString function_name_;
     // Containers...
-    QVector<ExpressionSymbol> symbols_;
+    QVector<ExpressionSymbol*> symbols_;
 };
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 //! \details The constructor.
@@ -50,7 +50,7 @@ inline Expression::Expression() : ExpressionSymbol()
  * \param[in] symbol New symbol.
  */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-inline void Expression::add(ExpressionSymbol& symbol)
+inline void Expression::add(ExpressionSymbol* symbol)
 {
     symbols_.push_back(symbol);
 }
@@ -60,7 +60,7 @@ inline void Expression::add(ExpressionSymbol& symbol)
  * \return Container of expression symbols.
  */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-inline const QVector<ExpressionSymbol>& Expression::symbols() const
+inline const QVector<ExpressionSymbol*>& Expression::symbols() const
 {
     return symbols_;
 }

@@ -10,7 +10,7 @@
 #ifndef FROPINTERPRETER_H
 #define FROPINTERPRETER_H
 
-#include "expression_checker.h"
+#include "math_checker.h"
 
 class FROpInterpreter
 {

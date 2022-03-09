@@ -10,7 +10,7 @@
 #ifndef SROPINTERPRETER_H
 #define SROPINTERPRETER_H
 
-#include "expression_checker.h"
+#include "math_checker.h"
 
 class SROpInterpreter
 {
