@@ -18,14 +18,14 @@ add_library(StringMath SHARED
     string_math_constant.cpp
     string_math_function.h
     string_math_function.cpp
+    expression.h
     expression_symbol.h
     expression_operand.h
-    expression_operator.h
-    expression.h
-    expression_analyzer.h
-    expression_analyzer.cpp
+    expression_operator.h    
     math_parser.h
     math_parser.cpp
+    math_processor.h
+    math_processor.cpp
     math_checker.h
     math_checker.cpp
     fr_op_interpreter.h

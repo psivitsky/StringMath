@@ -42,7 +42,8 @@
 #ifndef STRING_MATH_H
 #define STRING_MATH_H
 
-#include "expression_analyzer.h"
+#include "math_parser.h"
+#include "math_processor.h"
 
 class STRINGMATH_EXPORT StringMath
 {
@@ -64,8 +65,8 @@ public:
     void remove_function(const StringMathFunction& existingFunction);
     const QVector<StringMathFunction>& functions() const;
 
-    double   calculate(const QString& strExpression) const;
-    QString& calculate(const QString& strExpression, int precision) const;
+    double  calculate(const QString& strExpression) const;
+    QString calculate(const QString& strExpression, int precision) const;
 
 private:
     // Constants...

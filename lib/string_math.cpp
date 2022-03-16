@@ -152,11 +152,10 @@ const QVector<StringMathFunction>& StringMath::functions() const
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 double StringMath::calculate(const QString& strExpression) const
 {
-    QString            calcResult;
-    ExpressionAnalyzer obj(max_precision, constants_, functions_);
-    obj.analyze(strExpression, calcResult);
+    Expression* expression =
+        MathParser::expression_parsing(strExpression, constants_);
 
-    return calcResult.toDouble();
+    return MathProcessor::expression_calculation(expression, functions_);
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 /*!
@@ -167,12 +166,7 @@ double StringMath::calculate(const QString& strExpression) const
  * \return The result of the calculation (string).
  */
 //---------------------------------------------------------------------------------------------------------------------------------------------------
-QString& StringMath::calculate(const QString& strExpression,
-                               int            precision) const
+QString StringMath::calculate(const QString& strExpression, int precision) const
 {
-    static QString     calcResult;
-    ExpressionAnalyzer obj(precision, constants_, functions_);
-    obj.analyze(strExpression, calcResult);
-
-    return calcResult;
+    return QString::number(calculate(strExpression), 'f', precision);
 }
