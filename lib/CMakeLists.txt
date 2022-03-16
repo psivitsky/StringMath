@@ -28,10 +28,6 @@ add_library(StringMath SHARED
     math_processor.cpp
     math_checker.h
     math_checker.cpp
-    fr_op_interpreter.h
-    fr_op_interpreter.cpp
-    sr_op_interpreter.h
-    sr_op_interpreter.cpp
     func_interpreter.h
     func_interpreter.cpp)
 
