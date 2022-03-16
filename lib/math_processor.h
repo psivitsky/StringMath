@@ -5,7 +5,7 @@
 
 #include "math_checker.h"
 
-#include "func_interpreter.h"
+#include "string_math_function.h"
 
 namespace MathProcessor
 {

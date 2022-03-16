@@ -27,9 +27,7 @@ add_library(StringMath SHARED
     math_processor.h
     math_processor.cpp
     math_checker.h
-    math_checker.cpp
-    func_interpreter.h
-    func_interpreter.cpp)
+    math_checker.cpp)
 
 target_link_libraries(StringMath PRIVATE Qt5::Core)
 

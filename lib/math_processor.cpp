@@ -2,6 +2,9 @@
 
 double operators_processing(const QVector<ExpressionSymbol*>&);
 
+double function_processing(double, const QString&,
+                           const QVector<StringMathFunction>&);
+
 ExpressionOperand* hyper_1_operation_processing(const ExpressionOperand*,
                                                 const ExpressionOperator*,
                                                 const ExpressionOperand*,
@@ -43,8 +46,8 @@ double MathProcessor::expression_calculation(
 
     double calc_result = operators_processing(symbols_to_interpret);
 
-    FuncInterpreter function_(functions);
-    return function_.interpret(calc_result, expression->function_name());
+    return function_processing(calc_result, expression->function_name(),
+                               functions);
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -98,6 +101,41 @@ double operators_processing(const QVector<ExpressionSymbol*>& symbols)
     }
 
     calc_result += left_operand->value();
+
+    return calc_result;
+}
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+/*!
+ * The method of processing the algebraic function.
+ * \param[in] argument The algebraic function argument.
+ * \param[in] name The algebraic function name.
+ * \param[in] functions The container with functions.
+ * \return The result of the calculation.
+ */
+//---------------------------------------------------------------------------------------------------------------------------------------------------
+double function_processing(double argument, const QString& name,
+                           const QVector<StringMathFunction>& functions)
+{
+    double calc_result = 0.;
+    if(name.isEmpty())
+        calc_result = argument;
+    else
+    {
+        bool f_calculated = false;
+        foreach(StringMathFunction function, functions)
+        {
+            if(function.name() == name)
+            {
+                calc_result = function.calculate(argument);
+                f_calculated = true;
+                break;
+            }
+        }
+
+        if(!f_calculated)
+            throw StringMathError("MathProcessor: the function \"" + name +
+                                  "\" doesn't exist!");
+    }
 
     return calc_result;
 }
