@@ -12,6 +12,7 @@ find_package(Qt5 COMPONENTS Core REQUIRED)
 
 add_library(StringMath SHARED
     string_math_base.h
+    string_math_base.cpp
     string_math.h
     string_math.cpp
     string_math_constant.h

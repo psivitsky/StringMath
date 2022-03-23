@@ -73,23 +73,7 @@ private:
     static const int min_precision = 0;
     static const int max_precision = 16;
     // Containers...
-    QVector<StringMathConstant> constants_ = {
-        StringMathConstant("pi", 3.1415926535897932384626433832795),
-        StringMathConstant("e", 2.7182818284590452353602874713527)};
-
-    QVector<StringMathFunction> functions_ = {
-        StringMathFunction("cos", StringMathFuncImpl::cos_impl),
-        StringMathFunction("sin", StringMathFuncImpl::sin_impl),
-        StringMathFunction("tan", StringMathFuncImpl::tan_impl),
-        StringMathFunction("cot", StringMathFuncImpl::cot_impl),
-        StringMathFunction("acos", StringMathFuncImpl::acos_impl),
-        StringMathFunction("asin", StringMathFuncImpl::asin_impl),
-        StringMathFunction("atan", StringMathFuncImpl::atan_impl),
-        StringMathFunction("acot", StringMathFuncImpl::acot_impl),
-        StringMathFunction("log", StringMathFuncImpl::log_impl),
-        StringMathFunction("log10", StringMathFuncImpl::log10_impl),
-        StringMathFunction("log2", StringMathFuncImpl::log2_impl),
-        StringMathFunction("exp", StringMathFuncImpl::exp_impl),
-        StringMathFunction("sqrt", StringMathFuncImpl::sqrt_impl)};
+    QVector<StringMathConstant> constants_;
+    QVector<StringMathFunction> functions_;
 };
 #endif // STRING_MATH_H
