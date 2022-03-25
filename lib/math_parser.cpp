@@ -1,8 +1,14 @@
 #include "math_parser.h"
 
+ExpressionOperand* operand_parsing(const QString&,
+                                   const QVector<StringMathConstant>&);
+
 Expression* subexpression_parsing(QString::const_iterator&,
-                                  QString::const_iterator, QString&,
+                                  QString::const_iterator,
+                                  QString&,
                                   const QVector<StringMathConstant>&);
+
+void spaces_removing(QString&);
 
 void subexpression_closure_checking(QString::const_iterator&,
                                     QString::const_iterator);
@@ -12,29 +18,32 @@ void subexpression_closure_checking(QString::const_iterator&,
  * Expression parsing function.
  * \param[in] str The expression string to parse.
  * \param[in] constants The container with constants.
- * \return A pointer to the parsed expression.
+ * \param[out] expression The parsed expression.
  */
 //----------------------------------------------------------------------------------
-Expression*
-MathParser::expression_parsing(const QString&                     str,
-                               const QVector<StringMathConstant>& constants)
+void MathParser::expression_parsing(
+    const QString&                     expressionStr,
+    const QVector<StringMathConstant>& constants,
+    Expression&                        expression)
 {
-    Expression expression;
+    if(!expression.symbols().isEmpty())
+        throw StringMathError("MathParser: the expression is not empty!");
 
-    QString::const_iterator begin = str.begin();
+    QString                 operand = "";
+    QString::const_iterator begin = expressionStr.begin();
+    QString::const_iterator end = expressionStr.end();
 
-    QString operand = "";
     while(true)
     {
-        if(begin == str.end())
+        if(begin == end)
         {
-            expression.add(MathChecker::operand_parsing(operand, constants));
+            expression.add(operand_parsing(operand, constants));
             operand = "";
             break;
         }
         else if(operators.contains(*begin))
         {
-            expression.add(MathChecker::operand_parsing(operand, constants));
+            expression.add(operand_parsing(operand, constants));
             operand = "";
 
             expression.add(new ExpressionOperator(*begin));
@@ -42,10 +51,10 @@ MathParser::expression_parsing(const QString&                     str,
         else if(opening_brackets.contains(*begin))
         {
             expression.add(
-                subexpression_parsing(begin, str.end(), operand, constants));
+                subexpression_parsing(begin, end, operand, constants));
             operand = "";
 
-            if(begin != str.end())
+            if(begin != end)
                 expression.add(new ExpressionOperator(*begin));
             else
                 break;
@@ -55,8 +64,49 @@ MathParser::expression_parsing(const QString&                     str,
 
         ++begin;
     }
+}
+//----------------------------------------------------------------------------------
+/*!
+ * Operand parsing function.\n
+ * The function removes spaces from the operand string, checks its syntax, and
+ * replaces the constant if necessary.
+ * \param[in] operandStr The operand string to parse.
+ * \param[in] constants The container with constants.
+ * \return A pointer to the expression operand.
+ */
+//----------------------------------------------------------------------------------
+ExpressionOperand* operand_parsing(const QString& operandStr,
+                                   const QVector<StringMathConstant>& constants)
+{
+    double  new_operand_val = 0.;
+    QString new_operand_str = operandStr;
+    spaces_removing(new_operand_str);
 
-    return new Expression(expression);
+    if(new_operand_str.isEmpty())
+        return new ExpressionOperand();
+
+    QRegExp checker("^(-)?\\d+(\\.\\d*)?$");
+    if(checker.exactMatch(new_operand_str))
+        new_operand_val = new_operand_str.toDouble();
+    else
+    {
+        bool f_constant_replaced = false;
+        foreach(StringMathConstant constant, constants)
+        {
+            if(constant.name() == new_operand_str)
+            {
+                new_operand_val = constant.value();
+                f_constant_replaced = true;
+                break;
+            }
+        }
+
+        if(!f_constant_replaced)
+            throw StringMathError("MathParser: the operand \"" +
+                                  new_operand_str + "\" is invalid!");
+    }
+
+    return new ExpressionOperand(new_operand_val);
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -78,10 +128,10 @@ Expression* subexpression_parsing(QString::const_iterator&           begin,
                                   QString&                           funcName,
                                   const QVector<StringMathConstant>& constants)
 {
-    Expression expression;
+    Expression* expression = new Expression();
 
-    MathChecker::spaces_removing(funcName);
-    expression.set_function_name(funcName);
+    spaces_removing(funcName);
+    expression->set_function_name(funcName);
 
     ++begin;
 
@@ -89,35 +139,41 @@ Expression* subexpression_parsing(QString::const_iterator&           begin,
     while(true)
     {
         if(begin == end)
+        {
+            delete expression;
             throw StringMathError(
-                "ExpressionAnalyzer: the closing bracket is missing!");
+                "MathParser: the closing bracket is missing!");
+        }
         else if(MathParser::operators.contains(*begin))
         {
-            expression.add(MathChecker::operand_parsing(operand, constants));
+            expression->add(operand_parsing(operand, constants));
             operand = "";
 
-            expression.add(new ExpressionOperator(*begin));
+            expression->add(new ExpressionOperator(*begin));
         }
         else if(MathParser::opening_brackets.contains(*begin))
         {
-            expression.add(
+            expression->add(
                 subexpression_parsing(begin, end, operand, constants));
             operand = "";
 
             if(begin == end)
+            {
+                delete expression;
                 throw StringMathError(
-                    "ExpressionAnalyzer: the closing bracket is missing!");
+                    "MathParser: the closing bracket is missing!");
+            }
             else if(MathParser::closing_brackets.contains(*begin))
             {
                 subexpression_closure_checking(begin, end);
                 break;
             }
             else
-                expression.add(new ExpressionOperator(*begin));
+                expression->add(new ExpressionOperator(*begin));
         }
         else if(MathParser::closing_brackets.contains(*begin))
         {
-            expression.add(MathChecker::operand_parsing(operand, constants));
+            expression->add(operand_parsing(operand, constants));
 
             subexpression_closure_checking(begin, end);
             break;
@@ -128,7 +184,33 @@ Expression* subexpression_parsing(QString::const_iterator&           begin,
         ++begin;
     }
 
-    return new Expression(expression);
+    return expression;
+}
+//----------------------------------------------------------------------------------
+/*!
+ * Spaces removing function.
+ * \param[in,out] str The input string with spaces and
+ * the output string without spaces.
+ */
+//----------------------------------------------------------------------------------
+void spaces_removing(QString& str)
+{
+    while(true)
+    {
+        if(str.isEmpty())
+            break;
+
+        if(str.at(0) == " ")
+            str.remove(0, 1);
+        else if(str.at(0) == "\t")
+            str.remove(0, 1);
+        else if(str.at(str.length() - 1) == " ")
+            str.remove(str.length() - 1, 1);
+        else if(str.at(str.length() - 1) == "\t")
+            str.remove(str.length() - 1, 1);
+        else
+            break;
+    }
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -151,7 +233,6 @@ void subexpression_closure_checking(QString::const_iterator& begin,
 
     if(!MathParser::closing_brackets.contains(*begin) &&
        !MathParser::operators.contains(*begin) && (begin != end))
-        throw StringMathError(
-            "ExpressionAnalyzer: there should be an operator or a "
-            "closing bracket after the subexpression!");
+        throw StringMathError("MathParser: there should be an operator or a "
+                              "closing bracket after the subexpression!");
 }

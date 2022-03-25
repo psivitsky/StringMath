@@ -18,17 +18,19 @@ add_library(StringMath SHARED
     string_math_constant.h
     string_math_constant.cpp
     string_math_function.h
-    string_math_function.cpp
-    expression.h
+    string_math_function.cpp    
     expression_symbol.h
+    expression_symbol.cpp
     expression_operand.h
-    expression_operator.h    
+    expression_operand.cpp
+    expression_operator.h
+    expression_operator.cpp
+    expression.h
+    expression.cpp
     math_parser.h
     math_parser.cpp
     math_processor.h
-    math_processor.cpp
-    math_checker.h
-    math_checker.cpp)
+    math_processor.cpp)
 
 target_link_libraries(StringMath PRIVATE Qt5::Core)
 

@@ -1,18 +1,21 @@
 #include "math_processor.h"
 
 double operators_processing(const QVector<ExpressionSymbol*>&);
+double
+function_processing(double, const QString&, const QVector<StringMathFunction>&);
 
-double function_processing(double, const QString&,
-                           const QVector<StringMathFunction>&);
+ExpressionOperand* operand_checking(QVector<ExpressionSymbol*>::const_iterator,
+                                    QVector<ExpressionSymbol*>::const_iterator);
+ExpressionOperator*
+    operator_checking(QVector<ExpressionSymbol*>::const_iterator);
 
-ExpressionOperand* hyper_1_operation_processing(const ExpressionOperand*,
-                                                const ExpressionOperator*,
-                                                const ExpressionOperand*,
-                                                double&);
-
-ExpressionOperand* hyper_2_operation_processing(const ExpressionOperand*,
-                                                const ExpressionOperator*,
-                                                const ExpressionOperand*);
+void hyper_1_operation_processing(ExpressionOperand*,
+                                  const ExpressionOperator*,
+                                  const ExpressionOperand*,
+                                  double&);
+void hyper_2_operation_processing(ExpressionOperand*,
+                                  const ExpressionOperator*,
+                                  const ExpressionOperand*);
 
 //----------------------------------------------------------------------------------
 /*!
@@ -23,30 +26,23 @@ ExpressionOperand* hyper_2_operation_processing(const ExpressionOperand*,
  */
 //----------------------------------------------------------------------------------
 double MathProcessor::expression_calculation(
-    const Expression* expression, const QVector<StringMathFunction>& functions)
+    const Expression&                  expression,
+    const QVector<StringMathFunction>& functions)
 {
-    QVector<ExpressionSymbol*> symbols_to_interpret;
-    QVector<ExpressionSymbol*> interpreted_symbols;
-
-    foreach(ExpressionSymbol* symbol, expression->symbols())
+    foreach(ExpressionSymbol* symbol, expression.symbols())
     {
         if(symbol->symbol_type() == expressionType)
         {
-            double subexpression_val = expression_calculation(
-                dynamic_cast<Expression*>(symbol), functions);
-
-            ExpressionOperand* operand = new ExpressionOperand();
-            operand->set_value(subexpression_val);
-
-            symbols_to_interpret.push_back(operand);
+            Expression* subexpression = dynamic_cast<Expression*>(symbol);
+            subexpression->set_value(
+                expression_calculation(*subexpression, functions));
         }
-        else
-            symbols_to_interpret.push_back(symbol);
     }
 
-    double calc_result = operators_processing(symbols_to_interpret);
+    double calc_result = operators_processing(expression.symbols());
 
-    return function_processing(calc_result, expression->function_name(),
+    return function_processing(calc_result,
+                               expression.function_name(),
                                functions);
 }
 //----------------------------------------------------------------------------------
@@ -58,42 +54,44 @@ double MathProcessor::expression_calculation(
 //----------------------------------------------------------------------------------
 double operators_processing(const QVector<ExpressionSymbol*>& symbols)
 {
-    double calc_result = 0.;
-
     if(symbols.isEmpty())
         throw StringMathError("MathProcessor: the expression is empty!");
 
-    QVector<ExpressionSymbol*>::const_iterator iterator = symbols.begin();
+    double calc_result = 0.;
 
-    ExpressionOperand* left_operand =
-        MathChecker::operand_checking(iterator, symbols.end());
-    ++iterator;
+    QVector<ExpressionSymbol*>::const_iterator begin = symbols.begin();
+    QVector<ExpressionSymbol*>::const_iterator end = symbols.end();
+
+    ExpressionOperand* left_operand = operand_checking(begin, end);
+    ++begin;
 
     ExpressionOperator* expression_operator = nullptr;
     ExpressionOperand*  right_operand = nullptr;
 
-    while(iterator != symbols.end())
+    while(begin != end)
     {
-        expression_operator =
-            MathChecker::operator_checking(iterator, symbols.end());
-        ++iterator;
-        right_operand = MathChecker::operand_checking(iterator, symbols.end());
-        ++iterator;
+        expression_operator = operator_checking(begin);
+        ++begin;
+        right_operand = operand_checking(begin, end);
+        ++begin;
 
         if(MathProcessor::hyper_1_operators.contains(
                expression_operator->operator_type()))
         {
-            if(left_operand->is_empty() && (symbols.first() == left_operand))
+            if(left_operand->is_empty() && (left_operand == symbols.first()))
                 left_operand->set_value(0.);
 
-            left_operand = hyper_1_operation_processing(
-                left_operand, expression_operator, right_operand, calc_result);
+            hyper_1_operation_processing(left_operand,
+                                         expression_operator,
+                                         right_operand,
+                                         calc_result);
         }
         else if(MathProcessor::hyper_2_operators.contains(
                     expression_operator->operator_type()))
         {
-            left_operand = hyper_2_operation_processing(
-                left_operand, expression_operator, right_operand);
+            hyper_2_operation_processing(left_operand,
+                                         expression_operator,
+                                         right_operand);
         }
         else
             throw StringMathError("MathProcessor: the expression contains an "
@@ -104,7 +102,7 @@ double operators_processing(const QVector<ExpressionSymbol*>& symbols)
 
     return calc_result;
 }
-//---------------------------------------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------
 /*!
  * The method of processing the algebraic function.
  * \param[in] argument The algebraic function argument.
@@ -112,8 +110,9 @@ double operators_processing(const QVector<ExpressionSymbol*>& symbols)
  * \param[in] functions The container with functions.
  * \return The result of the calculation.
  */
-//---------------------------------------------------------------------------------------------------------------------------------------------------
-double function_processing(double argument, const QString& name,
+//----------------------------------------------------------------------------------
+double function_processing(double                             argument,
+                           const QString&                     name,
                            const QVector<StringMathFunction>& functions)
 {
     double calc_result = 0.;
@@ -139,21 +138,66 @@ double function_processing(double argument, const QString& name,
 
     return calc_result;
 }
-//---------------------------------------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------
+/*!
+ * Operand checking function.
+ * \param[in] begin The iterator pointing to the operand in the parsing
+ * container.
+ * \param[in] end The iterator pointing to a symbol after the last
+ * symbol in the parsing container.
+ * \return Pointer to the operand.
+ */
+//----------------------------------------------------------------------------------
+ExpressionOperand*
+operand_checking(QVector<ExpressionSymbol*>::const_iterator begin,
+                 QVector<ExpressionSymbol*>::const_iterator end)
+{
+    if(begin == end)
+        throw StringMathError("MathProcessor: the operand is missing!");
+
+    ExpressionOperand* operand = nullptr;
+    if((*begin)->symbol_type() == operandType)
+        operand = dynamic_cast<ExpressionOperand*>(*begin);
+    else if((*begin)->symbol_type() == expressionType)
+        operand = dynamic_cast<ExpressionOperand*>(*begin);
+    else
+        throw StringMathError("MathProcessor: the operand is missing!");
+
+    return operand;
+}
+//----------------------------------------------------------------------------------
+/*!
+ * Operator checking function.
+ * \param[in] iterator The iterator pointing to the operator in the parsing
+ * container.
+ * \return Pointer to the operator.
+ */
+//----------------------------------------------------------------------------------
+ExpressionOperator*
+operator_checking(QVector<ExpressionSymbol*>::const_iterator iterator)
+{
+    ExpressionOperator* expression_operator = nullptr;
+    if((*iterator)->symbol_type() == operatorType)
+        expression_operator = dynamic_cast<ExpressionOperator*>(*iterator);
+    else
+        throw StringMathError("MathProcessor: the operator is missing!");
+
+    return expression_operator;
+}
+//----------------------------------------------------------------------------------
 /*!
  * The hyper 1 operation processing function.
- * \param[in] leftOperand Pointer to the left operand.
+ * \param[in,out] leftOperand Pointer to the current left operand at the input
+ * and the next left operand at the output.
  * \param[in] centerOperator Pointer to the hyper 1 operator.
  * \param[in] rightOperand Pointer to the right operand.
  * \param[in,out] calcResult The calculation result.
- * \return Pointer to the new left operand.
  */
-//---------------------------------------------------------------------------------------------------------------------------------------------------
-ExpressionOperand*
-hyper_1_operation_processing(const ExpressionOperand*  leftOperand,
-                             const ExpressionOperator* centerOperator,
-                             const ExpressionOperand*  rightOperand,
-                             double&                   calcResult)
+//----------------------------------------------------------------------------------
+void hyper_1_operation_processing(ExpressionOperand*        leftOperand,
+                                  const ExpressionOperator* centerOperator,
+                                  const ExpressionOperand*  rightOperand,
+                                  double&                   calcResult)
 {
     if(leftOperand->is_empty())
         throw StringMathError("MathProcessor: the left operand is empty!");
@@ -163,26 +207,26 @@ hyper_1_operation_processing(const ExpressionOperand*  leftOperand,
 
     calcResult += leftOperand->value();
 
-    ExpressionOperand* new_operand = new ExpressionOperand(*rightOperand);
-
-    if(centerOperator->operator_type() == diffType)
-        new_operand->set_value(-rightOperand->value());
-
-    return new_operand;
+    if(centerOperator->operator_type() == sumType)
+        leftOperand->set_value(rightOperand->value());
+    else if(centerOperator->operator_type() == diffType)
+        leftOperand->set_value(-rightOperand->value());
+    else
+        throw StringMathError(
+            "MathProcessor: there is no such hyper 1 operation!");
 }
-//---------------------------------------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------
 /*!
  * The hyper 2 operation processing function.
- * \param[in] leftOperand Pointer to the left operand.
+ * \param[in,out] leftOperand Pointer to the current left operand at the input
+ * and the next left operand at the output.
  * \param[in] centerOperator Pointer to the hyper 2 operator.
  * \param[in] rightOperand Pointer to the right operand.
- * \return Pointer to the new left operand.
  */
-//---------------------------------------------------------------------------------------------------------------------------------------------------
-ExpressionOperand*
-hyper_2_operation_processing(const ExpressionOperand*  leftOperand,
-                             const ExpressionOperator* centerOperator,
-                             const ExpressionOperand*  rightOperand)
+//----------------------------------------------------------------------------------
+void hyper_2_operation_processing(ExpressionOperand*        leftOperand,
+                                  const ExpressionOperator* centerOperator,
+                                  const ExpressionOperand*  rightOperand)
 {
     if(leftOperand->is_empty())
         throw StringMathError("MathProcessor: the left operand is empty!");
@@ -190,15 +234,11 @@ hyper_2_operation_processing(const ExpressionOperand*  leftOperand,
     if(rightOperand->is_empty())
         throw StringMathError("MathProcessor: the right operand is empty!");
 
-    ExpressionOperand* new_operand = new ExpressionOperand();
-
     if(centerOperator->operator_type() == multType)
-        new_operand->set_value(leftOperand->value() * rightOperand->value());
+        leftOperand->set_value(leftOperand->value() * rightOperand->value());
     else if(centerOperator->operator_type() == divType)
-        new_operand->set_value(leftOperand->value() / rightOperand->value());
+        leftOperand->set_value(leftOperand->value() / rightOperand->value());
     else
         throw StringMathError(
             "MathProcessor: there is no such hyper 2 operation!");
-
-    return new_operand;
 }

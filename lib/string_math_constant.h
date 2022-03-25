@@ -1,4 +1,4 @@
-//---------------------------------------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------
 /*!
  * \brief
  * Mathematical constant
@@ -16,14 +16,12 @@
  * Code example
  * -----
  * \code
- *
  * StringMath calculator;
- *
  * try
  * {
  *     calculator.add_constant(StringMathConstant("2PI", 6.28));
- *     calculator.calculate("2PI");
- *     // The result will be "6.28".
+ *     double result = calculator.calculate("2PI");
+ *     // The "result" value will be "6.28".
  * }
  * catch(StringMathError &err)
  * {
@@ -32,9 +30,9 @@
  * \endcode
  *
  * \warning
- * If an object has an empty name, its value cannot be obtained.
+ * If a class object has an empty name, its value cannot be obtained.
  */
-//---------------------------------------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------
 #ifndef STRINGMATHCONSTANT_H
 #define STRINGMATHCONSTANT_H
 

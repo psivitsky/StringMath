@@ -1,4 +1,4 @@
-//---------------------------------------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------
 /*!
  * \brief
  * Algebraic function
@@ -19,16 +19,14 @@
  * Code example
  * -----
  * \code
- *
  * double my_sqr(double arg) { return arg * arg; };
  *
  * StringMath calculator;
- *
  * try
  * {
  *     calculator.add_function(StringMathConstant("sqr", my_sqr));
- *     calculator.calculate("sqr(2)");
- *     // The result will be "4".
+ *     double result = calculator.calculate("sqr(2)");
+ *     // The "result" value will be "4".
  * }
  * catch(StringMathError &err)
  * {
@@ -37,9 +35,9 @@
  * \endcode
  *
  * \warning
- * If an object has an empty name, its implementation cannot be obtained.
+ * If a class object has an empty name, its implementation cannot be obtained.
  */
-//---------------------------------------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------
 #ifndef STRINGMATHFUNCTION_H
 #define STRINGMATHFUNCTION_H
 
