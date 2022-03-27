@@ -41,9 +41,22 @@ double MathProcessor::expression_calculation(
 
     double calc_result = operators_processing(expression.symbols());
 
-    return function_processing(calc_result,
-                               expression.function_name(),
-                               functions);
+    calc_result =
+        function_processing(calc_result, expression.function_name(), functions);
+
+    switch(std::fpclassify(calc_result))
+    {
+        case FP_INFINITE:
+            throw StringMathError(
+                "MathProcessor: the calculation result is infinite!");
+        case FP_NAN:
+            throw StringMathError(
+                "MathProcessor: the calculation result is not a number!");
+        default:
+            break;
+    }
+
+    return calc_result;
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -98,6 +111,8 @@ double operators_processing(const QVector<ExpressionSymbol*>& symbols)
                                   "invalid operator!");
     }
 
+    if(left_operand->is_empty())
+        throw StringMathError("MathProcessor: the left operand is empty!");
     calc_result += left_operand->value();
 
     return calc_result;

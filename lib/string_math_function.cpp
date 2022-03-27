@@ -115,18 +115,5 @@ std::function<double(double)> StringMathFunction::function() const
 double StringMathFunction::calculate(double argument) const
 {
     double result = function_(argument);
-
-    switch(std::fpclassify(result))
-    {
-        case FP_INFINITE:
-            throw StringMathError("StringMathFunction: the \"" + name_ +
-                                  "\" calculation result is infinite!");
-        case FP_NAN:
-            throw StringMathError("StringMathFunction: the \"" + name_ +
-                                  "\" calculation result is not a number!");
-        default:
-            break;
-    }
-
     return result;
 }
