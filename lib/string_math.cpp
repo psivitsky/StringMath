@@ -52,11 +52,11 @@ void StringMath::replace_constant(const QString& existingConstantName,
                                   double         newConstantValue)
 {
     bool f_replaced = false;
-    foreach(StringMathConstant constant, constants_)
+    for(int i = 0; i < constants_.size(); ++i)
     {
-        if(constant.name() == existingConstantName)
+        if(constants_[i].name() == existingConstantName)
         {
-            constant.set_value(newConstantValue);
+            constants_[i].set_value(newConstantValue);
             f_replaced = true;
             break;
         }
@@ -121,11 +121,11 @@ void StringMath::replace_function(const QString& existingFunctionName,
                                   std::function<double(double)> newFunction)
 {
     bool f_replaced = false;
-    foreach(StringMathFunction function, functions_)
+    for(int i = 0; i < functions_.size(); ++i)
     {
-        if(function.name() == existingFunctionName)
+        if(functions_[i].name() == existingFunctionName)
         {
-            function.set_function(newFunction);
+            functions_[i].set_function(newFunction);
             f_replaced = true;
             break;
         }
