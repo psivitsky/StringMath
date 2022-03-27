@@ -24,7 +24,7 @@
  * StringMath calculator;
  * try
  * {
- *     calculator.add_function(StringMathConstant("sqr", my_sqr));
+ *     calculator.add_function(StringMathFunction("sqr", my_sqr));
  *     double result = calculator.calculate("sqr(2)");
  *     // The "result" value will be "4".
  * }
