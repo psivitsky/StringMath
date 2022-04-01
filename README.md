@@ -3,7 +3,7 @@
 The **"StringMath"** library provides calculation of mathematical expressions in string format.
 Expressions can contain several mathematical operations and subexpressions in brackets.
 Basic arithmetic operations, trigonometric and logarithmic functions are available for calculations.
-Calculations are made with double precision. The result of calculations is given with a specified number of decimal places.
+Calculations are made with double precision.
 
 # Installation
 
@@ -30,5 +30,4 @@ Build of test and example is performed similarly, but separately (don't forget t
 
 Include the header file "string_math.h" and create a class object.
 Pass an expression string to the object and get the result of the calculation.
-You can also pass the desired number of decimal places in the arguments of the class constructor.
 If the object detects an error it throws an exception.
