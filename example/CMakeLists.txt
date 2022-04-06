@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(StringMathWidget LANGUAGES CXX)
+project(StringMathExample LANGUAGES CXX)
 
 set(STRING_MATH_INCLUDE_PATH ..\\lib)
 
@@ -15,14 +15,14 @@ find_package(Qt5 COMPONENTS Widgets REQUIRED)
 
 add_subdirectory(${STRING_MATH_INCLUDE_PATH} StringMath)
 
-add_executable(StringMathWidget
+add_executable(${PROJECT_NAME} WIN32
   main.cpp
   interface.cpp
   interface.h
   interface.ui)
 
-target_link_libraries(StringMathWidget PRIVATE Qt5::Widgets StringMath)
+target_link_libraries(${PROJECT_NAME} PRIVATE Qt5::Widgets StringMath)
 
-target_include_directories(StringMathWidget PRIVATE ${STRING_MATH_INCLUDE_PATH})
+target_include_directories(${PROJECT_NAME} PRIVATE ${STRING_MATH_INCLUDE_PATH})
 
 install(FILES "${CMAKE_BINARY_DIR}/StringMath/StringMath.dll" DESTINATION ${CMAKE_BINARY_DIR})

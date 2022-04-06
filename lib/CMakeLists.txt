@@ -10,7 +10,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Qt5 COMPONENTS Core REQUIRED)
 
-add_library(StringMath SHARED
+add_library(${PROJECT_NAME} SHARED
     string_math_base.h
     string_math_base.cpp
     string_math.h
@@ -32,6 +32,6 @@ add_library(StringMath SHARED
     math_processor.h
     math_processor.cpp)
 
-target_link_libraries(StringMath PRIVATE Qt5::Core)
+target_link_libraries(${PROJECT_NAME} PRIVATE Qt5::Core)
 
-target_compile_definitions(StringMath PRIVATE STRINGMATH_LIBRARY)
+target_compile_definitions(${PROJECT_NAME} PRIVATE STRINGMATH_LIBRARY)

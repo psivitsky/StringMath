@@ -14,13 +14,13 @@ find_package(Qt5Core)
 
 add_subdirectory(${STRING_MATH_INCLUDE_PATH} StringMath)
 
-add_executable(StringMathTest main.cpp
+add_executable(${PROJECT_NAME} main.cpp
     string_math_tests.h
     string_math_tests.cpp
     resources.qrc)
 
-target_link_libraries(StringMathTest Qt5::Core StringMath)
+target_link_libraries(${PROJECT_NAME} Qt5::Core StringMath)
 
-target_include_directories(StringMathTest PRIVATE ${STRING_MATH_INCLUDE_PATH})
+target_include_directories(${PROJECT_NAME} PRIVATE ${STRING_MATH_INCLUDE_PATH})
 
 install(FILES "${CMAKE_BINARY_DIR}/StringMath/StringMath.dll" DESTINATION ${CMAKE_BINARY_DIR})
