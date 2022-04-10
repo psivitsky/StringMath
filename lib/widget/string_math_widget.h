@@ -39,6 +39,9 @@ private slots:
 
 private:
     Ui::StringMathWidget* ui;
+    // Constants...
+    const QString result_SB_ok_style = "color: rgb(0, 128, 0)";
+    const QString result_SB_error_style = "color: rgb(128, 0, 0)";
     // Variables...
     StringMath calc;
 };

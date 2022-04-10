@@ -27,7 +27,22 @@ StringMathWidget::~StringMathWidget()
 //----------------------------------------------------------------------------------
 void StringMathWidget::on_result_SB_valueChanged(const QString& arg1)
 {
-    ui->expression_LE->setText(arg1);
+    QString expression_str = arg1;
+    ui->expression_LE->setText(expression_str.replace(',', '.'));
+
+    try
+    {
+        QString result_str = calc.calculate(ui->expression_LE->text(),
+                                            ui->result_SB->decimals());
+
+        ui->result_LE->setStyleSheet(result_SB_ok_style);
+        ui->result_LE->setText(result_str);
+    }
+    catch(StringMathError& err)
+    {
+        ui->result_LE->setStyleSheet(result_SB_error_style);
+        ui->result_LE->setText(err.what());
+    }
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -40,8 +55,11 @@ void StringMathWidget::on_expression_LE_editingFinished()
 {
     try
     {
-        ui->result_LE->setText(calc.calculate(ui->expression_LE->text(),
-                                              ui->result_SB->decimals()));
+        QString result_str = calc.calculate(ui->expression_LE->text(),
+                                            ui->result_SB->decimals());
+
+        ui->result_LE->setStyleSheet(result_SB_ok_style);
+        ui->result_LE->setText(result_str);
 
         ui->result_SB->blockSignals(true);
         ui->result_SB->setValue(ui->result_LE->text().toDouble());
@@ -49,6 +67,7 @@ void StringMathWidget::on_expression_LE_editingFinished()
     }
     catch(StringMathError& err)
     {
+        ui->result_LE->setStyleSheet(result_SB_error_style);
         ui->result_LE->setText(err.what());
     }
 }
