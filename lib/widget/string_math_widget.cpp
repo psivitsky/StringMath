@@ -20,6 +20,57 @@ StringMathWidget::~StringMathWidget()
 }
 //----------------------------------------------------------------------------------
 /*!
+ * Expression string setter.
+ * \param[in] str The expression string.
+ */
+//----------------------------------------------------------------------------------
+void StringMathWidget::set_expression(const QString& str)
+{
+    ui->expression_LE->setText(str);
+    on_expression_LE_editingFinished();
+}
+//----------------------------------------------------------------------------------
+/*!
+ * Expression string getter.
+ * \return The expression string.
+ */
+//----------------------------------------------------------------------------------
+const QString StringMathWidget::expression() const
+{
+    return ui->expression_LE->text();
+}
+//----------------------------------------------------------------------------------
+/*!
+ * Calculation result getter.
+ * \return The calculation result.
+ */
+//----------------------------------------------------------------------------------
+double StringMathWidget::value() const
+{
+    return ui->result_SB->value();
+}
+//----------------------------------------------------------------------------------
+/*!
+ * Calculation precision setter.
+ * \param[in] val The calculation precision.
+ */
+//----------------------------------------------------------------------------------
+void StringMathWidget::set_decimals(int val)
+{
+    ui->result_SB->setDecimals(val);
+}
+//----------------------------------------------------------------------------------
+/*!
+ * Calculation precision getter.
+ * \return The calculation precision.
+ */
+//----------------------------------------------------------------------------------
+int StringMathWidget::decimals() const
+{
+    return ui->result_SB->decimals();
+}
+//----------------------------------------------------------------------------------
+/*!
  * Slot for processing the entered value.\n
  * Processing is performed every time the value changes.
  * \param[in] arg1 The entered value string.

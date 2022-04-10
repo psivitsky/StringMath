@@ -26,13 +26,19 @@ class StringMathWidget;
 
 #include "string_math.h"
 
-class StringMathWidget : public QWidget
+class STRINGMATHWIDGET_EXPORT StringMathWidget : public QWidget
 {
     Q_OBJECT
 public:
     explicit StringMathWidget(QWidget* parent = nullptr);
     ~StringMathWidget();
+    // Functions...
+    void          set_expression(const QString& str);
+    const QString expression() const;
+    double        value() const;
 
+    void set_decimals(int val);
+    int  decimals() const;
 private slots:
     void on_result_SB_valueChanged(const QString& arg1);
     void on_expression_LE_editingFinished();
