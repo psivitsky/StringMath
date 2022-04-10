@@ -24,6 +24,8 @@ class StringMathWidget;
 
 #include <QWidget>
 
+#include "string_math.h"
+
 class StringMathWidget : public QWidget
 {
     Q_OBJECT
@@ -31,7 +33,13 @@ public:
     explicit StringMathWidget(QWidget* parent = nullptr);
     ~StringMathWidget();
 
+private slots:
+    void on_result_SB_valueChanged(const QString& arg1);
+    void on_expression_LE_editingFinished();
+
 private:
     Ui::StringMathWidget* ui;
+    // Variables...
+    StringMath calc;
 };
 #endif // STRING_MATH_WIDGET_H
