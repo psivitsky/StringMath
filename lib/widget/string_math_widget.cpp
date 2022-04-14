@@ -10,6 +10,8 @@ StringMathWidget::StringMathWidget(QWidget* parent)
     : QWidget(parent), ui(new Ui::StringMathWidget)
 {
     ui->setupUi(this);
+
+    set_minimized(true);
 }
 //----------------------------------------------------------------------------------
 //! \details The destructor.
@@ -68,6 +70,68 @@ void StringMathWidget::set_decimals(int val)
 int StringMathWidget::decimals() const
 {
     return ui->result_SB->decimals();
+}
+//----------------------------------------------------------------------------------
+/*!
+ * Minimized view setter.
+ * \param[in] fMinimized The flag of the minimized view:
+ * true - the widget view is minimized,
+ * false - the widget is expanded.
+ */
+//----------------------------------------------------------------------------------
+void StringMathWidget::set_minimized(bool fMinimized)
+{
+    if(fMinimized)
+    {
+        ui->minimize_expand_PB->setText(minimized_symbol);
+        ui->calculator_frame->hide();
+    }
+    else
+    {
+        ui->minimize_expand_PB->setText(expanded_symbol);
+        ui->calculator_frame->show();
+    }
+}
+//----------------------------------------------------------------------------------
+/*!
+ * Minimized view checker.
+ * \return The check result: true - the widget view is minimized,
+ * false - the widget is expanded.
+ */
+//----------------------------------------------------------------------------------
+bool StringMathWidget::is_minimized()
+{
+    return ui->calculator_frame->isHidden();
+}
+//----------------------------------------------------------------------------------
+//! \details The widget enabling function.
+//----------------------------------------------------------------------------------
+void StringMathWidget::set_enabled()
+{
+    ui->result_SB->setEnabled(true);
+    ui->expression_LE->setEnabled(true);
+    ui->result_LE->setEnabled(true);
+    ui->cnst_and_func_PB->setEnabled(true);
+}
+//----------------------------------------------------------------------------------
+//! \details The widget disabling function.
+//----------------------------------------------------------------------------------
+void StringMathWidget::set_disabled()
+{
+    ui->result_SB->setDisabled(true);
+    ui->expression_LE->setDisabled(true);
+    ui->result_LE->setDisabled(true);
+    ui->cnst_and_func_PB->setDisabled(true);
+}
+//----------------------------------------------------------------------------------
+//! \details The widget minimizing/expanding slot.
+//----------------------------------------------------------------------------------
+void StringMathWidget::on_minimize_expand_PB_clicked()
+{
+    if(is_minimized())
+        set_minimized(false);
+    else
+        set_minimized(true);
 }
 //----------------------------------------------------------------------------------
 /*!

@@ -19,6 +19,8 @@ class StringMathWidget;
  * \brief
  * StringMath widget
  * \details
+ * \warning
+ * The widget is minimized by default.
  */
 //----------------------------------------------------------------------------------
 
@@ -39,13 +41,23 @@ public:
 
     void set_decimals(int val);
     int  decimals() const;
+
+    void set_minimized(bool fMinimized);
+    bool is_minimized();
+
+    void set_enabled();
+    void set_disabled();
 private slots:
+    void on_minimize_expand_PB_clicked();
     void on_result_SB_valueChanged(const QString& arg1);
     void on_expression_LE_editingFinished();
 
 private:
     Ui::StringMathWidget* ui;
     // Constants...
+    const QString minimized_symbol = "►";
+    const QString expanded_symbol = "▼";
+
     const QString result_SB_ok_style = "color: rgb(0, 128, 0)";
     const QString result_SB_error_style = "color: rgb(128, 0, 0)";
     // Variables...
