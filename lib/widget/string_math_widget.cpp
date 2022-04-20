@@ -1,5 +1,8 @@
 #include "string_math_widget.h"
 #include "ui_string_math_widget.h"
+
+#include "string_math_menu.h"
+
 //----------------------------------------------------------------------------------
 /*!
  * The constructor.
@@ -12,6 +15,8 @@ StringMathWidget::StringMathWidget(QWidget* parent)
     ui->setupUi(this);
 
     set_minimized(true);
+
+    menu = new StringMathMenu(this);
 }
 //----------------------------------------------------------------------------------
 //! \details The destructor.
@@ -185,4 +190,11 @@ void StringMathWidget::on_expression_LE_editingFinished()
         ui->result_LE->setStyleSheet(result_SB_error_style);
         ui->result_LE->setText(err.what());
     }
+}
+//----------------------------------------------------------------------------------
+//! \details Slot for displaying the context menu of constants and functions.
+//----------------------------------------------------------------------------------
+void StringMathWidget::on_cnst_and_func_PB_clicked()
+{
+    menu->popup(ui->cnst_and_func_PB->mapToGlobal(QPoint(0, 0)));
 }
