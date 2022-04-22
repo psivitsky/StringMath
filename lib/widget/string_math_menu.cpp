@@ -7,50 +7,43 @@
 //----------------------------------------------------------------------------------
 StringMathMenu::StringMathMenu(QWidget* parent) : QMenu(parent)
 {
-    QMenu* constants_submenu = new QMenu("Constants", this);
+    QMenu* constants_submenu = new QMenu(constants_submenu_name_, this);
     addMenu(constants_submenu);
+    for(int i = 0; i < constants_.size(); ++i)
+        add_action(constants_.at(i).actionName, constants_submenu);
 
-    QAction* constant_pi = new QAction("π", this);
-    constants_submenu->addAction(constant_pi);
-    QAction* constant_e = new QAction("e", this);
-    constants_submenu->addAction(constant_e);
-
-    QMenu* functions_submenu = new QMenu("Functions", this);
+    QMenu* functions_submenu = new QMenu(functions_submenu_name_, this);
     addMenu(functions_submenu);
 
-    QMenu* functions_basic_submenu = new QMenu("Basic", this);
+    QMenu* functions_basic_submenu =
+        new QMenu(basic_functions_submenu_name_, this);
     functions_submenu->addMenu(functions_basic_submenu);
-    QAction* function_sqrt = new QAction("Square root", this);
-    functions_basic_submenu->addAction(function_sqrt);
+    for(int i = 0; i < basic_functions_.size(); ++i)
+        add_action(basic_functions_.at(i).actionName, functions_basic_submenu);
 
-    QMenu* functions_trigonometric_submenu = new QMenu("Trigonometric", this);
+    QMenu* functions_trigonometric_submenu =
+        new QMenu(trigonometric_functions_submenu_name_, this);
     functions_submenu->addMenu(functions_trigonometric_submenu);
-    QAction* function_cos = new QAction("Cosine", this);
-    functions_trigonometric_submenu->addAction(function_cos);
-    QAction* function_sin = new QAction("Sine", this);
-    functions_trigonometric_submenu->addAction(function_sin);
-    QAction* function_tan = new QAction("Tangent", this);
-    functions_trigonometric_submenu->addAction(function_tan);
-    QAction* function_cot = new QAction("Cotangent", this);
-    functions_trigonometric_submenu->addAction(function_cot);
-    functions_trigonometric_submenu->addSeparator();
-    QAction* function_acos = new QAction("Arccosine", this);
-    functions_trigonometric_submenu->addAction(function_acos);
-    QAction* function_asin = new QAction("Arcsine", this);
-    functions_trigonometric_submenu->addAction(function_asin);
-    QAction* function_atan = new QAction("Arctangent", this);
-    functions_trigonometric_submenu->addAction(function_atan);
-    QAction* function_acot = new QAction("Arccotangent", this);
-    functions_trigonometric_submenu->addAction(function_acot);
+    for(int i = 0; i < trigonometric_functions_.size(); ++i)
+        add_action(trigonometric_functions_.at(i).actionName,
+                   functions_trigonometric_submenu);
 
-    QMenu* functions_logarithmic_submenu = new QMenu("Logarithmic", this);
+    QMenu* functions_logarithmic_submenu =
+        new QMenu(logarithmic_functions_submenu_name_, this);
     functions_submenu->addMenu(functions_logarithmic_submenu);
-    QAction* function_log = new QAction("Natural logarithm", this);
-    functions_logarithmic_submenu->addAction(function_log);
-    QAction* function_log10 = new QAction("Base 10 logarithm", this);
-    functions_logarithmic_submenu->addAction(function_log10);
-    QAction* function_log2 = new QAction("Base 2 logarithm", this);
-    functions_logarithmic_submenu->addAction(function_log2);
-    QAction* function_exp = new QAction("Exponent", this);
-    functions_logarithmic_submenu->addAction(function_exp);
+    for(int i = 0; i < logarithmic_functions_.size(); ++i)
+        add_action(logarithmic_functions_.at(i).actionName,
+                   functions_logarithmic_submenu);
+}
+//----------------------------------------------------------------------------------
+/*!
+ * The function of adding an action to the submenu.
+ * \param[in] actionName The name of the action.
+ * \param[in] targetSubmenu Pointer to the target submenu.
+ */
+//----------------------------------------------------------------------------------
+void StringMathMenu::add_action(const QString& actionName, QMenu* targetSubmenu)
+{
+    QAction* new_action = new QAction(actionName, this);
+    targetSubmenu->addAction(new_action);
 }
