@@ -35,6 +35,8 @@ class STRINGMATHWIDGET_EXPORT StringMathWidget : public QWidget
     Q_OBJECT
 public:
     explicit StringMathWidget(QWidget* parent = nullptr);
+    StringMathWidget(const StringMathWidget& obj) = delete;
+    StringMathWidget& operator=(const StringMathWidget& obj) = delete;
     ~StringMathWidget();
     // Functions...
     void          set_expression(const QString& str);
