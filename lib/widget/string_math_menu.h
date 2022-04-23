@@ -27,6 +27,10 @@ public:
     StringMathMenu(const StringMathMenu& obj) = delete;
     StringMathMenu& operator=(const StringMathMenu& obj) = delete;
     ~StringMathMenu() = default;
+signals:
+    void data_selected(const QString&);
+private slots:
+    void action_triggered();
 
 private:
     // Constants...
@@ -36,11 +40,11 @@ private:
     const QString trigonometric_functions_submenu_name_ = "Trigonometric";
     const QString logarithmic_functions_submenu_name_ = "Logarithmic";
 
-    const QVector<StringMathMenuData> constants_ = {{"π", "pi"},
-                                                    {"Exponent", "e"}};
+    const QVector<StringMathMenuData> constants_ = {{"π", "pi"}, {"e", "e"}};
 
     const QVector<StringMathMenuData> basic_functions_ = {
-        {"Square root", "sqrt()"}};
+        {"Square root", "sqrt()"},
+        {"Exponent", "exp()"}};
 
     const QVector<StringMathMenuData> trigonometric_functions_ = {
         {"Cosine", "cos()"},
@@ -55,9 +59,10 @@ private:
     const QVector<StringMathMenuData> logarithmic_functions_ = {
         {"Natural logarithm", "log()"},
         {"Base 10 logarithm", "log10()"},
-        {"Base 2 logarithm", "log2()"},
-        {"Exponent", "exp()"}};
+        {"Base 2 logarithm", "log2()"}};
 
+    // Containers...
+    QVector<StringMathMenuData> summary_data_;
     // Functions...
     void add_action(const QString& actionName, QMenu* targetSubmenu);
 };

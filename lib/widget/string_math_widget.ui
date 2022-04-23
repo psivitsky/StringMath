@@ -54,6 +54,7 @@
         </property>
         <property name="font">
          <font>
+          <family>Consolas</family>
           <pointsize>10</pointsize>
           <weight>75</weight>
           <bold>true</bold>
@@ -130,6 +131,7 @@
          <widget class="QLabel" name="expression_L">
           <property name="font">
            <font>
+            <family>Consolas</family>
             <pointsize>10</pointsize>
             <weight>75</weight>
             <bold>true</bold>
@@ -181,13 +183,15 @@
           </property>
           <property name="font">
            <font>
+            <family>Consolas</family>
             <pointsize>10</pointsize>
             <weight>75</weight>
+            <italic>true</italic>
             <bold>true</bold>
            </font>
           </property>
           <property name="text">
-           <string>δ</string>
+           <string>f</string>
           </property>
           <property name="autoRepeat">
            <bool>false</bool>

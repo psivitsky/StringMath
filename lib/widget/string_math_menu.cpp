@@ -34,6 +34,29 @@ StringMathMenu::StringMathMenu(QWidget* parent) : QMenu(parent)
     for(int i = 0; i < logarithmic_functions_.size(); ++i)
         add_action(logarithmic_functions_.at(i).actionName,
                    functions_logarithmic_submenu);
+
+    summary_data_ << constants_;
+    summary_data_ << basic_functions_;
+    summary_data_ << trigonometric_functions_;
+    summary_data_ << logarithmic_functions_;
+}
+//----------------------------------------------------------------------------------
+//! \details The slot of the triggered action.
+//----------------------------------------------------------------------------------
+void StringMathMenu::action_triggered()
+{
+    QAction* action = dynamic_cast<QAction*>(sender());
+    if(action == nullptr)
+        return;
+
+    foreach(StringMathMenuData data, summary_data_)
+    {
+        if(data.actionName == action->text())
+        {
+            emit(data_selected(data.str));
+            return;
+        }
+    }
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -45,5 +68,7 @@ StringMathMenu::StringMathMenu(QWidget* parent) : QMenu(parent)
 void StringMathMenu::add_action(const QString& actionName, QMenu* targetSubmenu)
 {
     QAction* new_action = new QAction(actionName, this);
+    connect(new_action, SIGNAL(triggered()), SLOT(action_triggered()));
+
     targetSubmenu->addAction(new_action);
 }

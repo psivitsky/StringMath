@@ -10,13 +10,16 @@
  */
 //----------------------------------------------------------------------------------
 StringMathWidget::StringMathWidget(QWidget* parent)
-    : QWidget(parent), ui(new Ui::StringMathWidget)
+    : QWidget(parent), ui(new Ui::StringMathWidget),
+      menu(new StringMathMenu(this))
 {
     ui->setupUi(this);
 
     set_minimized(true);
 
-    menu = new StringMathMenu(this);
+    connect(menu,
+            SIGNAL(data_selected(const QString&)),
+            SLOT(append_string(const QString&)));
 }
 //----------------------------------------------------------------------------------
 //! \details The destructor.
@@ -197,4 +200,14 @@ void StringMathWidget::on_expression_LE_editingFinished()
 void StringMathWidget::on_cnst_and_func_PB_clicked()
 {
     menu->popup(ui->cnst_and_func_PB->mapToGlobal(QPoint(0, 0)));
+}
+//----------------------------------------------------------------------------------
+/*!
+ * Slot for appending a string to the expression text.
+ * \param[in] str The appending string.
+ */
+//----------------------------------------------------------------------------------
+void StringMathWidget::append_string(const QString& str)
+{
+    ui->expression_LE->setText(ui->expression_LE->text() + str);
 }

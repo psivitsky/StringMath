@@ -57,6 +57,8 @@ private slots:
     void on_expression_LE_editingFinished();
     void on_cnst_and_func_PB_clicked();
 
+    void append_string(const QString& str);
+
 private:
     Ui::StringMathWidget* ui;
     // Constants...
@@ -68,6 +70,6 @@ private:
     // Variables...
     StringMath calc;
     // Pointers...
-    StringMathMenu* menu = nullptr;
+    StringMathMenu* menu;
 };
 #endif // STRING_MATH_WIDGET_H
