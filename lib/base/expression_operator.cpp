@@ -18,7 +18,9 @@ ExpressionOperator::ExpressionOperator(const QChar& character)
 {
     symbol_type_ = operatorType;
 
-    if(character == '*')
+    if(character == '^')
+        operator_type_ = powType;
+    else if(character == '*')
         operator_type_ = multType;
     else if(character == '/')
         operator_type_ = divType;

@@ -17,7 +17,7 @@ namespace MathParser
 const QStringList opening_brackets = {"(", "[", "{"};
 const QStringList closing_brackets = {")", "]", "}"};
 
-const QStringList operators = {"*", "/", "+", "-"};
+const QStringList operators = {"^", "*", "/", "+", "-"};
 
 void expression_parsing(const QString&                     expressionStr,
                         const QVector<StringMathConstant>& constants,

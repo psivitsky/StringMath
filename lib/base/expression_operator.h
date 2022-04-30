@@ -20,6 +20,7 @@
 enum ExpressionOperatorType
 {
     defaultType,
+    powType,
     multType,
     divType,
     sumType,
