@@ -17,6 +17,12 @@ struct StringMathMenuData
  * \brief
  * The context menu of StringMath constants and functions
  * \details
+ * The class object provides a context menu with StringMath constants and
+ * functions.\n
+ * The context menu consists of two submenus: a constant submenu and a function
+ * submenu. Each submenu, in turn, contains actions and other submenus. By
+ * clicking the action, object finds the constant or the function text and sends
+ * it to the widget.
  */
 //----------------------------------------------------------------------------------
 class StringMathMenu : public QMenu

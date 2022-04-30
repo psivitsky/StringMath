@@ -54,7 +54,7 @@ double StringMathFuncImpl::log_impl(double arg)
     if(arg <= 0.)
         throw StringMathError(
             "StringMathFuncImpl: the natural logarithm subexpression value is "
-            "less than or equal to zero!!");
+            "less than or equal to zero!");
     return log(arg);
 };
 

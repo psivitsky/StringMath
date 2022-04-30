@@ -9,17 +9,14 @@ class Interface;
 //----------------------------------------------------------------------------------
 /*!
  * \brief
- * Example application of using the "StringMath" library
+ * Example application of using the StringMath library
  * \details
- * The widget contains a line edit for entering an expression and spin box for
- * displaying the calculation result.\n
- * If a calculation throws an exception, it will be printed in log line edit.
+ * The application contains a StringMathWidget object - an interface to the
+ * StringMath calculator.
  */
 //----------------------------------------------------------------------------------
 
 #include <QWidget>
-
-#include "string_math.h"
 
 class Interface : public QWidget
 {
@@ -29,12 +26,12 @@ public:
     Interface(const Interface& obj) = delete;
     Interface& operator=(const Interface& obj) = delete;
     ~Interface();
-private slots:
-    void on_expression_LE_editingFinished();
 
 private:
     Ui::Interface* ui;
-    // Variables...
-    StringMath calc;
+    // Constants...
+    static const int decimals_number = 5;
+
+    const QString default_expression = "1.";
 };
 #endif // INTERFACE_H

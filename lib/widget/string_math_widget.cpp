@@ -1,6 +1,7 @@
 #include "string_math_widget.h"
 #include "ui_string_math_widget.h"
 
+#include "string_math.h"
 #include "string_math_menu.h"
 
 //----------------------------------------------------------------------------------
@@ -10,7 +11,7 @@
  */
 //----------------------------------------------------------------------------------
 StringMathWidget::StringMathWidget(QWidget* parent)
-    : QWidget(parent), ui(new Ui::StringMathWidget),
+    : QWidget(parent), ui(new Ui::StringMathWidget), calc(new StringMath()),
       menu(new StringMathMenu(this))
 {
     ui->setupUi(this);
@@ -26,6 +27,7 @@ StringMathWidget::StringMathWidget(QWidget* parent)
 //----------------------------------------------------------------------------------
 StringMathWidget::~StringMathWidget()
 {
+    delete calc;
     delete ui;
 }
 //----------------------------------------------------------------------------------
@@ -155,8 +157,8 @@ void StringMathWidget::on_result_SB_valueChanged(const QString& arg1)
 
     try
     {
-        QString result_str = calc.calculate(ui->expression_LE->text(),
-                                            ui->result_SB->decimals());
+        QString result_str = calc->calculate(ui->expression_LE->text(),
+                                             ui->result_SB->decimals());
 
         ui->result_LE->setStyleSheet(result_SB_ok_style);
         ui->result_LE->setText(result_str);
@@ -178,8 +180,8 @@ void StringMathWidget::on_expression_LE_editingFinished()
 {
     try
     {
-        QString result_str = calc.calculate(ui->expression_LE->text(),
-                                            ui->result_SB->decimals());
+        QString result_str = calc->calculate(ui->expression_LE->text(),
+                                             ui->result_SB->decimals());
 
         ui->result_LE->setStyleSheet(result_SB_ok_style);
         ui->result_LE->setText(result_str);
@@ -195,7 +197,7 @@ void StringMathWidget::on_expression_LE_editingFinished()
     }
 }
 //----------------------------------------------------------------------------------
-//! \details Slot for displaying the context menu of constants and functions.
+//! \details Slot for displaying the context menu.
 //----------------------------------------------------------------------------------
 void StringMathWidget::on_cnst_and_func_PB_clicked()
 {

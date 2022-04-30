@@ -107,8 +107,8 @@ double operators_processing(const QVector<ExpressionSymbol*>& symbols)
                                          right_operand);
         }
         else
-            throw StringMathError("MathProcessor: the expression contains an "
-                                  "invalid operator!");
+            throw StringMathError(
+                "MathProcessor: the expression contains an invalid operator!");
     }
 
     if(left_operand->is_empty())

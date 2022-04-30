@@ -19,15 +19,23 @@ class StringMathWidget;
  * \brief
  * StringMath widget
  * \details
- * \warning
- * The widget is minimized by default.
+ * The class object provides a StringMath calculator widget.\n
+ * It can have a minimized and expanded view.
+ * When minimized, the widget contains a spin box for entering numbers.
+ * When expanded, in addition to minimized view, the widget includes a line edit
+ * for user expressions and a line edit for the output of the StringMath
+ * calculator.\n
+ * If the StringMath calculator throws an exception, it will be printed in the
+ * output line edit.\n
+ * The expanded view also contains a context menu (an object of the
+ * StringMathMenu class) with available constants and functions.
+ * \warning The widget is minimized by default.
  */
 //----------------------------------------------------------------------------------
 
 #include <QWidget>
 
-#include "string_math.h"
-
+class StringMath;
 class StringMathMenu;
 
 class STRINGMATHWIDGET_EXPORT StringMathWidget : public QWidget
@@ -67,9 +75,8 @@ private:
 
     const QString result_SB_ok_style = "color: rgb(0, 128, 0)";
     const QString result_SB_error_style = "color: rgb(128, 0, 0)";
-    // Variables...
-    StringMath calc;
     // Pointers...
+    StringMath*     calc;
     StringMathMenu* menu;
 };
 #endif // STRING_MATH_WIDGET_H
