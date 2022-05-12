@@ -9,13 +9,22 @@ ExpressionOperand* operand_checking(QVector<ExpressionSymbol*>::const_iterator,
 ExpressionOperator*
     operator_checking(QVector<ExpressionSymbol*>::const_iterator);
 
-void hyper_1_operation_processing(ExpressionOperand*,
-                                  const ExpressionOperator*,
-                                  const ExpressionOperand*,
-                                  double&);
-void hyper_2_operation_processing(ExpressionOperand*,
-                                  const ExpressionOperator*,
-                                  const ExpressionOperand*);
+double operators_calculation(QVector<ExpressionSymbol*>::const_iterator&,
+                             QVector<ExpressionSymbol*>::const_iterator);
+
+double operation_switcher(const ExpressionOperand*,
+                          const ExpressionOperator*,
+                          const ExpressionOperand*);
+
+double hyper_1_operation_processing(const ExpressionOperand*,
+                                    const ExpressionOperator*,
+                                    const ExpressionOperand*);
+double hyper_2_operation_processing(const ExpressionOperand*,
+                                    const ExpressionOperator*,
+                                    const ExpressionOperand*);
+double hyper_3_operation_processing(const ExpressionOperand*,
+                                    const ExpressionOperator*,
+                                    const ExpressionOperand*);
 
 //----------------------------------------------------------------------------------
 /*!
@@ -70,50 +79,26 @@ double operators_processing(const QVector<ExpressionSymbol*>& symbols)
     if(symbols.isEmpty())
         throw StringMathError("MathProcessor: the expression is empty!");
 
-    double calc_result = 0.;
-
     QVector<ExpressionSymbol*>::const_iterator begin = symbols.begin();
     QVector<ExpressionSymbol*>::const_iterator end = symbols.end();
 
     ExpressionOperand* left_operand = operand_checking(begin, end);
-    ++begin;
-
-    ExpressionOperator* expression_operator = nullptr;
-    ExpressionOperand*  right_operand = nullptr;
-
-    while(begin != end)
+    if(symbols.size() == 1)
     {
-        expression_operator = operator_checking(begin);
-        ++begin;
-        right_operand = operand_checking(begin, end);
-        ++begin;
+        if(left_operand->is_empty())
+            throw StringMathError("MathProcessor: the operand is empty!");
 
-        if(MathProcessor::hyper_1_operators.contains(
-               expression_operator->operator_type()))
-        {
-            if(left_operand->is_empty() && (left_operand == symbols.first()))
-                left_operand->set_value(0.);
-
-            hyper_1_operation_processing(left_operand,
-                                         expression_operator,
-                                         right_operand,
-                                         calc_result);
-        }
-        else if(MathProcessor::hyper_2_operators.contains(
-                    expression_operator->operator_type()))
-        {
-            hyper_2_operation_processing(left_operand,
-                                         expression_operator,
-                                         right_operand);
-        }
-        else
-            throw StringMathError(
-                "MathProcessor: the expression contains an invalid operator!");
+        return left_operand->value();
+    }
+    else
+    {
+        if(left_operand->is_empty())
+            left_operand->set_value(0.);
     }
 
-    if(left_operand->is_empty())
-        throw StringMathError("MathProcessor: the left operand is empty!");
-    calc_result += left_operand->value();
+    double calc_result = 0.;
+    while(begin != end)
+        calc_result = operators_calculation(begin, end);
 
     return calc_result;
 }
@@ -201,18 +186,124 @@ operator_checking(QVector<ExpressionSymbol*>::const_iterator iterator)
 }
 //----------------------------------------------------------------------------------
 /*!
- * The hyper 1 operation processing function.
- * \param[in,out] leftOperand Pointer to the current left operand at the input
- * and the next left operand at the output.
- * \param[in] centerOperator Pointer to the hyper 1 operator.
- * \param[in] rightOperand Pointer to the right operand.
- * \param[in,out] calcResult The calculation result.
+ * The function of calculating expression operators.
+ * \param[in,out] begin The iterator pointing to the left operand.
+ * \param[in] end The iterator pointing to a symbol after the last
+ * symbol in the parsing container.
+ * \return The result of the calculation.
  */
 //----------------------------------------------------------------------------------
-void hyper_1_operation_processing(ExpressionOperand*        leftOperand,
-                                  const ExpressionOperator* centerOperator,
-                                  const ExpressionOperand*  rightOperand,
-                                  double&                   calcResult)
+double operators_calculation(QVector<ExpressionSymbol*>::const_iterator& begin,
+                             QVector<ExpressionSymbol*>::const_iterator  end)
+{
+    double calc_result = 0.;
+
+    ExpressionOperand* left_operand = operand_checking(begin, end);
+    ++begin;
+
+    ExpressionOperator* left_operator = operator_checking(begin);
+    ++begin;
+
+    while(true)
+    {
+        ExpressionOperand* right_operand = operand_checking(begin, end);
+        ++begin;
+
+        if(begin == end)
+        {
+            calc_result =
+                operation_switcher(left_operand, left_operator, right_operand);
+            break;
+        }
+
+        ExpressionOperator* right_operator = operator_checking(begin);
+        ++begin;
+
+        if(left_operator->operator_rank() == right_operator->operator_rank())
+        {
+            left_operand->set_value(
+                operation_switcher(left_operand, left_operator, right_operand));
+            *left_operator = *right_operator;
+        }
+        else if(left_operator->operator_rank() <
+                right_operator->operator_rank())
+        {
+            begin -= 2;
+            right_operand->set_value(operators_calculation(begin, end));
+
+            if(begin == end)
+            {
+                calc_result = operation_switcher(left_operand,
+                                                 left_operator,
+                                                 right_operand);
+                break;
+            }
+            else
+            {
+                left_operand->set_value(operation_switcher(left_operand,
+                                                           left_operator,
+                                                           right_operand));
+
+                begin += 1;
+                left_operator = operator_checking(begin);
+                begin += 1;
+            }
+        }
+        else
+        {
+            calc_result =
+                operation_switcher(left_operand, left_operator, right_operand);
+
+            right_operand->set_value(calc_result);
+            begin -= 2;
+
+            break;
+        }
+    }
+
+    return calc_result;
+}
+//----------------------------------------------------------------------------------
+/*!
+ * Operator type selection function.
+ * \param[in] leftOperand Pointer to the left operand.
+ * \param[in] centerOperator Pointer to the operator.
+ * \param[in] rightOperand Pointer to the right operand.
+ * \return The calculation result.
+ */
+//----------------------------------------------------------------------------------
+double operation_switcher(const ExpressionOperand*  leftOperand,
+                          const ExpressionOperator* centerOperator,
+                          const ExpressionOperand*  rightOperand)
+{
+    double calc_result = 0.;
+    if(centerOperator->operator_rank() == hyper1)
+        calc_result = hyper_1_operation_processing(leftOperand,
+                                                   centerOperator,
+                                                   rightOperand);
+    else if(centerOperator->operator_rank() == hyper2)
+        calc_result = hyper_2_operation_processing(leftOperand,
+                                                   centerOperator,
+                                                   rightOperand);
+    else if(centerOperator->operator_rank() == hyper3)
+        calc_result = hyper_3_operation_processing(leftOperand,
+                                                   centerOperator,
+                                                   rightOperand);
+    return calc_result;
+}
+
+//----------------------------------------------------------------------------------
+/*!
+ * The hyper 1 operation processing function.
+ * \param[in] leftOperand Pointer to the left operand.
+ * \param[in] centerOperator Pointer to the hyper 1 operator.
+ * \param[in] rightOperand Pointer to the right operand.
+ * \return The calculation result.
+ */
+//----------------------------------------------------------------------------------
+double hyper_1_operation_processing(const ExpressionOperand*  leftOperand,
+                                    const ExpressionOperator* centerOperator,
+                                    const ExpressionOperand*  rightOperand)
 {
     if(leftOperand->is_empty())
         throw StringMathError("MathProcessor: the left operand is empty!");
@@ -220,28 +311,29 @@ void hyper_1_operation_processing(ExpressionOperand*        leftOperand,
     if(rightOperand->is_empty())
         throw StringMathError("MathProcessor: the right operand is empty!");
 
-    calcResult += leftOperand->value();
-
+    double result = 0.;
     if(centerOperator->operator_type() == sumType)
-        leftOperand->set_value(rightOperand->value());
+        result = leftOperand->value() + rightOperand->value();
     else if(centerOperator->operator_type() == diffType)
-        leftOperand->set_value(-rightOperand->value());
+        result = leftOperand->value() - rightOperand->value();
     else
         throw StringMathError(
             "MathProcessor: there is no such hyper 1 operation!");
+
+    return result;
 }
 //----------------------------------------------------------------------------------
 /*!
  * The hyper 2 operation processing function.
- * \param[in,out] leftOperand Pointer to the current left operand at the input
- * and the next left operand at the output.
+ * \param[in] leftOperand Pointer to the left operand.
  * \param[in] centerOperator Pointer to the hyper 2 operator.
  * \param[in] rightOperand Pointer to the right operand.
+ * \return The calculation result.
  */
 //----------------------------------------------------------------------------------
-void hyper_2_operation_processing(ExpressionOperand*        leftOperand,
-                                  const ExpressionOperator* centerOperator,
-                                  const ExpressionOperand*  rightOperand)
+double hyper_2_operation_processing(const ExpressionOperand*  leftOperand,
+                                    const ExpressionOperator* centerOperator,
+                                    const ExpressionOperand*  rightOperand)
 {
     if(leftOperand->is_empty())
         throw StringMathError("MathProcessor: the left operand is empty!");
@@ -249,11 +341,41 @@ void hyper_2_operation_processing(ExpressionOperand*        leftOperand,
     if(rightOperand->is_empty())
         throw StringMathError("MathProcessor: the right operand is empty!");
 
+    double result = 0.;
     if(centerOperator->operator_type() == multType)
-        leftOperand->set_value(leftOperand->value() * rightOperand->value());
+        result = leftOperand->value() * rightOperand->value();
     else if(centerOperator->operator_type() == divType)
-        leftOperand->set_value(leftOperand->value() / rightOperand->value());
+        result = leftOperand->value() / rightOperand->value();
     else
         throw StringMathError(
             "MathProcessor: there is no such hyper 2 operation!");
+
+    return result;
+}
+//----------------------------------------------------------------------------------
+/*!
+ * The hyper 3 operation processing function.
+ * \param[in] leftOperand Pointer to the left operand.
+ * \param[in] centerOperator Pointer to the hyper 3 operator.
+ * \param[in] rightOperand Pointer to the right operand.
+ * \return The calculation result.
+ */
+//----------------------------------------------------------------------------------
+double hyper_3_operation_processing(const ExpressionOperand*  leftOperand,
+                                    const ExpressionOperator* centerOperator,
+                                    const ExpressionOperand*  rightOperand)
+{
+    if(leftOperand->is_empty())
+        throw StringMathError("MathProcessor: the left operand is empty!");
+
+    if(rightOperand->is_empty())
+        throw StringMathError("MathProcessor: the right operand is empty!");
+
+    double result = 0.;
+    if(centerOperator->operator_type() == powType)
+        result = pow(leftOperand->value(), rightOperand->value());
+    else
+        throw StringMathError(
+            "MathProcessor: there is no such hyper 3 operation!");
+    return result;
 }

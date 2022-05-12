@@ -3,7 +3,8 @@
 //! \details The default constructor.
 //----------------------------------------------------------------------------------
 ExpressionOperator::ExpressionOperator()
-    : ExpressionSymbol(), operator_type_(defaultType)
+    : ExpressionSymbol(), operator_type_(defaultType),
+      operator_rank_(defaultRank)
 {
     symbol_type_ = operatorType;
 }
@@ -14,30 +15,51 @@ ExpressionOperator::ExpressionOperator()
  */
 //----------------------------------------------------------------------------------
 ExpressionOperator::ExpressionOperator(const QChar& character)
-    : ExpressionSymbol(), operator_type_(defaultType)
+    : ExpressionSymbol(), operator_type_(defaultType),
+      operator_rank_(defaultRank)
 {
     symbol_type_ = operatorType;
 
-    if(character == '^')
-        operator_type_ = powType;
-    else if(character == '*')
-        operator_type_ = multType;
-    else if(character == '/')
-        operator_type_ = divType;
-    else if(character == '+')
-        operator_type_ = sumType;
-    else if(character == '-')
-        operator_type_ = diffType;
+    set_operator(character);
 }
 //----------------------------------------------------------------------------------
 /*!
- * The function of setting the operator type.
- * \param[in] operatorType Operator type.
+ * The function of setting the operator.
+ * \param[in] character Operator character.
  */
 //----------------------------------------------------------------------------------
-void ExpressionOperator::set_operator_type(ExpressionOperatorType operatorType)
+void ExpressionOperator::set_operator(const QChar& character)
 {
-    operator_type_ = operatorType;
+    if(character == '+')
+    {
+        operator_type_ = sumType;
+        operator_rank_ = hyper1;
+    }
+    else if(character == '-')
+    {
+        operator_type_ = diffType;
+        operator_rank_ = hyper1;
+    }
+    else if(character == '*')
+    {
+        operator_type_ = multType;
+        operator_rank_ = hyper2;
+    }
+    else if(character == '/')
+    {
+        operator_type_ = divType;
+        operator_rank_ = hyper2;
+    }
+    else if(character == '^')
+    {
+        operator_type_ = powType;
+        operator_rank_ = hyper3;
+    }
+    else
+    {
+        operator_type_ = defaultType;
+        operator_rank_ = defaultRank;
+    }
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -48,4 +70,14 @@ void ExpressionOperator::set_operator_type(ExpressionOperatorType operatorType)
 ExpressionOperatorType ExpressionOperator::operator_type() const
 {
     return operator_type_;
+}
+//----------------------------------------------------------------------------------
+/*!
+ * The function of getting the operator rank.
+ * \return Operator rank.
+ */
+//----------------------------------------------------------------------------------
+ExpressionOperatorRank ExpressionOperator::operator_rank() const
+{
+    return operator_rank_;
 }

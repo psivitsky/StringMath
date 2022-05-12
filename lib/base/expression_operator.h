@@ -20,11 +20,19 @@
 enum ExpressionOperatorType
 {
     defaultType,
-    powType,
+    sumType,
+    diffType,
     multType,
     divType,
-    sumType,
-    diffType
+    powType
+};
+
+enum ExpressionOperatorRank
+{
+    defaultRank,
+    hyper1,
+    hyper2,
+    hyper3
 };
 
 class ExpressionOperator : public ExpressionSymbol
@@ -36,11 +44,13 @@ public:
     ExpressionOperator& operator=(const ExpressionOperator& obj) = default;
     ~ExpressionOperator() = default;
     // Functions...
-    void set_operator_type(ExpressionOperatorType operatorType);
+    void                   set_operator(const QChar& character);
     ExpressionOperatorType operator_type() const;
+    ExpressionOperatorRank operator_rank() const;
 
 private:
     // Variables...
     ExpressionOperatorType operator_type_;
+    ExpressionOperatorRank operator_rank_;
 };
 #endif // EXPRESSIONOPERATOR_H

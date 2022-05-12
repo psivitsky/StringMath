@@ -14,6 +14,7 @@ namespace MathProcessor
 {
 const QVector<ExpressionOperatorType> hyper_1_operators = {sumType, diffType};
 const QVector<ExpressionOperatorType> hyper_2_operators = {multType, divType};
+const QVector<ExpressionOperatorType> hyper_3_operators = {powType};
 
 double expression_calculation(const Expression&                  expression,
                               const QVector<StringMathFunction>& functions);
