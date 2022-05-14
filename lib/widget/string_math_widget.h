@@ -47,9 +47,9 @@ public:
     StringMathWidget& operator=(const StringMathWidget& obj) = delete;
     ~StringMathWidget();
     // Functions...
-    void          set_expression(const QString& str);
-    const QString expression() const;
-    double        value() const;
+    void    set_expression(const QString& str);
+    QString expression() const;
+    double  value() const;
 
     void set_decimals(int val);
     int  decimals() const;

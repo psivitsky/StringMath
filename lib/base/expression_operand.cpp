@@ -2,8 +2,7 @@
 //----------------------------------------------------------------------------------
 //! \details The default constructor.
 //----------------------------------------------------------------------------------
-ExpressionOperand::ExpressionOperand()
-    : ExpressionSymbol(), f_empty(true), value_(0.)
+ExpressionOperand::ExpressionOperand() : f_empty(true), value_(0.)
 {
     symbol_type_ = operandType;
 }
@@ -14,7 +13,7 @@ ExpressionOperand::ExpressionOperand()
  */
 //----------------------------------------------------------------------------------
 ExpressionOperand::ExpressionOperand(double operandValue)
-    : ExpressionSymbol(), f_empty(false), value_(operandValue)
+    : f_empty(false), value_(operandValue)
 {
     symbol_type_ = operandType;
 }

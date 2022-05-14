@@ -3,8 +3,8 @@
 //! \details Constructor.
 //----------------------------------------------------------------------------------
 StringMath::StringMath()
-    : constants_({StringMathConstant("pi", 3.1415926535897932384626433832795),
-                  StringMathConstant("e", 2.7182818284590452353602874713527)}),
+    : constants_(
+          {StringMathConstant("pi", M_PI), StringMathConstant("e", M_E)}),
       functions_({StringMathFunction("cos", StringMathFuncImpl::cos_impl),
                   StringMathFunction("sin", StringMathFuncImpl::sin_impl),
                   StringMathFunction("tan", StringMathFuncImpl::tan_impl),

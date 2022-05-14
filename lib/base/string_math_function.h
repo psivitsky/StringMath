@@ -43,8 +43,6 @@
 
 #include "string_math_base.h"
 
-#include <QRegExp>
-
 #include <functional>
 
 class STRINGMATH_EXPORT StringMathFunction

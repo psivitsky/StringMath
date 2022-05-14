@@ -38,8 +38,6 @@
 
 #include "string_math_base.h"
 
-#include <QRegExp>
-
 class STRINGMATH_EXPORT StringMathConstant
 {
 public:

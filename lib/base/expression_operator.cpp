@@ -3,8 +3,7 @@
 //! \details The default constructor.
 //----------------------------------------------------------------------------------
 ExpressionOperator::ExpressionOperator()
-    : ExpressionSymbol(), operator_type_(defaultType),
-      operator_rank_(defaultRank)
+    : operator_type_(defaultType), operator_rank_(defaultRank)
 {
     symbol_type_ = operatorType;
 }
@@ -15,8 +14,7 @@ ExpressionOperator::ExpressionOperator()
  */
 //----------------------------------------------------------------------------------
 ExpressionOperator::ExpressionOperator(const QChar& character)
-    : ExpressionSymbol(), operator_type_(defaultType),
-      operator_rank_(defaultRank)
+    : operator_type_(defaultType), operator_rank_(defaultRank)
 {
     symbol_type_ = operatorType;
 

@@ -1,4 +1,7 @@
 #include "string_math_constant.h"
+
+#include <QRegExp>
+
 //----------------------------------------------------------------------------------
 //! \details The default constructor.
 //----------------------------------------------------------------------------------
@@ -30,9 +33,7 @@ StringMathConstant::StringMathConstant(const QString& constantName,
 //----------------------------------------------------------------------------------
 bool operator==(const StringMathConstant& obj1, const StringMathConstant& obj2)
 {
-    if((obj1.name_ == obj2.name_) && (obj1.value_ == obj2.value_))
-        return true;
-    return false;
+    return (obj1.name_ == obj2.name_) && (obj1.value_ == obj2.value_);
 }
 //----------------------------------------------------------------------------------
 /*!

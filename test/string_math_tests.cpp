@@ -207,8 +207,8 @@ void StringMathTests::pow_rand_tests()
     int test_num = 0;
     while(test_num < rand_tests_num)
     {
-        double op_1 = static_cast<double>(rand() % 50);
-        double op_2 = static_cast<double>(rand() % 10);
+        double op_1 = static_cast<double>(rand() % rand_tests_pow_op_1_limiter);
+        double op_2 = static_cast<double>(rand() % rand_tests_pow_op_2_limiter);
         double result = pow(op_1, op_2);
 
         QString test_exp =
@@ -309,11 +309,13 @@ bool test_parser(const QString& testStr, TestInfo& test)
     int end_pos = testStr.lastIndexOf("|");
 
     test.name = testStr.mid(begin_pos + 1, prec_pos - begin_pos - 1);
-    test.precision = testStr.mid(prec_pos + 1, exp_pos - prec_pos - 1).toInt();
+    test.precision =
+        testStr.midRef(prec_pos + 1, exp_pos - prec_pos - 1).toInt();
 
     test.expression = testStr.mid(exp_pos + 1, res_pos - exp_pos - 1);
 
-    double res_val = testStr.mid(res_pos + 1, end_pos - res_pos - 1).toDouble();
+    double res_val =
+        testStr.midRef(res_pos + 1, end_pos - res_pos - 1).toDouble();
     test.result = QString::number(res_val, 'f', test.precision);
 
     return true;

@@ -92,11 +92,9 @@ double operators_calculation(const QVector<ExpressionSymbol*>& symbols)
 
         return left_operand->value();
     }
-    else
-    {
-        if(left_operand->is_empty())
-            left_operand->set_value(0.);
-    }
+
+    if(left_operand->is_empty())
+        left_operand->set_value(0.);
 
     double calc_result = 0.;
     while(begin != end)
@@ -202,14 +200,12 @@ double operators_processing(QVector<ExpressionSymbol*>::const_iterator& begin,
                 calc_result = operator_calculation(l_val, l_op, r_val);
                 break;
             }
-            else
-            {
-                l_val->set_value(operator_calculation(l_val, l_op, r_val));
 
-                ++begin;
-                l_op = operator_checking(begin);
-                ++begin;
-            }
+            l_val->set_value(operator_calculation(l_val, l_op, r_val));
+
+            ++begin;
+            l_op = operator_checking(begin);
+            ++begin;
         }
         else
         {

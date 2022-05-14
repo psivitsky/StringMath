@@ -41,7 +41,8 @@ void MathParser::expression_parsing(
             operand = "";
             break;
         }
-        else if(operators.contains(*begin))
+
+        if(operators.contains(*begin))
         {
             expression.add(operand_parsing(operand, constants));
             operand = "";
@@ -145,7 +146,8 @@ Expression* subexpression_parsing(QString::const_iterator&           begin,
             throw StringMathError(
                 "MathParser: the closing bracket is missing!");
         }
-        else if(MathParser::operators.contains(*begin))
+
+        if(MathParser::operators.contains(*begin))
         {
             expression->add(operand_parsing(operand, constants));
             operand = "";
@@ -164,13 +166,14 @@ Expression* subexpression_parsing(QString::const_iterator&           begin,
                 throw StringMathError(
                     "MathParser: the closing bracket is missing!");
             }
-            else if(MathParser::closing_brackets.contains(*begin))
+
+            if(MathParser::closing_brackets.contains(*begin))
             {
                 subexpression_closure_checking(begin, end);
                 break;
             }
-            else
-                expression->add(new ExpressionOperator(*begin));
+
+            expression->add(new ExpressionOperator(*begin));
         }
         else if(MathParser::closing_brackets.contains(*begin))
         {

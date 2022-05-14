@@ -2,7 +2,7 @@
 //----------------------------------------------------------------------------------
 //! \details The constructor.
 //----------------------------------------------------------------------------------
-Expression::Expression() : ExpressionOperand(), function_name_("")
+Expression::Expression() : function_name_("")
 {
     symbol_type_ = expressionType;
 }

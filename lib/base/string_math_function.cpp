@@ -1,8 +1,13 @@
 #include "string_math_function.h"
+
+#include <QRegExp>
+
+#include <utility>
+
 //----------------------------------------------------------------------------------
 //! \details The default constructor.
 //----------------------------------------------------------------------------------
-StringMathFunction::StringMathFunction() : name_(""), function_(0)
+StringMathFunction::StringMathFunction() : name_(""), function_(nullptr)
 {
 }
 //----------------------------------------------------------------------------------
@@ -14,10 +19,10 @@ StringMathFunction::StringMathFunction() : name_(""), function_(0)
 //----------------------------------------------------------------------------------
 StringMathFunction::StringMathFunction(const QString& functionName,
                                        std::function<double(double)> function)
-    : name_(""), function_(0)
+    : name_(""), function_(nullptr)
 {
     set_name(functionName);
-    set_function(function);
+    set_function(std::move(function));
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -31,9 +36,8 @@ StringMathFunction::StringMathFunction(const QString& functionName,
 //----------------------------------------------------------------------------------
 bool operator==(const StringMathFunction& obj1, const StringMathFunction& obj2)
 {
-    if((obj1.name_ == obj2.name_) && (&(obj1.function_) == &(obj2.function_)))
-        return true;
-    return false;
+    return (obj1.name_ == obj2.name_) &&
+           (&(obj1.function_) == &(obj2.function_));
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -46,7 +50,7 @@ void StringMathFunction::set(const QString&                functionName,
                              std::function<double(double)> function)
 {
     set_name(functionName);
-    set_function(function);
+    set_function(std::move(function));
 }
 //----------------------------------------------------------------------------------
 /*!
@@ -89,7 +93,7 @@ const QString& StringMathFunction::name() const
 //----------------------------------------------------------------------------------
 void StringMathFunction::set_function(std::function<double(double)> function)
 {
-    function_ = function;
+    function_ = std::move(function);
 }
 //----------------------------------------------------------------------------------
 /*!

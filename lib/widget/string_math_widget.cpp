@@ -47,7 +47,7 @@ void StringMathWidget::set_expression(const QString& str)
  * \return The expression string.
  */
 //----------------------------------------------------------------------------------
-const QString StringMathWidget::expression() const
+QString StringMathWidget::expression() const
 {
     return ui->expression_LE->text();
 }
