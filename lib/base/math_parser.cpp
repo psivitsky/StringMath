@@ -103,7 +103,8 @@ ExpressionOperand* operand_parsing(const QString& operandStr,
 
         if(!f_constant_replaced)
             throw StringMathError("MathParser: the operand \"" +
-                                  new_operand_str + "\" is invalid!");
+                                  new_operand_str.toStdString() +
+                                  "\" is invalid!");
     }
 
     return new ExpressionOperand(new_operand_val);

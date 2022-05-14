@@ -16,19 +16,26 @@
 //----------------------------------------------------------------------------------
 //! \details StringMath exception error class.
 //----------------------------------------------------------------------------------
-class StringMathError
+class StringMathError : public std::exception
 {
 public:
-    StringMathError(const QString& str) : msg(str)
+    StringMathError(const std::string& whatArg) : _what_str(whatArg)
     {
     }
-    const QString& what()
+    StringMathError(const char* whatArg) : _what_str(whatArg)
     {
-        return msg;
+    }
+    StringMathError(const StringMathError& obj) = default;
+    StringMathError& operator=(const StringMathError& obj) = default;
+    ~StringMathError() = default;
+
+    const char* what() const noexcept override
+    {
+        return _what_str.c_str();
     }
 
 private:
-    QString msg;
+    std::string _what_str;
 };
 
 //----------------------------------------------------------------------------------

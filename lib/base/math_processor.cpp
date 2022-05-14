@@ -364,8 +364,8 @@ double function_calculation(double                             argument,
         }
 
         if(!f_calculated)
-            throw StringMathError("MathProcessor: the function \"" + name +
-                                  "\" doesn't exist!");
+            throw StringMathError("MathProcessor: the function \"" +
+                                  name.toStdString() + "\" doesn't exist!");
     }
 
     return calc_result;
