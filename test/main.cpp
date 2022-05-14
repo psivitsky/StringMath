@@ -22,6 +22,7 @@ int main(int argc, char* argv[])
     StringMathTests::diff_rand_tests();
     StringMathTests::prod_rand_tests();
     StringMathTests::div_rand_tests();
+    StringMathTests::pow_rand_tests();
     StringMathTests::file_tests();
 
     return 0;

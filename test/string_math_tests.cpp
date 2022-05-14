@@ -192,6 +192,50 @@ void StringMathTests::div_rand_tests()
         out << "\nNumber of failures: " << failures_cnt << "!\n\n";
 }
 //----------------------------------------------------------------------------------
+//! \details Power random testing function.
+//----------------------------------------------------------------------------------
+void StringMathTests::pow_rand_tests()
+{
+    QTextStream out(stdout);
+    out << "Power check...\n";
+
+    srand(QTime::currentTime().msec());
+
+    StringMath calc;
+
+    int failures_cnt = 0;
+    int test_num = 0;
+    while(test_num < rand_tests_num)
+    {
+        double op_1 = static_cast<double>(rand() % 50);
+        double op_2 = static_cast<double>(rand() % 10);
+        double result = pow(op_1, op_2);
+
+        QString test_exp =
+            QString::number(op_1, 'f', 0) + "^" + QString::number(op_2, 'f', 0);
+
+        try
+        {
+            if(calc.calculate(test_exp) != result)
+            {
+                ++failures_cnt;
+                out << "Failure!\t\t" << test_exp << "\n";
+            }
+        }
+        catch(StringMathError& err)
+        {
+            out << "Exception!\t\t" << test_exp << "\t\t" << err.what() << "\n";
+        }
+
+        ++test_num;
+    }
+
+    if(failures_cnt == 0)
+        out << "There were no failures!\n\n";
+    else
+        out << "\nNumber of failures: " << failures_cnt << "!\n\n";
+}
+//----------------------------------------------------------------------------------
 //! \details The function of specific tests.
 //----------------------------------------------------------------------------------
 void StringMathTests::file_tests()
