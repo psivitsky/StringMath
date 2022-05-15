@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>StringMathWidget</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QVBoxLayout" name="layout">
    <item>
     <widget class="QFrame" name="spinbox_frame">
      <property name="frameShape">
@@ -168,6 +168,39 @@
          </widget>
         </item>
         <item>
+         <widget class="QPushButton" name="copy_PB">
+          <property name="minimumSize">
+           <size>
+            <width>30</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>30</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <weight>50</weight>
+            <bold>false</bold>
+            <stylestrategy>PreferAntialias</stylestrategy>
+           </font>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="icon">
+           <iconset resource="resources.qrc">
+            <normaloff>:/icons/copy_icon.png</normaloff>:/icons/copy_icon.png</iconset>
+          </property>
+          <property name="flat">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QPushButton" name="cnst_and_func_PB">
           <property name="minimumSize">
            <size>
@@ -188,6 +221,9 @@
             <weight>75</weight>
             <italic>true</italic>
             <bold>true</bold>
+            <strikeout>false</strikeout>
+            <stylestrategy>PreferAntialias</stylestrategy>
+            <kerning>true</kerning>
            </font>
           </property>
           <property name="text">
@@ -214,6 +250,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
  <connections/>
 </ui>

@@ -57,12 +57,16 @@ public:
     void set_minimized(bool fMinimized);
     bool is_minimized();
 
+    void set_spinbox_visible(bool fVisible);
+    bool spinbox_visible();
+
     void set_enabled();
     void set_disabled();
 private slots:
     void on_minimize_expand_PB_clicked();
     void on_result_SB_valueChanged(const QString& arg1);
     void on_expression_LE_editingFinished();
+    void on_copy_PB_clicked();
     void on_cnst_and_func_PB_clicked();
 
     void append_string(const QString& str);

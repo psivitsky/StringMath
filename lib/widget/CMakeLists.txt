@@ -9,6 +9,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -21,7 +22,8 @@ add_library(${PROJECT_NAME} SHARED
     string_math_widget.cpp
     string_math_widget.ui
     string_math_menu.h
-    string_math_menu.cpp)
+    string_math_menu.cpp
+    resources.qrc)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt5::Widgets StringMath)
 

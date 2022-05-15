@@ -114,6 +114,32 @@ bool StringMathWidget::is_minimized()
     return ui->calculator_frame->isHidden();
 }
 //----------------------------------------------------------------------------------
+/*!
+ * The function of making the spinbox visible.
+ * \param[in] fShow The flag of spinbox visibility:
+ * true - make the spinbox visible,
+ * false - make the spinbox hidden,
+ */
+//----------------------------------------------------------------------------------
+void StringMathWidget::set_spinbox_visible(bool fVisible)
+{
+    if(!fVisible)
+        set_minimized(false);
+
+    ui->spinbox_frame->setVisible(fVisible);
+}
+//----------------------------------------------------------------------------------
+/*!
+ * The function of checking the spinbox visibility.
+ * \return TThe check result: true - the spinbox is visible,
+ * false - the spinbox is hidden.
+ */
+//----------------------------------------------------------------------------------
+bool StringMathWidget::spinbox_visible()
+{
+    return ui->spinbox_frame->isVisible();
+}
+//----------------------------------------------------------------------------------
 //! \details The widget enabling function.
 //----------------------------------------------------------------------------------
 void StringMathWidget::set_enabled()
@@ -161,7 +187,7 @@ void StringMathWidget::on_result_SB_valueChanged(const QString& arg1)
                                              ui->result_SB->decimals());
 
         ui->result_LE->setStyleSheet(result_SB_ok_style);
-        ui->result_LE->setText(result_str);
+        ui->result_LE->setText(result_str.replace('.', ','));
     }
     catch(StringMathError& err)
     {
@@ -183,18 +209,27 @@ void StringMathWidget::on_expression_LE_editingFinished()
         QString result_str = calc->calculate(ui->expression_LE->text(),
                                              ui->result_SB->decimals());
 
-        ui->result_LE->setStyleSheet(result_SB_ok_style);
-        ui->result_LE->setText(result_str);
-
         ui->result_SB->blockSignals(true);
-        ui->result_SB->setValue(ui->result_LE->text().toDouble());
+        ui->result_SB->setValue(result_str.toDouble());
         ui->result_SB->blockSignals(false);
+
+        ui->result_LE->setStyleSheet(result_SB_ok_style);
+        ui->result_LE->setText(result_str.replace('.', ','));
     }
     catch(StringMathError& err)
     {
         ui->result_LE->setStyleSheet(result_SB_error_style);
         ui->result_LE->setText(err.what());
     }
+}
+//----------------------------------------------------------------------------------
+//! \details Slot for copying the result to the clipboard.
+//----------------------------------------------------------------------------------
+void StringMathWidget::on_copy_PB_clicked()
+{
+    ui->result_LE->selectAll();
+    ui->result_LE->copy();
+    ui->result_LE->deselect();
 }
 //----------------------------------------------------------------------------------
 //! \details Slot for displaying the context menu.
