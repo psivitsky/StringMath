@@ -8,11 +8,11 @@ Calculations are made with double precision.
 The library also contains Qt-based widget:
 
 <p align="center">
- <img width="500" height="100" src="https://user-images.githubusercontent.com/92302433/168427893-24c5fc12-bcae-4d00-b137-09f91de985e0.png">
+ <img width="396" height="58" src="https://user-images.githubusercontent.com/92302433/168480806-b0c0b4ff-861a-49a7-b69b-e12fa5854dcf.png">
 </p>
 
 <p align="center">
- <img width="500" height="100" src="https://user-images.githubusercontent.com/92302433/168427943-6b25284c-bf33-4ae1-83d6-6f3288782310.png">
+ <img width="396" height="58" src="https://user-images.githubusercontent.com/92302433/168480867-34fcb9ac-c044-4645-888a-749b9fb720f4.png">
 </p>
 
 # Installation
